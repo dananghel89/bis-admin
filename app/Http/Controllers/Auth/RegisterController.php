@@ -78,4 +78,22 @@ class RegisterController extends Controller
     {
         return '/dashboard';
     }
+
+
+    public function showRegistrationForm()
+    {
+        if (! get_option('membership')) {
+            return redirect()->route('front');
+        }
+
+        return view('auth.register');
+    }
+
+    public function register(Request $request)
+    {
+        if (! get_option('membership')) {
+            return redirect()->route('front');
+        }
+    }
+
 }

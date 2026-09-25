@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Models\Options;
+use Illuminate\Support\Facades\Schema;
 
 /*----------  General Functions  ----------*/
 
@@ -25,11 +26,17 @@ function get_post_statuses() {
 function get_option( $name ) {
 	$result = '';
 
-	$options = Options::all()->toArray();
+	$model = new Options();
+
+	if (Schema::hasTable($model->getTable())) {
+		$options = $model->all()->toArray();
+	} else {
+		$options = [];
+	}
 
 	if ( is_array($options) && !empty($options) ) {
 		foreach ( $options as $option ) {
-			if ( $option['name'] == $name ) {				
+			if ( $option['name'] == $name ) {
 				$result = $option['value'];
 				break;
 			}
