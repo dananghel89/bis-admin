@@ -52,7 +52,7 @@
 					<tr>
 						<th scope="row">{{ $counter }}</th>
 						<td><a href="{{ route($location, $info['id']) }}" class="btn-link">{{ $info['title'] }}</a></td>
-						<td>{{ $user::find(Auth::user($info['author'])->id)->name }}</td>
+						<td>{{ optional($user::find($info['author']))->name ?? '-' }}</td>
 						<td>{{ date('Y/m/d', strtotime($info['created_at'])) }}</td>
 					</tr>
 

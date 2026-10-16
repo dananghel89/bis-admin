@@ -44,7 +44,7 @@ class InfoController extends Controller
      */
     public function infoView($id)
     {
-        $info = Info::find($id)->toArray();
+        $info = Info::findOrFail($id)->toArray();
 
         return view('admin.infos.infoView', compact('info'));
     }
@@ -57,7 +57,7 @@ class InfoController extends Controller
     public function infoEdit($id)
     {
         $statuses = get_post_statuses();
-        $info = Info::find($id)->toArray();
+        $info = Info::findOrFail($id)->toArray();
 
         return view('admin.infos.infoEdit', compact('statuses', 'info'));
     }
@@ -86,7 +86,7 @@ class InfoController extends Controller
      */
     public function infoEditSave(InfoEditRequest $request, $id)
     {
-        $info = Info::find($id);
+        $info = Info::findOrFail($id);
 
         $info->title = $request->get('title');
         $info->content = $request->get('content');
@@ -104,7 +104,7 @@ class InfoController extends Controller
      */
     public function infoDelete($id)
     {
-        $info = Info::find($id);
+        $info = Info::findOrFail($id);
 
         $info->delete();
 
