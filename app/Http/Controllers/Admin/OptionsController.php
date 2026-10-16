@@ -16,12 +16,12 @@ class OptionsController extends Controller
      */
     public function index()
     {
-        $options = Options::all()->pluck('value', 'id');
+        $options = Options::all()->pluck('value', 'name');
 
-        $site_title = !$options->isEmpty() ? $options[1] : '';
-        $tagline = !$options->isEmpty() ? $options[2] : '';
-        $email_address = !$options->isEmpty() ? $options[3] : '';
-        $membership = !$options->isEmpty() ? $options[4] : '';
+        $site_title = $options->get('site_title', '');
+        $tagline = $options->get('tagline', '');
+        $email_address = $options->get('email_address', '');
+        $membership = $options->get('membership', '');
 
         return view('admin.optionsEdit', compact('site_title', 'tagline', 'email_address', 'membership'));
     }

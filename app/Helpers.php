@@ -27,26 +27,20 @@ if ( ! function_exists('get_option') ) {
 	 * @return string
 	 */
 	function get_option( $name ) {
-		$result = '';
+		// Loaded once per request: this runs on every request from routes/auth.php and in several views.
+		static $options = null;
 
-		$model = new Options();
+		if ( is_null($options) ) {
+			$model = new Options();
 
-		if (Schema::hasTable($model->getTable())) {
-			$options = $model->all()->toArray();
-		} else {
-			$options = [];
-		}
-
-		if ( is_array($options) && !empty($options) ) {
-			foreach ( $options as $option ) {
-				if ( $option['name'] == $name ) {
-					$result = $option['value'];
-					break;
-				}
+			if (Schema::hasTable($model->getTable())) {
+				$options = $model->all()->pluck('value', 'name')->toArray();
+			} else {
+				$options = [];
 			}
 		}
 
-		return $result;
+		return isset($options[$name]) ? $options[$name] : '';
 	}
 }
 
