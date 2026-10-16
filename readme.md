@@ -1,71 +1,101 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+# BIS Admin
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+**Building Information System**: an architecture web application for documentation, plans and licenses.
 
-## About Laravel
+BIS Admin has a public landing page, user accounts with roles, and an admin dashboard where editors publish information for subscribers. It is built with Laravel 5.8.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+> **Status:** work in progress. Accounts, site options and **Infos** work end to end. The **Alerts**, **Plans**, **Licenses**, **Users** and **Messages** sections only show their pages so far.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| Area | What works |
+|---|---|
+| Landing | Front page and Terms of Service page |
+| Accounts | Login, logout, password reset, and self-registration when *Membership* is on |
+| Settings | Every user can change their own name, email and password |
+| Options | Admins edit the site title, tagline, contact email, and whether anyone can register |
+| Infos | Editors create, edit and delete infos marked *public* or *private*; subscribers read public infos |
+| Alerts, Plans, Licenses, Users, Messages | Pages only; no saving yet |
 
-## Learning Laravel
+## Roles
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Every user has one role, stored as a number in the `users.role` column:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1100 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost you and your team's skills by digging into our comprehensive video library.
+| Role | Value | Can access |
+|---|---|---|
+| Admin | `0` | Options, Users, Messages, own Settings |
+| Editor | `1` | Create, edit and delete Infos, Alerts, Plans and Licenses; Messages; own Settings |
+| Subscriber | `2` | View Infos (public ones only), Alerts, Plans and Licenses; Messages; own Settings |
 
-## Laravel Sponsors
+People who register themselves become **subscribers**. There is no admin screen for changing roles yet, so the first admin has to be set directly in the database (see step 6 below).
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## Requirements
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
+- PHP **7.1.3 – 7.x**. PHP 8 is not supported by Laravel 5.8.
+- MySQL
+- Composer. This repo includes `composer.phar` (Composer 2.2 LTS), which still runs on PHP 7.1. Current Composer releases need PHP 7.2.5 or newer.
 
-## Contributing
+The front-end needs no build step: the admin and landing templates are prebuilt files in `public/admin` and `public/landing`.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Installation
 
-## Security Vulnerabilities
+1. Clone the repository and install the PHP dependencies:
+   ```bash
+   php composer.phar install
+   ```
+2. Create your environment file and app key:
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+3. Create an empty MySQL database (named `bis_admin` by default) and set the `DB_*` values in `.env`.
+4. Create the tables. This also adds the default site options, with Membership turned on:
+   ```bash
+   php artisan migrate
+   ```
+5. Point a virtual host at the `public/` folder (`.env.example` uses `http://bis-admin.test`), or run `php artisan serve`. Then open `/register` and create your account.
+6. Make that account an admin by setting its role to `0`:
+   ```sql
+   UPDATE users SET role = 0 WHERE email = 'you@example.com';
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+If more than one PHP version is installed, run `php` and `composer.phar` with PHP 7.1–7.x, for example `php7.1 composer.phar install`.
 
-## License
+## Configuration
 
-The Laravel framework is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Admins manage these settings from **Dashboard → Options**. They are stored in the `options` table:
+
+| Option | Purpose |
+|---|---|
+| Site Title, Tagline | Used in page titles, headers and the footer |
+| Email Address | Contact address (saved, but not shown on the site yet) |
+| Membership | When on, anyone can register at `/register`. When off, `/register` redirects to the home page. |
+
+The register routes are set up when the routes file loads. If you cache routes with `php artisan route:cache`, run it again after changing Membership.
+
+## Tests
+
+```bash
+php vendor/bin/phpunit
+php vendor/bin/phpunit --filter testBasicTest     # a single test
+```
+
+`phpunit.xml` doesn't override the database connection, so any test that uses the database runs against the one configured in `.env`. Point it at a separate test database before writing database tests.
+
+## Project structure
+
+| Path | Contents |
+|---|---|
+| `routes/web.php` | Landing routes; loads `routes/auth.php` and `routes/admin.php` |
+| `routes/admin.php` | Dashboard routes under `/dashboard`, protected by `auth` and per-page `can:` permissions |
+| `app/Providers/AuthServiceProvider.php` | Defines every permission (Gate ability) for each role |
+| `app/Http/Controllers/Admin` | Dashboard controllers |
+| `app/Http/Models` | Eloquent models (`Info`, `Alert`, `Plan`, `License`, `Options`); `User` is in `app/User.php` |
+| `app/Helpers.php` | Global helpers: `get_option()`, `get_post_statuses()`, `get_gravatar()` |
+| `resources/views` | Blade views, with `admin`, `auth` and `landing` layouts |
+
+## Built with
+
+- [Laravel 5.8](https://laravel.com/docs/5.8)
+- Admin dashboard and landing page HTML templates (Bootstrap and jQuery), stored in `public/admin` and `public/landing`
+- [Gravatar](https://gravatar.com) for user avatars
