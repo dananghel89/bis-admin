@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -20,7 +21,9 @@ class RegisterController extends Controller
     |
     */
 
-    use RegistersUsers;
+    use RegistersUsers {
+        register as protected registerUser;
+    }
 
     /**
      * Where to redirect users after registration.
@@ -94,6 +97,8 @@ class RegisterController extends Controller
         if (! get_option('membership')) {
             return redirect()->route('front');
         }
+
+        return $this->registerUser($request);
     }
 
 }
