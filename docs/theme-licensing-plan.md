@@ -1,6 +1,6 @@
 # Plan: using the Sufee Admin and Bell themes
 
-Status: **Done** – 2026-11-02: facts checked against the original downloads and the four license pages (section 2); D1–D3 decided (section 4); Sufee updated to the Colorlib Nov 2018 release with its MIT `LICENSE`, unused demo libraries removed (665cb69, avatar fix b3d569f); Bell footer credit restored and README credits added (9e78056). Optional later: self-host the Google Fonts in the Laravel 13 upgrade
+Status: **Done** – 2026-11-02: facts checked against the original downloads and the four license pages (section 2); D1–D3 decided (section 4); Sufee updated to the Colorlib Nov 2018 release with its MIT `LICENSE`, unused demo libraries removed (665cb69, avatar fix b3d569f); Bell footer credit restored and README credits added (9e78056). Google Fonts stay as they are (your decision)
 Created: 2026-11-02
 
 > This is a technical checklist based on the published license texts, not legal advice.
@@ -61,7 +61,7 @@ Because the repo is **already public**, this plan was done before the review pla
 | Library notices in the files that are used (Bootstrap, jQuery, Font Awesome, Superfish, Stellar…) | Yes, and already met | Keep the vendor files as they are |
 | Images `landing/img/cover.jpg` (hero background, loaded from `landing/css/style.css:117`) and `parallax-bg.jpg` | No: **Unsplash** photos (D3). The [Unsplash License](https://unsplash.com/license) allows free use, including commercial, without required attribution | Keep both. An earlier version of this plan called `cover.jpg` unused because it isn't referenced from a view; the CSS does use it. "Photos: Unsplash" is in the README credits |
 | BIS logos (`landing/img/logo.png`, `logo-nav.png`) and the favicons (`landing/img/favicon.png`, `admin/img/favicon.png`) | No: **your own** brand assets (D3), made back then with Shopify's logo maker, which no longer exists | Keep them unchanged |
-| Google Fonts (3 `fonts.googleapis.com` links) | No (privacy best practice) | Self-host during the Laravel 13 upgrade, with Vite/Fontsource, as in agency-cms |
+| Google Fonts (3 `fonts.googleapis.com` links) | No (self-hosting would only be a privacy best practice) | **Decided 2026-11-02: not needed.** The links stay as they are |
 | Project license | No | Already decided: `"license": "proprietary"` in `composer.json`, with no `LICENSE` file in the root |
 
 ## 4. Decisions needed
@@ -69,7 +69,7 @@ Because the repo is **already public**, this plan was done before the review pla
 | ID | Question | Options |
 |---|---|---|
 | ~~D1~~ | Will BIS Admin be a live site for a client or paid work? | **Decided 2026-11-02: no.** Personal project, published at `demo.dananghel.com`; the free Bell license is fine |
-| ~~D2~~ | Keep **Bell** in the **public** repo? | **Decided 2026-11-02: keep it, with the footer credit restored** (the recommended option, taken when you asked to finish this plan). ThemeWagon publishes the same release publicly. If BootstrapMade ever objects, replace the landing page with an MIT theme |
+| ~~D2~~ | Keep **Bell** in the **public** repo? | **Decided 2026-11-02, confirmed by you: keep it, with the footer credit restored.** ThemeWagon publishes the same release publicly. If BootstrapMade ever objects, replace the landing page with an MIT theme |
 | ~~D3~~ | Where do `parallax-bg.jpg`, `cover.jpg`, the BIS logos and the favicons come from? | **Decided 2026-11-02:** the two photos are from Unsplash; the BIS logos and favicons are your own (made with Shopify's former logo maker). All are kept |
 
 ## 5. Steps
