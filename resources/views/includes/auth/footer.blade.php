@@ -2,7 +2,7 @@
 	</div>
 </div>
 
-<script src="{{ asset('admin/js/vendor/jquery-2.1.4.min.js') }}"></script>
-<script src="{{ asset('admin/js/popper.min.js') }}"></script>
-<script src="{{ asset('admin/js/plugins.js') }}"></script>
-<script src="{{ asset('admin/js/main.js') }}"></script>
+<script src="{{ asset('admin/vendors/jquery/dist/jquery.min.js') }}"></script>
+<script src="{{ asset('admin/vendors/popper.js/dist/umd/popper.min.js') }}"></script>
+<script src="{{ asset('admin/vendors/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('admin/assets/js/main.js') }}"></script>

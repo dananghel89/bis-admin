@@ -22,7 +22,12 @@ php71 -l path/to/File.php                       # syntax check (no linter is con
 php71 artisan route:list                        # list routes
 ```
 
-Front-end assets are not built. The views load prebuilt static templates from `public/admin/` and `public/landing/` with `asset(...)`. `webpack.mix.js`/`package.json` are the untouched Laravel defaults, and no view uses their output.
+Front-end assets are not built. The views load prebuilt static templates with `asset(...)`:
+- `public/admin/` is the **Sufee** admin theme (Colorlib, MIT, Nov 2018 release), in its original `assets/` + `vendors/` layout. It's used by the admin and auth layouts.
+- `public/landing/` is the **Bell** theme (BootstrapMade, free license; its footer credit must stay).
+- Project-specific admin styles go in `public/css/bis-admin.css`, which loads after the theme. Keep theme files, their banners and their `LICENSE`/`README` files unchanged; see `docs/theme-licensing-plan.md`.
+
+`webpack.mix.js`/`package.json` are the untouched Laravel defaults, and no view uses their output.
 
 ## Architecture
 

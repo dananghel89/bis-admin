@@ -1,0 +1,56 @@
+/* BIS Admin styles on top of the Sufee theme (public/admin). Loaded after the theme's style.css. */
+
+/* Custom Styles */
+
+.bis_auth body {
+	background-color: #343a40;
+}
+
+.card_form {
+	max-width: 1024px;
+}
+
+.card_medium_form {
+	max-width: 820px;
+}
+
+.card_table {
+	background-color: #fff;
+	border: 1px solid #dee2e6;
+}
+
+.card_table .table {
+	margin-bottom: 0;
+}
+
+.card_table .col_1 {
+	width: 5%;
+}
+
+.card_table .col_2 {
+	width: 50%;
+}
+
+.card_table .col_3 {
+	width: 30%;
+}
+
+.card_table .col_4 {
+	width: 15%;
+}
+
+/* Responsive Styles */
+
+@media (max-width: 1024px) {
+	.bis_admin, .bis_admin body {
+		width: 1024px;
+		overflow-x: auto;
+	}
+}
+
+@media (max-width: 576px) {
+	.bis_auth, .bis_auth body {
+		width: 576px;
+		overflow-x: auto;
+	}
+}
