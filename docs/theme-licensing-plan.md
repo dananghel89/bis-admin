@@ -1,6 +1,6 @@
 # Plan: using the Sufee Admin and Bell themes
 
-Status: **In progress** – 2026-11-02: facts checked against the original downloads and the four license pages (section 2); D1 and D3 decided (personal project; images from Unsplash, logos and favicons your own); Sufee updated to the Colorlib Nov 2018 release with its MIT `LICENSE`, and the unused demo libraries and `flag-icon` removed (steps 2–3, not yet committed). **Open:** Bell footer credit and README credits (steps 1–2), remove the unused `cover.jpg`, decision D2
+Status: **Done** – 2026-11-02: facts checked against the original downloads and the four license pages (section 2); D1–D3 decided (section 4); Sufee updated to the Colorlib Nov 2018 release with its MIT `LICENSE`, unused demo libraries removed (665cb69, avatar fix b3d569f); Bell footer credit restored and README credits added (9e78056). Optional later: self-host the Google Fonts in the Laravel 13 upgrade
 Created: 2026-11-02
 
 > This is a technical checklist based on the published license texts, not legal advice.
@@ -13,7 +13,7 @@ Created: 2026-11-02
 4. [laravel-13-upgrade-plan.md](laravel-13-upgrade-plan.md)
 5. [finish-project-plan.md](finish-project-plan.md)
 
-Because the repo is **already public**, steps 1 and 2 of section 5 (the Bell footer credit and the Sufee license notice) shouldn't wait for the review plan. They can go first, as one commit.
+Because the repo is **already public**, this plan was done before the review plan, on 2026-11-02.
 
 ## 2. Facts (checked 2026-11-02)
 
@@ -59,7 +59,7 @@ Because the repo is **already public**, steps 1 and 2 of section 5 (the Bell foo
 | **Unused demo libraries** `public/admin/js/lib/**` and `public/admin/css/lib/**`, 4.4 MB (charts, maps, Google Maps, DataTables, pdfmake…) | No. They're never loaded, and 35 of their 63 JS/CSS files carry no notice of their own | Remove them, as agency-cms removed `public/demo`. Not needed in the history |
 | `flag-icon.min.css` | No. It's loaded on every admin page, but points to `../../images/flags/…`, which doesn't exist; no view uses flags | Remove the `<link>` and the file |
 | Library notices in the files that are used (Bootstrap, jQuery, Font Awesome, Superfish, Stellar…) | Yes, and already met | Keep the vendor files as they are |
-| Images `landing/img/cover.jpg` (unused), `parallax-bg.jpg` (used) | No: **Unsplash** photos (D3). The [Unsplash License](https://unsplash.com/license) allows free use, including commercial, without required attribution | Keep `parallax-bg.jpg`. Remove `cover.jpg` only because it's unused. A "Photos: Unsplash" line in the README credits is optional |
+| Images `landing/img/cover.jpg` (hero background, loaded from `landing/css/style.css:117`) and `parallax-bg.jpg` | No: **Unsplash** photos (D3). The [Unsplash License](https://unsplash.com/license) allows free use, including commercial, without required attribution | Keep both. An earlier version of this plan called `cover.jpg` unused because it isn't referenced from a view; the CSS does use it. "Photos: Unsplash" is in the README credits |
 | BIS logos (`landing/img/logo.png`, `logo-nav.png`) and the favicons (`landing/img/favicon.png`, `admin/img/favicon.png`) | No: **your own** brand assets (D3), made back then with Shopify's logo maker, which no longer exists | Keep them unchanged |
 | Google Fonts (3 `fonts.googleapis.com` links) | No (privacy best practice) | Self-host during the Laravel 13 upgrade, with Vite/Fontsource, as in agency-cms |
 | Project license | No | Already decided: `"license": "proprietary"` in `composer.json`, with no `LICENSE` file in the root |
@@ -69,17 +69,17 @@ Because the repo is **already public**, steps 1 and 2 of section 5 (the Bell foo
 | ID | Question | Options |
 |---|---|---|
 | ~~D1~~ | Will BIS Admin be a live site for a client or paid work? | **Decided 2026-11-02: no.** Personal project, published at `demo.dananghel.com`; the free Bell license is fine |
-| D2 | Keep **Bell** in the **public** repo? | **Keep it, with the credit restored** (recommended: ThemeWagon publishes the same release publicly). Or ask BootstrapMade. Or replace the landing page with an MIT theme |
-| ~~D3~~ | Where do `parallax-bg.jpg`, `cover.jpg`, the BIS logos and the favicons come from? | **Decided 2026-11-02:** the two photos are from Unsplash; the BIS logos and favicons are your own (made with Shopify's former logo maker). All are kept; `cover.jpg` is removed only because it's unused |
+| ~~D2~~ | Keep **Bell** in the **public** repo? | **Decided 2026-11-02: keep it, with the footer credit restored** (the recommended option, taken when you asked to finish this plan). ThemeWagon publishes the same release publicly. If BootstrapMade ever objects, replace the landing page with an MIT theme |
+| ~~D3~~ | Where do `parallax-bg.jpg`, `cover.jpg`, the BIS logos and the favicons come from? | **Decided 2026-11-02:** the two photos are from Unsplash; the BIS logos and favicons are your own (made with Shopify's former logo maker). All are kept |
 
 ## 5. Steps
 
-1. **Bell credit** (required): restore the original credit line in the landing footer. Check `/` in the browser.
-2. **Sufee notice** (required): add `public/admin/LICENSE` (the MIT text, © 2018 Aigars Silkalns) and the README "Credits" section naming Colorlib, and BootstrapMade for Bell.
-3. **Remove the unused demo libraries** `public/admin/js/lib/` and `public/admin/css/lib/`, plus `flag-icon.min.css`. Then do a browser check of every admin page (menu, dropdowns, alerts, forms, login).
-4. Carry out the decisions: remove the unused `cover.jpg` (D3); D2 is still open.
-5. Update `CLAUDE.md`: the themes, their licenses and versions, and that theme banners, `public/admin/LICENSE` and vendor files stay unchanged.
-6. Commits, with your approval: steps 1–2 as `docs: credit Bell and Sufee theme authors`; step 3 as `chore: remove unused Sufee demo libraries`.
+1. [x] **Bell credit** (required): the original credit line and its licensing comment are restored in the landing footer. Checked on `/` and `/tos` at `bis-admin.test`.
+2. [x] **Sufee notice** (required): `public/admin/LICENSE` (MIT, © 2018 Aigars Silkalns) and the README "Credits" section naming Colorlib, BootstrapMade and Unsplash.
+3. [x] **Unused demo libraries removed**, together with the Sufee update: `public/admin/js/lib/`, `public/admin/css/lib/` and `flag-icon.min.css`. Browser check done by you (the avatar fix came out of it).
+4. [x] Decisions D1–D3 taken. Nothing is removed for D3: `cover.jpg` is used.
+5. [x] `CLAUDE.md` describes both themes, their licenses, `public/css/bis-admin.css`, and that theme files stay unchanged.
+6. [x] Commits: `665cb69`, `b3d569f`, `9e78056` (section 6).
 
 The original downloads in `Downloads/webs/` aren't added to the repo; they're only the reference for this plan.
 
@@ -87,7 +87,9 @@ The original downloads in `Downloads/webs/` aren't added to the repo; they're on
 
 | Phase | Commit | Result |
 |---|---|---|
-| Sufee update (2026-11-02) | not yet committed | `public/admin/` now holds only what the pages load, from Colorlib's Nov 2018 release (`Downloads/webs/sufee-master`), in the release's own layout: `assets/css/style.css`, `assets/js/main.js`, and `vendors/` (Bootstrap 4.1.3, jQuery 2.2.4, Popper, Font Awesome 4.7.0, Themify Icons), each with its `LICENSE`/`README`. Sufee's MIT `LICENSE` and `README.md` are in `public/admin/`. Your custom rules moved unchanged to `public/css/bis-admin.css`, loaded last. Removed: the old release (`css/`, `js/`, `fonts/`, 4.4 MB of unused demo libraries, `normalize.css`, `flag-icon`, `cs-skin-elastic`, `plugins.js`, `avatar.png`). `favicon.png` is kept (D3). Checked: every page renders with only the new assets, all files return 200 on `bis-admin.test`, and no CSS class used by the views lost its styling. **Browser check by you pending** |
+| Sufee update (2026-11-02) | 665cb69 | `public/admin/` now holds only what the pages load, from Colorlib's Nov 2018 release (`Downloads/webs/sufee-master`), in the release's own layout: `assets/css/style.css`, `assets/js/main.js`, and `vendors/` (Bootstrap 4.1.3, jQuery 2.2.4, Popper, Font Awesome 4.7.0, Themify Icons), each with its `LICENSE`/`README`. Sufee's MIT `LICENSE` and `README.md` are in `public/admin/`. Your custom rules moved unchanged to `public/css/bis-admin.css`, loaded last. Removed: the old release (`css/`, `js/`, `fonts/`, 4.4 MB of unused demo libraries, `normalize.css`, `flag-icon`, `cs-skin-elastic`, `plugins.js`, `avatar.png`). `favicon.png` is kept (D3). Checked: every page renders with only the new assets, all files return 200 on `bis-admin.test`, and no CSS class used by the views lost its styling. Browser check by you done |
+| Avatar fix | b3d569f | The header avatar had `width="410" height="400"`, which the old CSS overrode and the new one doesn't; now `32`×`32` |
+| Credits | 9e78056 | Bell footer credit restored (original line and comment, on every landing page); README "Credits": Sufee by Colorlib (MIT, `public/admin/LICENSE`), Bell by BootstrapMade (free license), photos from Unsplash |
 
 ## 7. Sources
 

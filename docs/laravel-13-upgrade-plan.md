@@ -1,6 +1,6 @@
 # Plan: Upgrade to Laravel 13 on PHP 8.4
 
-Status: **Not started** – waits for the review plan and the theme-licensing plan
+Status: **Not started** – waits for the review plan (the theme-licensing plan is done)
 Created: 2026-10-16
 
 **Prerequisite:** [project-review-fix-plan.md](project-review-fix-plan.md) runs first. It delivers Step 0.2 (InnoDB) and Step 3 (SQLite tests and the test suite) of this plan, on Laravel 5.8, so this upgrade starts with a green test suite.

@@ -23,7 +23,7 @@ The permissions (Gates) for all of these already exist in `AuthServiceProvider`.
 
 ## Do the Laravel 13 upgrade first
 
-Order: [project-review-fix-plan.md](project-review-fix-plan.md), [theme-licensing-plan.md](theme-licensing-plan.md), [github-migration-plan.md](github-migration-plan.md) (done), [the Laravel 13 upgrade](laravel-13-upgrade-plan.md), then this plan. The review plan's backlog (its section 6) lists the same unfinished features.
+Order: [project-review-fix-plan.md](project-review-fix-plan.md), [theme-licensing-plan.md](theme-licensing-plan.md) (done), [github-migration-plan.md](github-migration-plan.md) (done), [the Laravel 13 upgrade](laravel-13-upgrade-plan.md), then this plan. The review plan's backlog (its section 6) lists the same unfinished features.
 
 Build the new features **after** [the Laravel 13 upgrade](laravel-13-upgrade-plan.md). Otherwise every new controller, route and test gets written in Laravel 5.8 style and then rewritten. The review plan converts the database to InnoDB and gives the tests their own SQLite database. Both are needed before writing tests for the new features.
 

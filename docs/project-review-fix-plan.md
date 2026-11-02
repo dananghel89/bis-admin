@@ -6,7 +6,7 @@ Created: 2026-11-02
 Plan order in `docs/`:
 
 1. **This plan**
-2. [theme-licensing-plan.md](theme-licensing-plan.md)
+2. [theme-licensing-plan.md](theme-licensing-plan.md) (done, 2026-11-02)
 3. [github-migration-plan.md](github-migration-plan.md) (already done, 2026-10-16 → 2026-10-22)
 4. [laravel-13-upgrade-plan.md](laravel-13-upgrade-plan.md)
 5. [finish-project-plan.md](finish-project-plan.md)
