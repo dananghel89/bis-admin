@@ -97,5 +97,13 @@ php vendor/bin/phpunit --filter testBasicTest     # a single test
 ## Built with
 
 - [Laravel 5.8](https://laravel.com/docs/5.8)
-- Admin dashboard and landing page HTML templates (Bootstrap and jQuery), stored in `public/admin` and `public/landing`
+- The Sufee and Bell themes (Bootstrap 4 and jQuery), stored in `public/admin` and `public/landing`; see Credits
 - [Gravatar](https://gravatar.com) for user avatars
+
+## Credits
+
+- **Admin theme:** [Sufee](https://github.com/puikinsh/sufee-admin-dashboard) by [Colorlib](https://colorlib.com), the original author. MIT License; see [`public/admin/LICENSE`](public/admin/LICENSE). Its bundled libraries keep their own licenses in `public/admin/vendors/`.
+- **Landing theme:** [Bell](https://bootstrapmade.com/bell-free-bootstrap-4-template/) by [BootstrapMade](https://bootstrapmade.com), used under the [BootstrapMade free license](https://bootstrapmade.com/license/). Its footer credit is kept as required.
+- **Photos:** the landing page background images are from [Unsplash](https://unsplash.com) ([Unsplash License](https://unsplash.com/license)).
+
+The project's own code is not open source (`"license": "proprietary"` in `composer.json`). The themes and libraries above remain under their own licenses.
