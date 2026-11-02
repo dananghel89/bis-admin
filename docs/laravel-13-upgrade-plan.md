@@ -1,5 +1,10 @@
 # Plan: Upgrade to Laravel 13 on PHP 8.4
 
+Status: **Not started** – waits for the review plan and the theme-licensing plan
+Created: 2026-10-16
+
+**Prerequisite:** [project-review-fix-plan.md](project-review-fix-plan.md) runs first. It delivers Step 0.2 (InnoDB) and Step 3 (SQLite tests and the test suite) of this plan, on Laravel 5.8, so this upgrade starts with a green test suite.
+
 ## Goal
 
 Move BIS Admin from **Laravel 5.8 on PHP 7.1** to **Laravel 13 on PHP 8.4**, the PHP version already installed in WAMP (`C:\Wamp\bin\php\php8.4.26`). The app should keep working the same way and keep its existing data.
@@ -20,7 +25,7 @@ Do all the work on a branch, `upgrade/laravel-13`. `master` stays on 5.8 until t
    ```bash
    mysqldump -u root bis_admin > bis_admin-backup.sql
    ```
-2. **Convert the tables to InnoDB.** Every table is currently MyISAM, so transactions and rollbacks silently do nothing. Laravel 13's test helpers rely on transactions.
+2. **Convert the tables to InnoDB.** *Done by the review plan (B02); only check it's still true.* Every table is currently MyISAM, so transactions and rollbacks silently do nothing. Laravel 13's test helpers rely on transactions.
    ```sql
    ALTER TABLE users ENGINE=InnoDB;      ALTER TABLE password_resets ENGINE=InnoDB;
    ALTER TABLE options ENGINE=InnoDB;    ALTER TABLE infos ENGINE=InnoDB;
@@ -108,6 +113,8 @@ Use the new project's `.env.example` and copy over the values for `APP_NAME`, `A
 | `BROADCAST_DRIVER` | `BROADCAST_CONNECTION` |
 
 ## Step 3 — Tests
+
+*The review plan already adds the SQLite test database and these tests on Laravel 5.8 (its Phase B). In this step, port them to the new PHPUnit version and make sure they still pass.*
 
 - In `phpunit.xml`, set `DB_CONNECTION=sqlite` and `DB_DATABASE=:memory:` so tests never touch `bis_admin`.
 - Add feature tests for the behavior that must survive the upgrade:

@@ -1,5 +1,8 @@
 # Plan: Complete the missing parts of BIS Admin
 
+Status: **Not started** – runs last, after the Laravel 13 upgrade
+Created: 2026-10-16
+
 ## Where the project stands
 
 | Area | State |
@@ -20,7 +23,9 @@ The permissions (Gates) for all of these already exist in `AuthServiceProvider`.
 
 ## Do the Laravel 13 upgrade first
 
-Build the new features **after** [the Laravel 13 upgrade](upgrade-laravel-13-plan.md). Otherwise every new controller, route and test gets written in Laravel 5.8 style and then rewritten. The upgrade also converts the database to InnoDB and gives the tests their own sqlite database. Both are needed before writing tests for the new features.
+Order: [project-review-fix-plan.md](project-review-fix-plan.md), [theme-licensing-plan.md](theme-licensing-plan.md), [github-migration-plan.md](github-migration-plan.md) (done), [the Laravel 13 upgrade](laravel-13-upgrade-plan.md), then this plan. The review plan's backlog (its section 6) lists the same unfinished features.
+
+Build the new features **after** [the Laravel 13 upgrade](laravel-13-upgrade-plan.md). Otherwise every new controller, route and test gets written in Laravel 5.8 style and then rewritten. The review plan converts the database to InnoDB and gives the tests their own SQLite database. Both are needed before writing tests for the new features.
 
 ## Decisions needed before starting
 
@@ -30,7 +35,7 @@ These questions change what gets built, so they need an answer first:
 2. **What is an Alert?** The permissions suggest editors *send* alerts and subscribers *receive* them, with a menu in the header. Should an alert be a post like an info, or a notification with an unread count, sent to everyone or to chosen users?
 3. **Messages: between whom?** Any user to any user, or only between subscribers and editors/admins? With attachments?
 4. **Should admins see Infos, Alerts, Plans and Licenses?** Today `viewPosts` excludes admins.
-5. **Language:** the Messages inbox title is Spanish ("Bandeja De Entrada") and the rest is English. Pick one language, or plan for translations (`lang/` files).
+5. ~~**Language**~~ **Decided 2026-11-02: English only.** The review plan (B13) translates the Spanish texts; no translations (`lang/` files) are needed. New features are written in English.
 6. **Email verification:** `VerificationController` exists but isn't used. Should new users have to verify their email?
 
 ## Work plan
@@ -39,9 +44,9 @@ Each milestone is one or more small commits, in the repo's `type: description` s
 
 ### Milestone 1 — Foundations
 
-- **Create the first admin.** Add an Artisan command, e.g. `php artisan bis:make-admin {email}`, that gives an existing user role `0`. Today this can only be done in the database.
-- **Move access filtering out of the views.** Non-editors are blocked from private infos only by `@cannot` blocks in Blade. Add a query scope such as `Info::visibleTo($user)` and use it in the controllers, so a subscriber can't open a private info by guessing its URL.
-- **Real author relationship.** Add `author()` (`belongsTo(User::class, 'author')`) to the post models and load it with `with('author')`. This replaces `$user::find(...)` inside `infosIndex.blade.php`, which runs one query per row.
+- ~~**Create the first admin.**~~ *Done by the review plan (B10: `AdminUserSeeder` with `.env` defaults).*
+- ~~**Move access filtering out of the views.**~~ *Done for Infos by the review plan (B06: `Info::visibleTo($user)`). Reuse the same scope for Alerts, Plans and Licenses.*
+- ~~**Real author relationship.**~~ *Done for Infos by the review plan (B15: `Info::author()`). Add the same relationship to the other post models.*
 - **Pagination** on every list page (`->paginate(20)`).
 - **One shared base for post-like sections.** Infos, Alerts, Plans and Licenses use identical tables (`title`, `content`, `author`, `status`). Pull the Infos controller logic and its two form requests into a shared base controller or trait plus one form request, so Alerts, Plans and Licenses don't become three copies of the same code.
 - **Fix the form requests** `AlertRequest`, `PlanRequest` and `LicenseRequest`. Their `authorize()` returns `false`, which blocks every request with a 403. Return `true` (permissions are already checked by the `can:` middleware) and add rules.

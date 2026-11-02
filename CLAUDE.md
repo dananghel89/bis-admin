@@ -48,3 +48,5 @@ Front-end assets are not built. The views load prebuilt static templates with `a
 ## Conventions
 
 Commit messages are one line in the form `type: description` (e.g. `fix: ...`, `chore: ...`, `refactor: ...`).
+
+The UI language is **English only** (decided 2026-11-02). Some menu entries and page titles are still Spanish until the review plan's B13 is done; never add new Spanish text, and don't introduce `lang/` translation files.
