@@ -43,7 +43,7 @@ Then add the packages this app needs:
 | Package | Action | Why |
 |---|---|---|
 | `laravel/ui` `^4.6` | add | Contains the `AuthenticatesUsers`, `RegistersUsers`, `SendsPasswordResetEmails` and `ResetsPasswords` traits the auth controllers use. Laravel removed them from the framework in 6.0. v4.6.3 supports Laravel 13 ([Packagist](https://packagist.org/packages/laravel/ui)). |
-| `barryvdh/laravel-ide-helper` | add as dev, latest version | Generates `_ide_helper.php` for VS Code / Intelephense |
+| `barryvdh/laravel-ide-helper` | optional (removed from the 5.8 project) | Only needed to silence Intelephense's `Undefined type 'Route'`; the 5.8 project lives with that warning |
 | `fideloper/proxy` | drop | Built into Laravel since 9 |
 | `beyondcode/laravel-dump-server` | drop | Not used |
 | `fzaninotto/faker` | drop | Abandoned; the new project already includes `fakerphp/faker` |
@@ -124,7 +124,7 @@ Run them with `php artisan test`.
 ## Step 4 — Switch WAMP and the tooling to PHP 8.4
 
 1. In WAMP, switch the `bis-admin.test` virtual host or Apache to PHP 8.4.26.
-2. Regenerate the IDE helper with `php artisan ide-helper:generate`.
+2. If you added `laravel-ide-helper` in Step 1, generate its file with `php artisan ide-helper:generate`.
 3. Update `README.md` and `CLAUDE.md`: PHP 8.4, the global `composer`, no `php71`, the new commands, and the models in `App\Models`.
 4. Remove `composer.phar` from the repository.
 

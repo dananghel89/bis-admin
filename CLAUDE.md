@@ -20,7 +20,6 @@ php71 vendor/bin/phpunit tests/Feature/ExampleTest.php   # one test file
 php71 vendor/bin/phpunit --filter testBasicTest          # one test method
 php71 -l path/to/File.php                       # syntax check (no linter is configured)
 php71 artisan route:list                        # list routes
-php71 artisan ide-helper:generate               # regenerate _ide_helper.php (gitignored) after adding facades/packages
 ```
 
 Front-end assets are not built. The views load prebuilt static templates from `public/admin/` and `public/landing/` with `asset(...)`. `webpack.mix.js`/`package.json` are the untouched Laravel defaults, and no view uses their output.
@@ -39,7 +38,7 @@ Front-end assets are not built. The views load prebuilt static templates from `p
 
 **Views.** Three layouts in `resources/views/layouts/` (`admin`, `auth`, `landing`), each with matching partials in `resources/views/includes/<layout>/`. View names are camelCase per section, e.g. `admin.infos.infosIndex`, `admin.infos.infoEdit`; route names follow the same pattern (`infos`, `infoAdd`, `infoEditSave`, ...).
 
-**Facades.** Route files and some views use facade aliases (`Route::`, `Auth::`) without `use` imports, relying on the aliases in `config/app.php`. Editor tooling resolves them through the generated `_ide_helper.php`.
+**Facades.** Route files and some views use facade aliases (`Route::`, `Auth::`) without `use` imports, relying on the aliases in `config/app.php`. Intelephense therefore reports them as `Undefined type`; that warning is expected and harmless (no IDE helper package is installed).
 
 ## Conventions
 
