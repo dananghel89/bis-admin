@@ -1,6 +1,6 @@
 # Plan: move the repository from Bitbucket to GitHub
 
-Status: **Done** – 2026-10-16: history rewritten and checked (4.3–4.4), pushed to GitHub (4.5), Bitbucket remote removed (4.7). 2026-10-17: identity changed to the noreply address and the 4 oldest messages renamed (4.3, second and third passes). 2026-10-22: repo public (4.8). By 2026-11-02: Bitbucket repo deleted (4.9). **Open:** purge the old objects locally (4.7.3), and keep a copy of the backup bundle until the Laravel 13 upgrade is done (4.9.2).
+Status: **Done** – 2026-10-16: history rewritten and checked (4.3–4.4), pushed to GitHub (4.5), Bitbucket remote removed (4.7). 2026-10-17: identity changed to the noreply address and the 4 oldest messages renamed (4.3, second and third passes). 2026-10-22: repo public (4.8). By 2026-11-02: Bitbucket repo deleted (4.9). 2026-11-02: original-history bundle saved to `../bis-admin-pre-github-20261016.bundle` (4.9.2), and old objects purged locally (4.7.3). The local bundle is kept until the Laravel 13 upgrade is done.
 Created: 2026-11-02 (written afterwards, as a record of the migration done 2026-10-16 → 2026-10-22)
 Model: this was the **first** migration. agency-cms (2026-10-31 → 2026-11-02) followed the same route in a single rewrite pass: rewrite the history to the GitHub noreply address with one-line messages, push to GitHub, review it as a visitor, make it public, then delete Bitbucket.
 
@@ -119,7 +119,7 @@ Checked after each pass:
 
 1. [x] `git remote remove bitbucket` (2026-10-17, the local link only).
 2. [x] `git update-ref -d refs/original/refs/heads/master` after each pass.
-3. [ ] **Open:** purge the old objects locally. They're unreferenced but still in `.git`; for example, the old Bitbucket tip `982c9d2` is still readable. Run `git reflog expire --expire=now --all`, then `git gc --prune=now`.
+3. [x] Purged the old objects locally (2026-11-02, after the bundle in 4.9.2 was saved): `git reflog expire --expire=now --all`, then `git gc --prune=now`. Afterwards, the old Bitbucket tip `982c9d2` and the earlier rewrite tips `eae4797`, `5102c21` and `226158d` are gone; `git fsck --unreachable --no-reflogs` finds nothing; the tests pass.
 4. [x] `git log --all --format='%ae %ce' | sort -u` → only the noreply address.
 
 ### 4.8 ⏸ You: make it public
@@ -134,7 +134,7 @@ Checked after each pass:
 ### 4.9 ⏸ You: delete the Bitbucket repo (browser)
 
 1. [x] **Deleted.** Before deleting, its only branch, `master` (`982c9d2`), was compared with GitHub: all 12 commits were present in the same order, and the content differed only in the two scrubbed email lines (2026-10-22). On 2026-11-02, `git ls-remote` reported that the repo no longer exists. The GitHub URL was entered as the new location.
-2. [ ] **Open:** the three bundles (4.1) are the only copy of the original history, and they sit in a **temporary** folder. Copy `bis-admin-before-email-rewrite.bundle` to `../bis-admin-pre-github-20261016.bundle` if you want to keep it until the Laravel 13 upgrade is merged, then delete it.
+2. [x] **Original history saved** (2026-11-02): `bis-admin-before-email-rewrite.bundle` was copied to `../bis-admin-pre-github-20261016.bundle`, next to the project folder and outside the repo, as in agency-cms. `git bundle verify` reports a complete history: 15 commits, including Bitbucket's tip `982c9d2`. It still contains the old emails, so **delete it once the Laravel 13 upgrade is merged**. The three copies in the session's temporary scratchpad can go at any time.
 
 ### 4.10 Docs and follow-up
 
@@ -149,14 +149,14 @@ Checked after each pass:
 - [x] The old emails appear nowhere in the history
 - [x] The GitHub repo is public, with Issues, Wiki, Projects, Discussions and Pull requests off
 - [x] The Bitbucket repo is deleted
-- [ ] Old objects purged locally (4.7.3); bundle copied or deleted (4.9.2)
+- [x] Old objects purged locally (4.7.3); bundle copied to `../bis-admin-pre-github-20261016.bundle` (4.9.2), kept until the Laravel 13 upgrade is done
 - [x] The tests pass on the GitHub `master`
 
 ## 6. Rollback
 
 | Situation | Action |
 |---|---|
-| A rewrite looks wrong | No longer applies: every pass was verified and pushed. To see the original history, fetch it from the bundle: `git fetch <bundle> master:original-history` (into a separate branch, never over `master`) |
+| A rewrite looks wrong | No longer applies: every pass was verified and pushed. To see the original history, fetch it from the bundle: `git fetch ../bis-admin-pre-github-20261016.bundle master:original-history` (into a separate branch, never over `master`) |
 | Anything else | GitHub `master` is the only source of truth now. **No force-push without asking** |
 
 ## 7. Lessons (used for agency-cms)

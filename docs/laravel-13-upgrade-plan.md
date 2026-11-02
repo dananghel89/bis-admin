@@ -150,6 +150,7 @@ Run them with `php artisan test`.
   - Infos: list, add, view, edit, delete
   - a subscriber can't see private infos or open Options and Users
 - [ ] The existing user and info from the old database still show up and the user can log in.
+- [ ] **After merging:** delete `../bis-admin-pre-github-20261016.bundle`. It's the last copy of the pre-GitHub history and contains the old emails (see [github-migration-plan.md](github-migration-plan.md) 4.9.2).
 
 ## Risks and notes
 
