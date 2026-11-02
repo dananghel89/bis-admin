@@ -38,7 +38,7 @@ Front-end assets are not built. The views load prebuilt static templates from `p
 
 **Views.** Three layouts in `resources/views/layouts/` (`admin`, `auth`, `landing`), each with matching partials in `resources/views/includes/<layout>/`. View names are camelCase per section, e.g. `admin.infos.infosIndex`, `admin.infos.infoEdit`; route names follow the same pattern (`infos`, `infoAdd`, `infoEditSave`, ...).
 
-**Facades.** Route files and some views use facade aliases (`Route::`, `Auth::`) without `use` imports, relying on the aliases in `config/app.php`. Intelephense therefore reports them as `Undefined type`; that warning is expected and harmless (no IDE helper package is installed).
+**Facades.** Route files import the facades they use (`use Illuminate\Support\Facades\Route;`, `Broadcast`, `Artisan`); keep doing that in new PHP files so Intelephense resolves them, since no IDE helper package is installed. Blade views still use the global aliases from `config/app.php` (e.g. `Auth::user()`), which is fine at runtime.
 
 ## Conventions
 
