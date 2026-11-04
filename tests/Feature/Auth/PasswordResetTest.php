@@ -61,6 +61,14 @@ class PasswordResetTest extends TestCase
         $this->get('/password/reset/some-token')->assertOk()->assertSee('name="token"');
     }
 
+    public function test_reset_screen_prefills_the_email_from_the_link()
+    {
+        $this->get('/password/reset/some-token?email=jane%40example.com')
+            ->assertOk()
+            ->assertSee('value="jane@example.com"')
+            ->assertDontSee('value="1"');
+    }
+
     public function test_valid_token_resets_the_password()
     {
         $user = factory(User::class)->create();
