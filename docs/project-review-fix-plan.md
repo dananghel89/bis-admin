@@ -113,7 +113,7 @@ The PHP files pass `php71 -l`, every route name used in the views exists, and ev
 | `Feature/Admin/SettingsTest` | Change name and email (unique, ignoring yourself); change password (confirmation required); blank password keeps the old one |
 | `Feature/Admin/OptionsTest` | Admin saves the 4 options; unchecking Membership stores `'0'`; validation |
 | `Feature/OptionHelperTest` | `get_option()` returns the DB value, `''` for an unknown name, and works with no `options` table |
-| `Feature/LandingTest` | `/` and `/tos` render with `site_title` in `<title>` |
+| `Feature/LandingTest` | `/` and `/terms-of-service` render with `site_title` in `<title>` |
 
 5. `php71 vendor/bin/phpunit` → all green.
 
@@ -154,7 +154,7 @@ Each item: add a failing test → fix → green.
 3. `php71 artisan route:list`: same routes as before, plus the throttle and `membership` middleware.
 4. With MySQL stopped: `php71 artisan inspire` works (B03).
 5. Browser smoke test on `http://bis-admin.test`:
-   - **Landing:** `/`, `/tos`.
+   - **Landing:** `/`, `/terms-of-service`.
    - **Auth:** login; register with Membership on and off; forgot/reset password (mail in `storage/logs`); logout.
    - **Admin, as each role:** menu entries match the role, with no fake badge; Infos list/add/edit/delete, with a confirmation on delete; a subscriber gets 404 on a private info; Settings; Options (save, Membership toggle).
 
