@@ -1,8 +1,5 @@
 <?php
 
-use App\Http\Models\Options;
-use Illuminate\Support\Facades\Schema;
-
 /*----------  General Functions  ----------*/
 
 if ( ! function_exists('get_post_statuses') ) {
@@ -27,18 +24,8 @@ if ( ! function_exists('get_option') ) {
 	 * @return string
 	 */
 	function get_option( $name ) {
-		// Loaded once per request: this runs on every request from routes/auth.php and in several views.
-		static $options = null;
-
-		if ( is_null($options) ) {
-			$model = new Options();
-
-			if (Schema::hasTable($model->getTable())) {
-				$options = $model->all()->pluck('value', 'name')->toArray();
-			} else {
-				$options = [];
-			}
-		}
+		// The 'bis.options' singleton (AppServiceProvider) loads all options on first use, once per app instance.
+		$options = app('bis.options');
 
 		return isset($options[$name]) ? $options[$name] : '';
 	}

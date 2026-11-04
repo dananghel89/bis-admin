@@ -47,6 +47,9 @@ class OptionsController extends Controller
             $option->save();
         }
 
+        // get_option() must not keep serving the values loaded before the save.
+        app()->forgetInstance('bis.options');
+
         return back()->with('success', 'General options updated successfully.');
     }
 }

@@ -1,6 +1,6 @@
 # Project review and fix plan
 
-Status: **Not started**
+Status: **In progress** – Phase A done 2026-11-04 (DB backup `../bis_admin-backup-20261104.sql`, B01, B02, B03, B04). Next: Phase B
 Created: 2026-11-02
 
 Plan order in `docs/`:
