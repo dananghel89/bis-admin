@@ -1,6 +1,6 @@
 # Project review and fix plan
 
-Status: **In progress** – Phase A done 2026-11-04 (afa3a17: DB backup `../bis_admin-backup-20261104.sql`, B01, B02, B03, B04); Phase B done 2026-11-04 (f991ec2, 41 tests); Phase C done 2026-11-04 (6e52208, B05–B12); Phase D done 2026-11-04 (B13–B19; B20 left to the backlog, 58 tests). Next: Phase E
+Status: **Done** – Phase A done 2026-11-04 (afa3a17: DB backup `../bis_admin-backup-20261104.sql`, B01, B02, B03, B04); Phase B done 2026-11-04 (f991ec2, 41 tests); Phase C done 2026-11-04 (6e52208, B05–B12); Phase D done 2026-11-04 (311156e, B13–B19; B20 left to the backlog, 58 tests); `/tos` moved to `/terms-of-service` (d3f08ca); Phase E done 2026-11-04 (R01 fixed in 3ef747f, 60 tests); Phase F done 2026-11-04. Next: [laravel-13-upgrade-plan.md](laravel-13-upgrade-plan.md)
 Created: 2026-11-02
 
 Plan order in `docs/`:
@@ -158,6 +158,8 @@ Each item: add a failing test → fix → green.
    - **Auth:** login; register with Membership on and off; forgot/reset password (mail in `storage/logs`); logout.
    - **Admin, as each role:** menu entries match the role, with no fake badge; Infos list/add/edit/delete, with a confirmation on delete; a subscriber gets 404 on a private info; Settings; Options (save, Membership toggle).
 
+**Done 2026-11-04** on 3ef747f: 60 tests green; `view:cache` OK; 43 routes, with `membership` and `throttle.route` on register and `password.email`; `artisan inspire` and `route:list` work with the database unreachable (`DB_PORT=1`). The browser smoke test found R01 (section 5), fixed.
+
 ### Phase F – Wrap up
 
 1. Update `CLAUDE.md`:
@@ -170,13 +172,15 @@ Each item: add a failing test → fix → green.
 2. Update the upgrade plan: Step 0.2 (InnoDB) and Step 3 (tests) are **done by this plan**.
 3. Final review of all commits since the start of the plan, with your approval. Then the upgrade plan can start.
 
+**Done 2026-11-04:** `CLAUDE.md` already covered point 1 (updated phase by phase); the upgrade and finish plans now mark what this plan delivered; the backlog below is brought up to date with B11/B18.
+
 ## 5. Bugs discovered while implementing
 
 Add any new findings here (ID, location, problem, decision). Fix them only if they are small and you approve; otherwise move them to the backlog.
 
 | ID | Location | Problem | Decision |
 |---|---|---|---|
-| | | | |
+| R01 | `resources/views/auth/passwords/reset.blade.php` | The reset form showed `1` in the email field: `{{ $email or old('email') }}` is the Blade `or` syntax removed in Laravel 5.7, so it ran as PHP's boolean `or` | Fixed in 3ef747f with `??`, plus a test. No other view used `or` |
 
 ## 6. Backlog (unfinished features – not part of this plan)
 
@@ -185,12 +189,12 @@ These items are planned in [finish-project-plan.md](finish-project-plan.md), whi
 | Feature | Notes |
 |---|---|
 | Users management | List, add, edit, delete and role change for admins; the Gates `addUsers`, `editUsers`, `deleteUsers` exist |
-| Alerts, Plans, Licenses | Same table shape as Infos; build on a shared base. Their request classes have `authorize()` returning `false` |
+| Alerts, Plans, Licenses | Same table shape as Infos; build on a shared base. Their unused request classes were removed (B18); new ones are needed |
 | Messages | No table, model or routes yet; the menu is hidden by B11 |
 | Admins and posts | Admins get 403 on Infos, Alerts, Plans and Licenses (`viewPosts` excludes them). Decide whether that's intended |
 | Dashboard | Only a welcome text; counters per role |
 | Landing page | Real texts instead of lorem ipsum, a working contact form sent to the `email_address` option (with throttle and CSRF), real or removed address and phone |
-| Email verification | `VerificationController` exists but isn't wired; decide if new users must verify |
+| Email verification | The unwired `VerificationController` was removed (B18); decide if new users must verify |
 | Error pages | 403/404/500 in the site layout |
 | Front-end assets | Laravel Mix defaults are unused; decide during the upgrade (keep the static templates, or move to Vite) |
 

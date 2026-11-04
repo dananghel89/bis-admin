@@ -1,6 +1,6 @@
 # Plan: Upgrade to Laravel 13 on PHP 8.4
 
-Status: **Not started** – waits for the review plan (the theme-licensing plan is done)
+Status: **Not started** – next; the review plan (done 2026-11-04, 3ef747f) delivered Step 0.2 and Step 3
 Created: 2026-10-16
 
 **Prerequisite:** [project-review-fix-plan.md](project-review-fix-plan.md) runs first. It delivers Step 0.2 (InnoDB) and Step 3 (SQLite tests and the test suite) of this plan, on Laravel 5.8, so this upgrade starts with a green test suite.
@@ -15,7 +15,7 @@ Sources: [Laravel 13 release notes](https://laravel.com/docs/13.x/releases.md), 
 
 ## Approach: start from a fresh Laravel 13 project and move the code in
 
-Laravel 5.8 to 13 is eight major versions. Upgrading one version at a time (6 → 7 → … → 13) means eight rounds of dependency changes and upgrade guides. This app is small: 9 admin controllers, 5 auth controllers, 6 models, 7 form requests, 45 Blade views and 8 migrations. It is much less work to create a clean Laravel 13 project and copy the app's own code into it, fixing each part as it moves.
+Laravel 5.8 to 13 is eight major versions. Upgrading one version at a time (6 → 7 → … → 13) means eight rounds of dependency changes and upgrade guides. This app is small: 9 admin controllers, 4 auth controllers, 6 models (5 in `App\Http\Models` plus `User`), 4 form requests, 45 Blade views and 9 migrations. It is much less work to create a clean Laravel 13 project and copy the app's own code into it, fixing each part as it moves.
 
 Do all the work on a branch, `upgrade/laravel-13`. `master` stays on 5.8 until the new version passes the checklist at the end.
 
@@ -25,12 +25,9 @@ Do all the work on a branch, `upgrade/laravel-13`. `master` stays on 5.8 until t
    ```bash
    mysqldump -u root bis_admin > bis_admin-backup.sql
    ```
-2. **Convert the tables to InnoDB.** *Done by the review plan (B02); only check it's still true.* Every table is currently MyISAM, so transactions and rollbacks silently do nothing. Laravel 13's test helpers rely on transactions.
+2. **Convert the tables to InnoDB.** *Done by the review plan (B02): migration `2026_11_04_000000_convert_tables_to_innodb`; only check it's still true.* The tables were MyISAM, so transactions and rollbacks silently did nothing, and Laravel 13's test helpers rely on transactions. Copy that migration into the new project with the others.
    ```sql
-   ALTER TABLE users ENGINE=InnoDB;      ALTER TABLE password_resets ENGINE=InnoDB;
-   ALTER TABLE options ENGINE=InnoDB;    ALTER TABLE infos ENGINE=InnoDB;
-   ALTER TABLE alerts ENGINE=InnoDB;     ALTER TABLE plans ENGINE=InnoDB;
-   ALTER TABLE licenses ENGINE=InnoDB;   ALTER TABLE migrations ENGINE=InnoDB;
+   SELECT TABLE_NAME, ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'bis_admin';
    ```
 3. **Note the `APP_KEY`** in the current `.env`. Reusing it in the new project keeps existing login sessions valid. Passwords are hashed with bcrypt, so they work either way.
 4. **Check the global Composer:** `composer --version` should report 2.x and PHP 8.4. Once the upgrade is done, the `composer.phar` in the repo is no longer needed.
@@ -63,7 +60,7 @@ Laravel 11 introduced a much smaller project structure: no `Kernel.php` files, a
 | `app/Helpers.php` | `app/Helpers.php` | Add to `autoload.files` in `composer.json`. No code changes. |
 | `app/User.php`, `app/Http/Models/*` | `app/Models/` (namespace `App\Models`) | Recommended: matches Laravel's convention and Laravel Extra Intellisense finds them there. Update every `use` statement and `config/auth.php`. Keep `User`'s `role` constants and `getRole()`. |
 | `app/Http/Controllers/Admin/*`, `Auth/*` | same folders | See **Controllers** below. |
-| `app/Http/Requests/*` | same folder | `SettingsRequest`: replace `Input::get('password')` with `$this->input('password')`; the `Input` facade was removed in Laravel 6. `InfoEditRequest`: replace `$this->id` with `$this->route('id')`. |
+| `app/Http/Requests/*` | same folder | `SettingsRequest` already uses `$this->input('password')` (review plan B19). `InfoEditRequest`: replace `$this->id` with `$this->route('id')`. |
 | `AuthServiceProvider` (all `Gate::define` calls) | `AppServiceProvider::boot()` | Laravel 11+ has no `AuthServiceProvider` by default. Remove the empty `$policies` array. |
 | `AppServiceProvider` `Schema::defaultStringLength(191)` | remove | Only needed for MySQL < 5.7.7 / MariaDB < 10.2.2. |
 | `app/Http/Middleware/*` | delete | All are the stock 5.8 versions, now built into the framework. Set the "already logged in" redirect in `bootstrap/app.php`: `$middleware->redirectUsersTo('/dashboard')`. |
@@ -91,16 +88,16 @@ Laravel 11 introduced a much smaller project structure: no `Kernel.php` files, a
   Route::get('/infos', [InfoController::class, 'index'])->name('infos')->middleware('can:viewPosts');
   ```
 - Group the guest-only auth routes under `Route::middleware('guest')`, keeping `logout` outside that group.
-- **Recommended:** replace the `if (get_option('membership'))` around the register routes with a small middleware (for example `EnsureMembershipIsOpen`) on those two routes. The routes then always exist, `php artisan route:cache` keeps working when the option changes, and the checks in `RegisterController` become unnecessary.
+- ~~Replace the `if (get_option('membership'))` around the register routes with a middleware.~~ *Done by the review plan (B04): the register routes sit behind the `membership` middleware (`EnsureMembershipIsOpen`). Keep the `Route::middleware('membership')` group and register the alias in `bootstrap/app.php`.*
 
 ### Database
 
 Keep the existing database and its data. In the new project:
 
-1. **Delete** the new project's default migrations (`0001_01_01_000000_create_users_table`, `…_create_cache_table`, `…_create_jobs_table`) and **copy in the 8 existing migrations**. The `migrations` table already records them as run, so nothing runs again.
+1. **Delete** the new project's default migrations (`0001_01_01_000000_create_users_table`, `…_create_cache_table`, `…_create_jobs_table`) and **copy in the 9 existing migrations**. The `migrations` table already records them as run, so nothing runs again.
 2. The new project's `.env` defaults to `SESSION_DRIVER=database`, `CACHE_STORE=database` and `QUEUE_CONNECTION=database`, which need tables this database doesn't have. Either set them to `file`, `file` and `sync` (the current behavior), or add the `sessions`, `cache` and `jobs` migrations with `php artisan make:session-table`, `make:cache-table` and `make:queue-table`, then run `php artisan migrate`.
 3. **Password reset table:** Laravel 10+ uses `password_reset_tokens`. Either rename the table with a migration, or set `'table' => 'password_resets'` under `passwords.users` in `config/auth.php`.
-4. In `config/database.php`, set `'engine' => 'InnoDB'` on the `mysql` connection so new tables are never MyISAM again.
+4. In `config/database.php`, set `'engine' => 'InnoDB'` on the `mysql` connection so new tables are never MyISAM again (the 5.8 project already has it).
 
 ### Environment (`.env`)
 
@@ -114,10 +111,10 @@ Use the new project's `.env.example` and copy over the values for `APP_NAME`, `A
 
 ## Step 3 — Tests
 
-*The review plan already adds the SQLite test database and these tests on Laravel 5.8 (its Phase B). In this step, port them to the new PHPUnit version and make sure they still pass.*
+*Done by the review plan (Phase B, 2026-11-04): the SQLite test database and 60 tests on Laravel 5.8, in `tests/Unit` and `tests/Feature`. In this step, port them to the new PHPUnit version (factories become classes, `factory(User::class)` becomes `User::factory()`) and make sure they still pass.*
 
-- In `phpunit.xml`, set `DB_CONNECTION=sqlite` and `DB_DATABASE=:memory:` so tests never touch `bis_admin`.
-- Add feature tests for the behavior that must survive the upgrade:
+- In `phpunit.xml`, set `DB_CONNECTION=sqlite` and `DB_DATABASE=:memory:` so tests never touch `bis_admin`; keep `tests/Unit/TestDatabaseTest.php`, which guards it.
+- The existing tests already cover the behavior that must survive the upgrade:
   - login and logout
   - registration with Membership on, and the redirect with it off
   - password reset request (mail driver `array`)

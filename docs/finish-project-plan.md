@@ -23,7 +23,7 @@ The permissions (Gates) for all of these already exist in `AuthServiceProvider`.
 
 ## Do the Laravel 13 upgrade first
 
-Order: [project-review-fix-plan.md](project-review-fix-plan.md), [theme-licensing-plan.md](theme-licensing-plan.md) (done), [github-migration-plan.md](github-migration-plan.md) (done), [the Laravel 13 upgrade](laravel-13-upgrade-plan.md), then this plan. The review plan's backlog (its section 6) lists the same unfinished features.
+Order: [project-review-fix-plan.md](project-review-fix-plan.md) (done), [theme-licensing-plan.md](theme-licensing-plan.md) (done), [github-migration-plan.md](github-migration-plan.md) (done), [the Laravel 13 upgrade](laravel-13-upgrade-plan.md), then this plan. The review plan's backlog (its section 6) lists the same unfinished features.
 
 Build the new features **after** [the Laravel 13 upgrade](laravel-13-upgrade-plan.md). Otherwise every new controller, route and test gets written in Laravel 5.8 style and then rewritten. The review plan converts the database to InnoDB and gives the tests their own SQLite database. Both are needed before writing tests for the new features.
 
@@ -87,7 +87,8 @@ Each milestone is one or more small commits, in the repo's `type: description` s
   - Add rate limiting (`throttle` middleware).
   - Add a CSRF token; the form doesn't have one today.
 - **Replace the landing page's lorem ipsum** (features, about, steps) with real text, and check the Terms of Service text.
-- **Membership:** if the upgrade plan's `EnsureMembershipIsOpen` middleware isn't done yet, do it here.
+- ~~**Membership middleware.**~~ *Done by the review plan (B04: `EnsureMembershipIsOpen`).*
+- **Contact details:** show the `email_address` option instead of the email typed into the page, and replace or remove the placeholder address and phone.
 
 ### Milestone 6 — Finish
 
