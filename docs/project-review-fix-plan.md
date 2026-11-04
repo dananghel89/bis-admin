@@ -1,6 +1,6 @@
 # Project review and fix plan
 
-Status: **In progress** – Phase A done 2026-11-04 (afa3a17: DB backup `../bis_admin-backup-20261104.sql`, B01, B02, B03, B04); Phase B done 2026-11-04 (41 tests). Next: Phase C
+Status: **In progress** – Phase A done 2026-11-04 (afa3a17: DB backup `../bis_admin-backup-20261104.sql`, B01, B02, B03, B04); Phase B done 2026-11-04 (f991ec2, 41 tests); Phase C done 2026-11-04 (B05–B12, 53 tests). Next: Phase D
 Created: 2026-11-02
 
 Plan order in `docs/`:
@@ -93,7 +93,7 @@ The PHP files pass `php71 -l`, every route name used in the views exists, and ev
 4. **B03 + B04:** stop reading options when the routes load.
    - Always register `GET`/`POST /register` and remove the `if (get_option('membership'))` block.
    - Add middleware `EnsureMembershipIsOpen` (alias `membership`) on both routes: when Membership is off, redirect to `front`. Remove the duplicate checks in `RegisterController`, so the trait alias can go too.
-   - Replace the `static` cache in `get_option()` with a container singleton (`app('bis.options')`), loaded on first use. `OptionsController::optionsEdit` calls `app()->forgetInstance('bis.options')` after saving. A new app instance, as in each test, starts fresh.
+   - Replace the `static` cache in `get_option()` with a container singleton (`app('project.options')`), loaded on first use. `OptionsController::optionsEdit` calls `app()->forgetInstance('project.options')` after saving. A new app instance, as in each test, starts fresh.
    - Check: with an unreachable database port (`DB_PORT=1`), `php71 artisan inspire` and `package:discover` work. `php71 artisan route:list` shows the register routes. The WAMP site behaves exactly as before.
 
 ### Phase B – Test suite for the current, correct behaviour
@@ -163,7 +163,7 @@ Each item: add a failing test → fix → green.
 1. Update `CLAUDE.md`:
    - tests run on SQLite in-memory (safe)
    - tables are InnoDB
-   - `get_option()` uses the lazy `bis.options` singleton
+   - `get_option()` uses the lazy `project.options` singleton
    - registration is controlled by the `membership` middleware
    - the admin seeder and its `.env` keys
    - remove the fixed quirks (MyISAM warning, route-time membership)

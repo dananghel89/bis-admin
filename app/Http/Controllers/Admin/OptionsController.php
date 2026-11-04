@@ -33,22 +33,16 @@ class OptionsController extends Controller
      */
     public function optionsEdit(OptionsRequest $request)
     {
-        $options = Options::all()->pluck('name', 'id');
+        // Only the options on this form; any other row in the table is left alone.
+        // An unchecked checkbox (membership) isn't sent at all, so it's stored as '0'.
+        foreach ( ['site_title', 'tagline', 'email_address', 'membership'] as $name ) {
+            $value = $request->get($name);
 
-        foreach ( $options as $optionId => $optionName ) {
-            $option = Options::find($optionId);
-
-            if ( is_null( $request->get($optionName) ) ) {
-                $option->value = '0';
-            } else {
-                $option->value = $request->get($optionName);
-            }
-
-            $option->save();
+            Options::updateOrCreate(['name' => $name], ['value' => is_null($value) ? '0' : $value]);
         }
 
         // get_option() must not keep serving the values loaded before the save.
-        app()->forgetInstance('bis.options');
+        app()->forgetInstance('project.options');
 
         return back()->with('success', 'General options updated successfully.');
     }

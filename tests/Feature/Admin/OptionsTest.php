@@ -67,6 +67,36 @@ class OptionsTest extends TestCase
         $this->assertSame('0', $this->storedOption('membership'));
     }
 
+    public function test_options_that_are_not_on_the_form_keep_their_value()
+    {
+        // B07
+        DB::table('options')->insert(['name' => 'logo', 'value' => 'logo.png']);
+
+        $this->actingAs($this->admin)->patch('/dashboard/options', [
+            'site_title' => 'BIS',
+            'tagline' => 'T',
+            'email_address' => 'contact@example.com',
+        ])->assertSessionHasNoErrors();
+
+        $this->assertSame('logo.png', $this->storedOption('logo'));
+    }
+
+    public function test_saving_creates_a_missing_option_row()
+    {
+        // B07: update by name, not by row id
+        DB::table('options')->where('name', 'tagline')->delete();
+
+        $this->actingAs($this->admin)->patch('/dashboard/options', [
+            'site_title' => 'BIS',
+            'tagline' => 'Back again',
+            'email_address' => 'contact@example.com',
+            'membership' => '1',
+        ])->assertSessionHasNoErrors();
+
+        $this->assertSame('Back again', $this->storedOption('tagline'));
+        $this->assertSame(4, DB::table('options')->count());
+    }
+
     public function test_validation()
     {
         $this->actingAs($this->admin)

@@ -80,6 +80,15 @@ class AccessTest extends TestCase
         }
     }
 
+    public function test_menu_has_no_fake_unread_badge_and_no_messages_entry()
+    {
+        // B11: Messages isn't built yet, so its menu (with a hard-coded "10" badge) is hidden
+        $html = $this->actingAs(factory(User::class)->create())->get('/dashboard')->getContent();
+
+        $this->assertNotContains('badge-success', $html);
+        $this->assertNotContains(route('messages'), $html);
+    }
+
     public function test_guests_are_sent_to_login_from_every_admin_page()
     {
         foreach (array_keys($this->pages(1)) as $uri) {

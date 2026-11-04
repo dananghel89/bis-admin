@@ -109,6 +109,46 @@ class InfosTest extends TestCase
         $this->assertNotNull(Info::find($info->id));
     }
 
+    public function test_status_must_be_public_or_private()
+    {
+        // B05
+        $info = factory(Info::class)->create();
+
+        $this->actingAs($this->editor)
+            ->post('/dashboard/infos/add-info', ['title' => 'Odd', 'status' => 'whatever'])
+            ->assertSessionHasErrors('status');
+
+        $this->actingAs($this->editor)
+            ->patch("/dashboard/infos/edit-info/{$info->id}", ['title' => $info->title, 'status' => 'whatever'])
+            ->assertSessionHasErrors('status');
+
+        $this->assertSame(0, Info::where('status', 'whatever')->count());
+    }
+
+    public function test_subscriber_gets_404_for_a_private_info()
+    {
+        // B06: privacy is enforced by the controller, not only by the view
+        $subscriber = factory(User::class)->create();
+        $private = factory(Info::class)->states('private')->create(['content' => 'SECRET-CONTENT']);
+        $public = factory(Info::class)->create();
+
+        $this->actingAs($subscriber)->get("/dashboard/infos/view-info/{$private->id}")
+            ->assertNotFound()
+            ->assertDontSee('SECRET-CONTENT');
+        $this->actingAs($subscriber)->get("/dashboard/infos/view-info/{$public->id}")->assertOk();
+        $this->actingAs($this->editor)->get("/dashboard/infos/view-info/{$private->id}")->assertOk();
+    }
+
+    public function test_delete_asks_for_confirmation()
+    {
+        // B09
+        $info = factory(Info::class)->create();
+
+        $this->actingAs($this->editor)
+            ->get("/dashboard/infos/edit-info/{$info->id}")
+            ->assertSee("return confirm('Delete this info?')");
+    }
+
     public function test_subscriber_does_not_see_private_infos_in_the_list()
     {
         factory(Info::class)->create(['title' => 'Public note']);

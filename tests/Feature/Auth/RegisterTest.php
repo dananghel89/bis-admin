@@ -36,7 +36,7 @@ class RegisterTest extends TestCase
     protected function setMembership($value)
     {
         DB::table('options')->where('name', 'membership')->update(['value' => $value]);
-        app()->forgetInstance('bis.options');
+        app()->forgetInstance('project.options');
     }
 
     public function test_form_renders_when_membership_is_on()
@@ -60,6 +60,17 @@ class RegisterTest extends TestCase
         unset($data['terms']);
 
         $this->post('/register', $data)->assertSessionHasErrors('terms');
+        $this->assertSame(0, User::count());
+    }
+
+    public function test_sign_ups_are_throttled()
+    {
+        // B08: at most 3 sign-up attempts per 10 minutes from one IP
+        for ($i = 0; $i < 3; $i++) {
+            $this->post('/register', ['name' => 'X'])->assertSessionHasErrors('email');
+        }
+
+        $this->post('/register', $this->validData())->assertStatus(429);
         $this->assertSame(0, User::count());
     }
 

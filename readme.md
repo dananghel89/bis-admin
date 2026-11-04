@@ -27,7 +27,7 @@ Every user has one role, stored as a number in the `users.role` column:
 | Editor | `1` | Create, edit and delete Infos, Alerts, Plans and Licenses; Messages; own Settings |
 | Subscriber | `2` | View Infos (public ones only), Alerts, Plans and Licenses; Messages; own Settings |
 
-People who register themselves become **subscribers**. There is no admin screen for changing roles yet, so the first admin has to be set directly in the database (see step 6 below).
+People who register themselves become **subscribers**. There is no admin screen for changing roles yet; the first admin is created by the database seeder (see step 4 below).
 
 ## Requirements
 
@@ -49,15 +49,13 @@ The front-end needs no build step: the admin and landing templates are prebuilt 
    php artisan key:generate
    ```
 3. Create an empty MySQL database (named `bis_admin` by default) and set the `DB_*` values in `.env`.
-4. Create the tables. This also adds the default site options, with Membership turned on:
+4. Choose the first admin's login in `.env`: `SEED_ADMIN_NAME`, `SEED_ADMIN_EMAIL` and `SEED_ADMIN_PASSWORD`. The defaults are `admin@example.com` / `password`; never keep them on a public server.
+5. Create the tables and the first admin. The migrations also add the default site options, with Membership turned on:
    ```bash
-   php artisan migrate
+   php artisan migrate --seed
    ```
-5. Point a virtual host at the `public/` folder (`.env.example` uses `http://bis-admin.test`), or run `php artisan serve`. Then open `/register` and create your account.
-6. Make that account an admin by setting its role to `0`:
-   ```sql
-   UPDATE users SET role = 0 WHERE email = 'you@example.com';
-   ```
+   Seeding again later is safe: an existing user with that email is left unchanged.
+6. Point a virtual host at the `public/` folder (`.env.example` uses `http://bis-admin.test`), or run `php artisan serve`. Then log in with the admin account from step 4.
 
 If more than one PHP version is installed, run `php` and `composer.phar` with PHP 7.1–7.x, for example `php7.1 composer.phar install`.
 

@@ -91,7 +91,7 @@
 							</a>
 
 							@can ('deletePosts')
-								<a class="btn btn-danger btn-sm" href="{{ route('infoDelete', $info['id']) }}" onclick="event.preventDefault(); document.getElementById('delete-info').submit();">
+								<a class="btn btn-danger btn-sm" href="{{ route('infoDelete', $info['id']) }}" onclick="event.preventDefault(); return confirm('Delete this info?') && document.getElementById('delete-info').submit();">
 									<i class="fa fa-ban"></i> Delete
 								</a>
 							@endcan

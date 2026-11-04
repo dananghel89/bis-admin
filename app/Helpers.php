@@ -24,8 +24,8 @@ if ( ! function_exists('get_option') ) {
 	 * @return string
 	 */
 	function get_option( $name ) {
-		// The 'bis.options' singleton (AppServiceProvider) loads all options on first use, once per app instance.
-		$options = app('bis.options');
+		// The 'project.options' singleton (AppServiceProvider) loads all options on first use, once per app instance.
+		$options = app('project.options');
 
 		return isset($options[$name]) ? $options[$name] : '';
 	}

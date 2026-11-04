@@ -30,23 +30,10 @@
 			
 			<tbody>
 				@php
+					// The controller already limits $infos to what this user may read (Info::visibleTo).
 					$counter = 1;
-					$public_infos = [];
-					$location = 'infoEdit';
-
-					foreach ( $infos as $info ) {
-						if ( $info['status'] == 'public' ) {
-							$public_infos[] = $info;
-						}
-					}
+					$location = Auth::user()->can('editPosts') ? 'infoEdit' : 'infoView';
 				@endphp
-
-				@cannot ('editPosts')
-					@php
-						$infos = $public_infos;
-						$location = 'infoView';
-					@endphp
-				@endcan
 
 				@foreach ( $infos as $info )
 					<tr>

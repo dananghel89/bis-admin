@@ -19,7 +19,7 @@ class OptionHelperTest extends TestCase
     public function test_returns_database_values_and_empty_for_unknown_names()
     {
         $this->artisan('migrate');
-        app()->forgetInstance('bis.options');
+        app()->forgetInstance('project.options');
 
         $this->assertSame('BIS', get_option('site_title'));
         $this->assertSame('1', get_option('membership'));
@@ -34,7 +34,7 @@ class OptionHelperTest extends TestCase
         DB::table('options')->where('name', 'site_title')->update(['value' => 'Changed']);
         $this->assertSame('BIS', get_option('site_title'), 'cached for the request');
 
-        app()->forgetInstance('bis.options');
+        app()->forgetInstance('project.options');
         $this->assertSame('Changed', get_option('site_title'));
     }
 }
