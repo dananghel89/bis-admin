@@ -15,10 +15,10 @@ Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::middleware('membership')->group(function () {
     Route::get('/register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-    Route::post('/register', 'Auth\RegisterController@register');
+    Route::post('/register', 'Auth\RegisterController@register')->middleware('throttle.route:3,10');
 });
 
 Route::get('/password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-Route::post('/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+Route::post('/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email')->middleware('throttle.route:3,10');
 Route::get('/password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
 Route::post('/password/reset', 'Auth\ResetPasswordController@reset');

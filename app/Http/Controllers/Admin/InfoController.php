@@ -20,7 +20,7 @@ class InfoController extends Controller
     public function index()
     {
         $user = User::class;
-        $infos = Info::all()->toArray();
+        $infos = Info::visibleTo(Auth::user())->get()->toArray();
 
         return view('admin.infos.infosIndex', compact('user', 'infos'));
     }
@@ -44,7 +44,7 @@ class InfoController extends Controller
      */
     public function infoView($id)
     {
-        $info = Info::findOrFail($id)->toArray();
+        $info = Info::visibleTo(Auth::user())->findOrFail($id)->toArray();
 
         return view('admin.infos.infoView', compact('info'));
     }

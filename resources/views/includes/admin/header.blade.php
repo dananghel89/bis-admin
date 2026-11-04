@@ -12,6 +12,7 @@
 					</a>
 				</li>
 
+				{{-- Messages is not built yet (docs/finish-project-plan.md, Milestone 4): menu hidden until then.
 				@can ( 'accessMessages' )
 					<li class="menu-item-has-children dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -21,7 +22,7 @@
 						<ul class="sub-menu children dropdown-menu">
 							<li>
 								<i class="fa fa-angle-right"></i>
-								<a href="{{ route('messages') }}">Bandeja De Entrada <span class="badge badge-success">10</span></a>
+								<a href="{{ route('messages') }}">Bandeja De Entrada</a>
 							</li>
 
 							<li>
@@ -36,6 +37,7 @@
 						</ul>
 					</li>
 				@endcan
+				--}}
 
 				@can ( 'viewPosts' )
 					<h3 class="menu-title">Datos De Sistema</h3>
@@ -88,10 +90,6 @@
 						<li>
 							<a href="{{ route('alerts') }}">
 								<i class="menu-icon fa fa-exclamation"></i> Avisos
-								
-								@can ( 'receiveAlerts' )
-									<span class="badge badge-success">10</span>
-								@endcan
 							</a>
 						</li>
 					@endcan

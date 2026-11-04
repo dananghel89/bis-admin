@@ -26,7 +26,7 @@ class InfoAddRequest extends FormRequest
         $rules = [
             'title' => 'required|string|max:100|unique:infos',
             'content' => 'string|nullable',
-            'status' => 'required',
+            'status' => 'required|in:' . implode(',', array_keys(get_post_statuses())),
         ];
 
         return $rules;

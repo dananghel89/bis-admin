@@ -29,6 +29,33 @@ class PasswordResetTest extends TestCase
         Notification::assertSentTo($user, ResetPassword::class);
     }
 
+    public function test_reset_requests_are_throttled()
+    {
+        // B08: at most 3 requests per 10 minutes from one IP
+        Notification::fake();
+        $user = factory(User::class)->create();
+
+        for ($i = 0; $i < 3; $i++) {
+            $this->post('/password/email', ['email' => $user->email])->assertSessionHas('status');
+        }
+        $this->post('/password/email', ['email' => $user->email])->assertStatus(429);
+
+        Notification::assertSentToTimes($user, ResetPassword::class, 3);
+    }
+
+    public function test_reset_throttle_is_separate_from_sign_up()
+    {
+        // The throttle key includes the route, so sign-up attempts don't use up reset requests
+        Notification::fake();
+        $user = factory(User::class)->create();
+
+        for ($i = 0; $i < 3; $i++) {
+            $this->post('/register', ['name' => 'X']);
+        }
+
+        $this->post('/password/email', ['email' => $user->email])->assertSessionHas('status');
+    }
+
     public function test_reset_screen_renders()
     {
         $this->get('/password/reset/some-token')->assertOk()->assertSee('name="token"');
