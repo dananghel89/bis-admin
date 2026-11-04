@@ -1,6 +1,6 @@
 # Project review and fix plan
 
-Status: **In progress** – Phase A done 2026-11-04 (DB backup `../bis_admin-backup-20261104.sql`, B01, B02, B03, B04). Next: Phase B
+Status: **In progress** – Phase A done 2026-11-04 (afa3a17: DB backup `../bis_admin-backup-20261104.sql`, B01, B02, B03, B04); Phase B done 2026-11-04 (41 tests). Next: Phase C
 Created: 2026-11-02
 
 Plan order in `docs/`:
