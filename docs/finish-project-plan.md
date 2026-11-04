@@ -36,7 +36,7 @@ These questions change what gets built, so they need an answer first:
 3. **Messages: between whom?** Any user to any user, or only between subscribers and editors/admins? With attachments?
 4. **Should admins see Infos, Alerts, Plans and Licenses?** Today `viewPosts` excludes admins.
 5. ~~**Language**~~ **Decided 2026-11-02: English only.** The review plan (B13) translates the Spanish texts; no translations (`lang/` files) are needed. New features are written in English.
-6. **Email verification:** `VerificationController` exists but isn't used. Should new users have to verify their email?
+6. **Email verification:** should new users have to verify their email? The unused `VerificationController` was removed by the review plan (B18). If yes, add it back with Laravel's `MustVerifyEmail` and the `verified` middleware.
 
 ## Work plan
 
@@ -46,10 +46,10 @@ Each milestone is one or more small commits, in the repo's `type: description` s
 
 - ~~**Create the first admin.**~~ *Done by the review plan (B10: `AdminUserSeeder` with `.env` defaults).*
 - ~~**Move access filtering out of the views.**~~ *Done for Infos by the review plan (B06: `Info::visibleTo($user)`). Reuse the same scope for Alerts, Plans and Licenses.*
-- ~~**Real author relationship.**~~ *Done for Infos by the review plan (B15: `Info::author()`). Add the same relationship to the other post models.*
+- ~~**Real author relationship.**~~ *Done for Infos by the review plan (B15: `Info::authorUser()`, eager-loaded; not `author()`, because that's the column name). Add the same relationship to the other post models.*
 - **Pagination** on every list page (`->paginate(20)`).
 - **One shared base for post-like sections.** Infos, Alerts, Plans and Licenses use identical tables (`title`, `content`, `author`, `status`). Pull the Infos controller logic and its two form requests into a shared base controller or trait plus one form request, so Alerts, Plans and Licenses don't become three copies of the same code.
-- **Fix the form requests** `AlertRequest`, `PlanRequest` and `LicenseRequest`. Their `authorize()` returns `false`, which blocks every request with a 403. Return `true` (permissions are already checked by the `can:` middleware) and add rules.
+- **Form requests for Alerts, Plans and Licenses.** The unused `AlertRequest`, `PlanRequest` and `LicenseRequest` (`authorize()` returned `false`) were removed by the review plan (B18). Create the shared form request from the point above, with `authorize()` returning `true` (permissions are already checked by the `can:` middleware) and a status rule like `InfoAddRequest`'s.
 
 ### Milestone 2 — Users management (admin)
 

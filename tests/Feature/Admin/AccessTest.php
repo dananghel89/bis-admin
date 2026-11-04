@@ -80,6 +80,32 @@ class AccessTest extends TestCase
         }
     }
 
+    public function test_admin_pages_are_english_only()
+    {
+        // B13: the UI is English only (decided 2026-11-02)
+        $spanish = [
+            'Añadir', 'Todos Los', 'Todas Las', 'Informaciones', 'Información', 'Avisos', 'Planos', 'Licencias',
+            'Usuarios', 'Opciones', 'Ajustes', 'Mensajes', 'Bandeja', 'Enviar', 'Administración',
+            'Datos De Sistema', 'Cerrar Sesión',
+        ];
+        $users = [
+            'admin' => factory(User::class)->states('admin')->create(),
+            'editor' => factory(User::class)->states('editor')->create(),
+            'subscriber' => factory(User::class)->create(),
+        ];
+        $info = factory(Info::class)->create();
+
+        foreach ($this->pages($info->id) as $uri => $allowed) {
+            foreach ($allowed as $role) {
+                $html = $this->actingAs($users[$role])->get($uri)->getContent();
+
+                foreach ($spanish as $word) {
+                    $this->assertNotContains($word, $html, "{$role} GET {$uri} contains '{$word}'");
+                }
+            }
+        }
+    }
+
     public function test_menu_has_no_fake_unread_badge_and_no_messages_entry()
     {
         // B11: Messages isn't built yet, so its menu (with a hard-coded "10" badge) is hidden

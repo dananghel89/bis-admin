@@ -1,6 +1,6 @@
 # Project review and fix plan
 
-Status: **In progress** – Phase A done 2026-11-04 (afa3a17: DB backup `../bis_admin-backup-20261104.sql`, B01, B02, B03, B04); Phase B done 2026-11-04 (f991ec2, 41 tests); Phase C done 2026-11-04 (B05–B12, 53 tests). Next: Phase D
+Status: **In progress** – Phase A done 2026-11-04 (afa3a17: DB backup `../bis_admin-backup-20261104.sql`, B01, B02, B03, B04); Phase B done 2026-11-04 (f991ec2, 41 tests); Phase C done 2026-11-04 (6e52208, B05–B12); Phase D done 2026-11-04 (B13–B19; B20 left to the backlog, 58 tests). Next: Phase E
 Created: 2026-11-02
 
 Plan order in `docs/`:
@@ -139,10 +139,10 @@ Each item: add a failing test → fix → green.
 | ID | Fix |
 |---|---|
 | B13 | **Decided 2026-11-02: everything in English.** Translate the Spanish menu entries, page titles (`@section('title')`) and messages, e.g. "Todas Las Informaciones" → "All Infos", "Añadir Plan" → "Add Plan", "Bandeja De Entrada" → "Inbox", "Ajustes" → "Settings", "Opciones" → "Options". No `lang/` files are needed. Add an `AccessTest` assertion that the admin menu contains no Spanish labels |
-| B14 | Correct the "not allowed" texts (alerts, plans, licenses), or remove them together with the dead `@cannot` branches (B18) |
-| B15 | `Info::author()` (`belongsTo(User::class, 'author')`) and `Info::with('author')->latest()->get()`. The view uses `$info->author->name ?? '-'`; stop passing `User::class` |
+| B14 | Correct the "not allowed" texts (alerts, plans, licenses), or remove them together with the dead `@cannot` branches (B18). **Done:** removed with the 20 unreachable `@cannot` blocks |
+| B15 | `Info::author()` (`belongsTo(User::class, 'author')`) and `Info::with('author')->latest()->get()`. The view uses `$info->author->name ?? '-'`; stop passing `User::class`. **Done as `authorUser()`:** `author` is already the column name, so a relation called `author()` would never be used |
 | B16 | `{!! nl2br(e($info->content)) !!}` |
-| B17 | `min:8` for new passwords (register, settings, reset) |
+| B17 | `min:8` for new passwords (register, settings, reset). **Reset** already required 8 in Laravel 5.8's `ResetsPasswords`; register and settings changed |
 | B18 | Remove the dead code and unused imports listed in B18. Leave `resources/js`, `resources/sass` and the npm files in place until the upgrade (the upgrade plan decides) |
 | B19 | `$this->input('password')` instead of `Input::get('password')` |
 | B20 | No code change here: listed in the backlog. Only make sure the disabled form can't be submitted (it can't today) |

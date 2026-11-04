@@ -2,20 +2,14 @@
 
 {{-- page title --}}
 
-@section('title', 'Añadir Usuario')
+@section('title', 'Add User')
 
 {{-- content section --}}
 
 @section('content')
 
-	@cannot ( 'addUsers' )
-		<div class="alert alert-danger" role="alert">
-			You are not allowed to access users.
-		</div>
-	@else
-		<div class="alert alert-primary" role="alert">
-			TODO: coming soon
-		</div>
-	@endcan
+	<div class="alert alert-primary" role="alert">
+		TODO: coming soon
+	</div>
 
 @endsection

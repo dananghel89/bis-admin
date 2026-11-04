@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SettingsRequest extends FormRequest
@@ -25,7 +24,7 @@ class SettingsRequest extends FormRequest
      */
     public function rules()
     {
-        $password = Input::get('password');
+        $password = $this->input('password');
 
         if ( is_null($password) ) {
             $rules = [
@@ -36,7 +35,7 @@ class SettingsRequest extends FormRequest
             $rules = [
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users,email,' . Auth::user()->id,
-                'password' => 'required|string|min:6|confirmed',
+                'password' => 'required|string|min:8|confirmed',
             ];
         }
 

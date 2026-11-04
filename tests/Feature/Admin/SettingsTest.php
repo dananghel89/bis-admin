@@ -63,6 +63,23 @@ class SettingsTest extends TestCase
         $this->assertTrue(Hash::check('new-secret-1', $user->fresh()->password));
     }
 
+    public function test_new_password_needs_at_least_8_characters()
+    {
+        // B17
+        $user = factory(User::class)->create();
+
+        $this->actingAs($user)
+            ->patch('/dashboard/settings', [
+                'name' => $user->name,
+                'email' => $user->email,
+                'password' => 'short12',
+                'password_confirmation' => 'short12',
+            ])
+            ->assertSessionHasErrors('password');
+
+        $this->assertTrue(Hash::check('password', $user->fresh()->password));
+    }
+
     public function test_blank_password_keeps_the_old_one()
     {
         $user = factory(User::class)->create();

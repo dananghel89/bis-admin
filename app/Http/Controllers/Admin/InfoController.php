@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\User;
 use App\Http\Models\Info;
 use App\Http\Requests\InfoAddRequest;
 use App\Http\Requests\InfoEditRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class InfoController extends Controller
@@ -19,10 +17,9 @@ class InfoController extends Controller
      */
     public function index()
     {
-        $user = User::class;
-        $infos = Info::visibleTo(Auth::user())->get()->toArray();
+        $infos = Info::with('authorUser')->visibleTo(Auth::user())->latest()->get()->toArray();
 
-        return view('admin.infos.infosIndex', compact('user', 'infos'));
+        return view('admin.infos.infosIndex', compact('infos'));
     }
 
     /**

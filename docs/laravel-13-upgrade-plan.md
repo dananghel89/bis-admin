@@ -78,9 +78,9 @@ Laravel 11 introduced a much smaller project structure: no `Kernel.php` files, a
 
 ### Controllers
 
-- **`$this->middleware(...)` in constructors no longer works.** In Laravel 11+, the base `Controller` is an empty class. `LoginController`, `RegisterController`, `ForgotPasswordController`, `ResetPasswordController` and `VerificationController` all call it. Remove those constructors and apply `guest` / `auth` in the route files instead (see below).
+- **`$this->middleware(...)` in constructors no longer works.** In Laravel 11+, the base `Controller` is an empty class. `LoginController`, `RegisterController`, `ForgotPasswordController` and `ResetPasswordController` all call it (`VerificationController` was removed by the review plan, B18). Remove those constructors and apply `guest` / `auth` in the route files instead (see below).
 - If a controller ever calls `$this->authorize()` or `$this->validate()`, add `use AuthorizesRequests, ValidatesRequests;` to the base `Controller`. The current code uses neither: it relies on form requests and `can:` middleware.
-- `RegisterController` keeps its `register as protected registerUser` trait alias. Replace `bcrypt()` with `Hash::make()`; both still work, so this is optional.
+- `RegisterController` is the stock `RegistersUsers` controller (the review plan moved the Membership check into the `membership` middleware). Replace `bcrypt()` with `Hash::make()`; both still work, so this is optional. The custom middleware `EnsureMembershipIsOpen` and `ThrottleRequestsPerRoute` move to `bootstrap/app.php` aliases. Laravel 11+ throttles per route already (named rate limiters), so `ThrottleRequestsPerRoute` can become a `RateLimiter::for()` definition.
 
 ### Routes
 

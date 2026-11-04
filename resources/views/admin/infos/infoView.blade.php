@@ -25,7 +25,7 @@
 					<span class="card-title">Content</span>
 				</div>
 				<div class="card-body">
-					<p class="card-text">{{ $info['content'] }}</p>
+					<p class="card-text">{!! nl2br(e($info['content'])) !!}</p>
 				</div>
 			</div>
 		@endif

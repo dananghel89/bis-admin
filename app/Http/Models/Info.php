@@ -16,6 +16,16 @@ class Info extends Model
     ];
 
     /**
+     * The user who wrote this info. Not named author(): that's the column holding the user id.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function authorUser()
+    {
+        return $this->belongsTo(\App\User::class, 'author');
+    }
+
+    /**
      * Limit the query to the infos this user may read: editors see every info,
      * everyone else only the public ones.
      *

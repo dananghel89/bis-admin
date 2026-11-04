@@ -63,6 +63,15 @@ class RegisterTest extends TestCase
         $this->assertSame(0, User::count());
     }
 
+    public function test_password_needs_at_least_8_characters()
+    {
+        // B17
+        $data = array_merge($this->validData(), ['password' => 'short12', 'password_confirmation' => 'short12']);
+
+        $this->post('/register', $data)->assertSessionHasErrors('password');
+        $this->assertSame(0, User::count());
+    }
+
     public function test_sign_ups_are_throttled()
     {
         // B08: at most 3 sign-up attempts per 10 minutes from one IP
