@@ -2,20 +2,14 @@
 
 {{-- page title --}}
 
-@section('title', 'Todos Los Planos')
+@section('title', 'All Plans')
 
 {{-- content section --}}
 
 @section('content')
 
-	@cannot ( 'viewPosts' )
-		<div class="alert alert-danger" role="alert">
-			You are not allowed to access info.
-		</div>
-	@else
-		<div class="alert alert-primary" role="alert">
-			TODO: coming soon
-		</div>
-	@endcan
+	<div class="alert alert-primary" role="alert">
+		TODO: coming soon
+	</div>
 
 @endsection

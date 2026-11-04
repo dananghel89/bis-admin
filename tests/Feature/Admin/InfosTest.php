@@ -97,6 +97,35 @@ class InfosTest extends TestCase
             ->assertSee('Ana Architect');
     }
 
+    public function test_list_is_newest_first_and_loads_authors_in_one_query()
+    {
+        // B15
+        factory(Info::class)->create(['title' => 'Older info', 'created_at' => now()->subDays(2)]);
+        factory(Info::class)->create(['title' => 'Newest info', 'created_at' => now()]);
+        factory(Info::class, 3)->create(['created_at' => now()->subDays(5)]);
+
+        \DB::enableQueryLog();
+        $html = $this->actingAs($this->editor)->get('/dashboard/infos')->getContent();
+        $userQueries = array_filter(\DB::getQueryLog(), function ($query) {
+            return stripos($query['query'], 'from "users"') !== false;
+        });
+
+        $this->assertLessThan(strpos($html, 'Older info'), strpos($html, 'Newest info'));
+        $this->assertCount(1, $userQueries, 'authors must be eager-loaded, not queried per row');
+    }
+
+    public function test_content_keeps_line_breaks_and_stays_escaped()
+    {
+        // B16
+        $info = factory(Info::class)->create(['content' => "Line one\nLine two <script>alert(1)</script>"]);
+
+        $this->actingAs($this->editor)
+            ->get("/dashboard/infos/view-info/{$info->id}")
+            ->assertSee('Line one<br />')
+            ->assertSee('&lt;script&gt;')
+            ->assertDontSee('<script>alert(1)</script>');
+    }
+
     public function test_subscriber_cannot_add_edit_or_delete()
     {
         $subscriber = factory(User::class)->create();

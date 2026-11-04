@@ -2,7 +2,7 @@
 
 {{-- page title --}}
 
-@section('title', 'Ajustes')
+@section('title', 'Settings')
 
 {{-- content section --}}
 

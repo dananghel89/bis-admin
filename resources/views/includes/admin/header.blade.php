@@ -16,23 +16,23 @@
 				@can ( 'accessMessages' )
 					<li class="menu-item-has-children dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<i class="menu-icon fa fa-envelope-o"></i> Mensajes
+							<i class="menu-icon fa fa-envelope-o"></i> Messages
 						</a>
 
 						<ul class="sub-menu children dropdown-menu">
 							<li>
 								<i class="fa fa-angle-right"></i>
-								<a href="{{ route('messages') }}">Bandeja De Entrada</a>
+								<a href="{{ route('messages') }}">Inbox</a>
 							</li>
 
 							<li>
 								<i class="fa fa-angle-right"></i>
-								<a href="{{ route('messagesSent') }}">Mensajes Enviados</a>
+								<a href="{{ route('messagesSent') }}">Sent Messages</a>
 							</li>
 
 							<li>
 								<i class="fa fa-angle-right"></i>
-								<a href="{{ route('messageSend') }}">Enviar Mensaje</a>
+								<a href="{{ route('messageSend') }}">Send Message</a>
 							</li>
 						</ul>
 					</li>
@@ -40,30 +40,30 @@
 				--}}
 
 				@can ( 'viewPosts' )
-					<h3 class="menu-title">Datos De Sistema</h3>
+					<h3 class="menu-title">Content</h3>
 
 					@can ( 'addPosts' )
 						<li class="menu-item-has-children dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<i class="menu-icon fa fa-info"></i> Informaciones
+								<i class="menu-icon fa fa-info"></i> Infos
 							</a>
 
 							<ul class="sub-menu children dropdown-menu">
 								<li>
 									<i class="fa fa-angle-right"></i>
-									<a href="{{ route('infos') }}">Todas Las Informaciones</a>
+									<a href="{{ route('infos') }}">All Infos</a>
 								</li>
 								
 								<li>
 									<i class="fa fa-angle-right"></i>
-									<a href="{{ route('infoAdd') }}">Añadir Información</a>
+									<a href="{{ route('infoAdd') }}">Add Info</a>
 								</li>
 							</ul>
 						</li>
 					@else
 						<li>
 							<a href="{{ route('infos') }}">
-								<i class="menu-icon fa fa-info"></i> Informaciones
+								<i class="menu-icon fa fa-info"></i> Infos
 							</a>
 						</li>
 					@endcan
@@ -71,25 +71,25 @@
 					@can ( 'addPosts' )
 						<li class="menu-item-has-children dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<i class="menu-icon fa fa-exclamation"></i> Avisos
+								<i class="menu-icon fa fa-exclamation"></i> Alerts
 							</a>
 
 							<ul class="sub-menu children dropdown-menu">
 								<li>
 									<i class="fa fa-angle-right"></i>
-									<a href="{{ route('alerts') }}">Todos Los Avisos</a>
+									<a href="{{ route('alerts') }}">All Alerts</a>
 								</li>
 								
 								<li>
 									<i class="fa fa-angle-right"></i>
-									<a href="{{ route('alertAdd') }}">Añadir Aviso</a>
+									<a href="{{ route('alertAdd') }}">Add Alert</a>
 								</li>
 							</ul>
 						</li>
 					@else
 						<li>
 							<a href="{{ route('alerts') }}">
-								<i class="menu-icon fa fa-exclamation"></i> Avisos
+								<i class="menu-icon fa fa-exclamation"></i> Alerts
 							</a>
 						</li>
 					@endcan
@@ -97,25 +97,25 @@
 					@can ( 'addPosts' )
 						<li class="menu-item-has-children dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<i class="menu-icon fa fa-compass"></i> Planos
+								<i class="menu-icon fa fa-compass"></i> Plans
 							</a>
 
 							<ul class="sub-menu children dropdown-menu">
 								<li>
 									<i class="fa fa-angle-right"></i>
-									<a href="{{ route('plans') }}">Todos Los Planos</a>
+									<a href="{{ route('plans') }}">All Plans</a>
 								</li>
 								
 								<li>
 									<i class="fa fa-angle-right"></i>
-									<a href="{{ route('planAdd') }}">Añadir Plan</a>
+									<a href="{{ route('planAdd') }}">Add Plan</a>
 								</li>
 							</ul>
 						</li>
 					@else
 						<li>
 							<a href="{{ route('plans') }}">
-								<i class="menu-icon fa fa-compass"></i> Planos
+								<i class="menu-icon fa fa-compass"></i> Plans
 							</a>
 						</li>
 					@endcan
@@ -123,54 +123,54 @@
 					@can ( 'addPosts' )
 						<li class="menu-item-has-children dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<i class="menu-icon fa fa-file-text-o"></i> Licencias
+								<i class="menu-icon fa fa-file-text-o"></i> Licenses
 							</a>
 
 							<ul class="sub-menu children dropdown-menu">
 								<li>
 									<i class="fa fa-angle-right"></i>
-									<a href="{{ route('licenses') }}">Todas Las Licencias</a>
+									<a href="{{ route('licenses') }}">All Licenses</a>
 								</li>
 								
 								<li>
 									<i class="fa fa-angle-right"></i>
-									<a href="{{ route('licenseAdd') }}">Añadir Licencia</a>
+									<a href="{{ route('licenseAdd') }}">Add License</a>
 								</li>
 							</ul>
 						</li>
 					@else
 						<li>
 							<a href="{{ route('licenses') }}">
-								<i class="menu-icon fa fa-file-text-o"></i> Licencias
+								<i class="menu-icon fa fa-file-text-o"></i> Licenses
 							</a>
 						</li>
 					@endcan
 				@endcan
 			
 				@can ( 'editOptions' )
-					<h3 class="menu-title">Administración</h3>
+					<h3 class="menu-title">Administration</h3>
 
 					<li>
 						<a href="{{ route('options') }}">
-							<i class="menu-icon fa fa-wrench"></i> Opciones
+							<i class="menu-icon fa fa-wrench"></i> Options
 						</a>
 					</li>
 
 					@can ( 'addUsers' )
 						<li class="menu-item-has-children dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<i class="menu-icon fa fa-user"></i> Usuarios
+								<i class="menu-icon fa fa-user"></i> Users
 							</a>
 
 							<ul class="sub-menu children dropdown-menu">
 								<li>
 									<i class="fa fa-angle-right"></i>
-									<a href="{{ route('users') }}">Todos Los Usuarios</a>
+									<a href="{{ route('users') }}">All Users</a>
 								</li>
 								
 								<li>
 									<i class="fa fa-angle-right"></i>
-									<a href="{{ route('userAdd') }}">Añadir Usuario</a>
+									<a href="{{ route('userAdd') }}">Add User</a>
 								</li>
 							</ul>
 						</li>
@@ -202,12 +202,12 @@
 						<div class="user-menu dropdown-menu">
 							@can ( 'editProfile' )
 								<a class="nav-link" href="{{ route('settings') }}">
-									<i class="fa fa-cog"></i> Ajustes
+									<i class="fa fa-cog"></i> Settings
 								</a>
 							@endcan
 
 							<a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-								<i class="fa fa-power-off"></i> Cerrar Sesión
+								<i class="fa fa-power-off"></i> Log Out
 							</a>
 
 							<form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

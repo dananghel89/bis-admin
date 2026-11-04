@@ -2,7 +2,7 @@
 
 {{-- page title --}}
 
-@section('title', 'Añadir Información')
+@section('title', 'Add Info')
 
 {{-- content section --}}
 

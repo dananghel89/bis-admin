@@ -2,7 +2,7 @@
 
 {{-- page title --}}
 
-@section('title', 'Todas Las Informaciones')
+@section('title', 'All Infos')
 
 {{-- content section --}}
 
@@ -39,7 +39,7 @@
 					<tr>
 						<th scope="row">{{ $counter }}</th>
 						<td><a href="{{ route($location, $info['id']) }}" class="btn-link">{{ $info['title'] }}</a></td>
-						<td>{{ optional($user::find($info['author']))->name ?? '-' }}</td>
+						<td>{{ $info['author_user']['name'] ?? '-' }}</td>
 						<td>{{ date('Y/m/d', strtotime($info['created_at'])) }}</td>
 					</tr>
 

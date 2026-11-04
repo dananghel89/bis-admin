@@ -44,7 +44,7 @@ Front-end assets are not built. The views load prebuilt static templates with `a
 
 **Models.** Eloquent models live in `App\Http\Models` (`Info`, `Alert`, `Plan`, `License`, `Options`, `Dashboard`), not in `app/` or `app/Models`; `User` is `App\User`. The post-like tables (`infos`, `alerts`, `plans`, `licenses`) share one shape: `title`, `content`, `author` (user id, no foreign key), `status` (`public`/`private`, from `get_post_statuses()`).
 
-**Admin sections.** Only Infos is implemented end to end (`InfoController`, `InfoAddRequest`/`InfoEditRequest`). Alerts, Plans, Licenses, Users and Messages controllers only return their views. Their FormRequests (`AlertRequest`, `PlanRequest`, `LicenseRequest`) still have `authorize()` returning `false` and must be changed when wired up. Controllers usually pass plain arrays (`->toArray()`) to views.
+**Admin sections.** Only Infos is implemented end to end (`InfoController`, `InfoAddRequest`/`InfoEditRequest`). Alerts, Plans, Licenses, Users and Messages controllers only return "TODO: coming soon" views, and have no form requests yet. The Messages menu is commented out in `includes/admin/header.blade.php` until Messages is built. Controllers usually pass plain arrays (`->toArray()`) to views; the infos list eager-loads its author as `authorUser` (not `author()`, which is the user-id column), so the view reads `$info['author_user']['name']`.
 
 **Views.** Three layouts in `resources/views/layouts/` (`admin`, `auth`, `landing`), each with matching partials in `resources/views/includes/<layout>/`. View names are camelCase per section, e.g. `admin.infos.infosIndex`, `admin.infos.infoEdit`; route names follow the same pattern (`infos`, `infoAdd`, `infoEditSave`, ...).
 
@@ -54,4 +54,4 @@ Front-end assets are not built. The views load prebuilt static templates with `a
 
 Commit messages are one line in the form `type: description` (e.g. `fix: ...`, `chore: ...`, `refactor: ...`).
 
-The UI language is **English only** (decided 2026-11-02). Some menu entries and page titles are still Spanish until the review plan's B13 is done; never add new Spanish text, and don't introduce `lang/` translation files.
+The UI language is **English only** (decided 2026-11-02; translated in the review plan's B13). `AccessTest::test_admin_pages_are_english_only` fails on Spanish text in any admin page. Don't introduce `lang/` translation files.

@@ -2,7 +2,7 @@
 
 {{-- page title --}}
 
-@section('title', 'Opciones')
+@section('title', 'Options')
 
 {{-- content section --}}
 
