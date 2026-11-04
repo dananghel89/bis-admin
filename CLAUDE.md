@@ -42,7 +42,7 @@ Front-end assets are not built. The views load prebuilt static templates with `a
 
 **First admin.** `php artisan db:seed` runs `AdminUserSeeder`, which creates the admin from `config('project.seed_admin')` (`SEED_ADMIN_NAME`/`EMAIL`/`PASSWORD` in `.env`; defaults `admin@example.com`/`password`) and leaves an existing user with that email untouched.
 
-**Models.** Eloquent models live in `App\Http\Models` (`Info`, `Alert`, `Plan`, `License`, `Options`, `Dashboard`), not in `app/` or `app/Models`; `User` is `App\User`. The post-like tables (`infos`, `alerts`, `plans`, `licenses`) share one shape: `title`, `content`, `author` (user id, no foreign key), `status` (`public`/`private`, from `get_post_statuses()`).
+**Models.** Eloquent models live in `App\Http\Models` (`Info`, `Alert`, `Plan`, `License`, `Options`), not in `app/` or `app/Models`; `User` is `App\User`. The post-like tables (`infos`, `alerts`, `plans`, `licenses`) share one shape: `title`, `content`, `author` (user id, no foreign key), `status` (`public`/`private`, from `get_post_statuses()`).
 
 **Admin sections.** Only Infos is implemented end to end (`InfoController`, `InfoAddRequest`/`InfoEditRequest`). Alerts, Plans, Licenses, Users and Messages controllers only return "TODO: coming soon" views, and have no form requests yet. The Messages menu is commented out in `includes/admin/header.blade.php` until Messages is built. Controllers usually pass plain arrays (`->toArray()`) to views; the infos list eager-loads its author as `authorUser` (not `author()`, which is the user-id column), so the view reads `$info['author_user']['name']`.
 
