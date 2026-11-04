@@ -17,8 +17,8 @@ Laravel 5.8 admin app ("BIS Admin"), served locally by WAMP at http://bis-admin.
 php71 composer.phar install                     # install PHP dependencies
 php71 artisan migrate                           # create tables; the options migration also seeds the 4 default options
 php71 vendor/bin/phpunit                        # run all tests
-php71 vendor/bin/phpunit tests/Feature/ExampleTest.php   # one test file
-php71 vendor/bin/phpunit --filter testBasicTest          # one test method
+php71 vendor/bin/phpunit tests/Feature/Admin/InfosTest.php   # one test file (tests: Unit/, Feature/Auth/, Feature/Admin/, Feature/*Test.php)
+php71 vendor/bin/phpunit --filter test_editor_adds_an_info      # one test method (names are test_*, no annotations)
 php71 -l path/to/File.php                       # syntax check (no linter is configured)
 php71 artisan route:list                        # list routes
 ```

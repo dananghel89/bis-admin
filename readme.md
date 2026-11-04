@@ -77,10 +77,10 @@ The register routes are set up when the routes file loads. If you cache routes w
 
 ```bash
 php vendor/bin/phpunit
-php vendor/bin/phpunit --filter testBasicTest     # a single test
+php vendor/bin/phpunit --filter test_editor_adds_an_info     # a single test
 ```
 
-`phpunit.xml` doesn't override the database connection, so any test that uses the database runs against the one configured in `.env`. Point it at a separate test database before writing database tests.
+The tests run on an in-memory SQLite database (set in `phpunit.xml`), so they never touch the database in `.env`. PHP needs the `pdo_sqlite` extension. The feature tests cover login, registration, password reset, each role's access to every admin page, Infos, Settings, Options and the landing pages.
 
 ## Project structure
 
