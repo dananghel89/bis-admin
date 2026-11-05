@@ -1,6 +1,6 @@
 # Project review and fix plan
 
-Status: **Done** – Phase A done 2026-11-04 (afa3a17: DB backup `../bis_admin-backup-20261104.sql`, B01, B02, B03, B04); Phase B done 2026-11-04 (f991ec2, 41 tests); Phase C done 2026-11-04 (6e52208, B05–B12); Phase D done 2026-11-04 (311156e, B13–B19; B20 left to the backlog, 58 tests); `/tos` moved to `/terms-of-service` (d3f08ca); Phase E done 2026-11-04 (R01 fixed in 3ef747f, 60 tests); Phase F done 2026-11-04. Next: [laravel-13-upgrade-plan.md](laravel-13-upgrade-plan.md)
+Status: **Done** – Phase A done 2026-11-04 (afa3a17: DB backup `bis_admin-backup-20261104.sql`, now in `~/Downloads/backups/bis-admin/`; B01, B02, B03, B04); Phase B done 2026-11-04 (f991ec2, 41 tests); Phase C done 2026-11-04 (6e52208, B05–B12); Phase D done 2026-11-04 (311156e, B13–B19; B20 left to the backlog, 58 tests); `/tos` moved to `/terms-of-service` (d3f08ca); Phase E done 2026-11-04 (R01 fixed in 3ef747f, 60 tests); Phase F done 2026-11-04. Next: [laravel-13-upgrade-plan.md](laravel-13-upgrade-plan.md)
 Created: 2026-11-02
 
 Plan order in `docs/`:
@@ -30,7 +30,7 @@ Two parts of the upgrade plan move into this plan, because both make every later
 
 - PHP: **`php71`** for every command. Composer: **`php71 composer.phar`**.
 - > ⛔ **Do not add or run database tests until step A2 is done.** Today `phpunit.xml` has no test database, so tests use the real `bis_admin` MySQL database. Its tables are MyISAM, so transactions and rollbacks silently do nothing: any test that writes data leaves it behind (findings B01 and B02).
-- Back up the database before Phase A: `mysqldump -u root bis_admin > ../bis_admin-backup-YYYYMMDD.sql`.
+- Back up the database before Phase A: `mysqldump -u root bis_admin > ~/Downloads/backups/bis-admin/bis_admin-backup-YYYYMMDD.sql` (backups live in `~/Downloads/backups/bis-admin/`, outside the repo).
 - Never verify a fix by writing test data to `bis_admin`. Use the SQLite test database from step A2.
 
 ## 3. Findings

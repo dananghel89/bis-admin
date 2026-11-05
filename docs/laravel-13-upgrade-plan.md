@@ -23,8 +23,9 @@ Do all the work on a branch, `upgrade/laravel-13`. `master` stays on 5.8 until t
 
 1. **Back up the database:**
    ```bash
-   mysqldump -u root bis_admin > bis_admin-backup.sql
+   mysqldump -u root bis_admin > ~/Downloads/backups/bis-admin/bis_admin-backup-YYYYMMDD.sql
    ```
+   Backups go in `~/Downloads/backups/bis-admin/`, outside the repo. The review plan's backup (`bis_admin-backup-20261104.sql`) is already there.
 2. **Convert the tables to InnoDB.** *Done by the review plan (B02): migration `2026_11_04_000000_convert_tables_to_innodb`; only check it's still true.* The tables were MyISAM, so transactions and rollbacks silently did nothing, and Laravel 13's test helpers rely on transactions. Copy that migration into the new project with the others.
    ```sql
    SELECT TABLE_NAME, ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'bis_admin';
@@ -147,7 +148,7 @@ Run them with `php artisan test`.
   - Infos: list, add, view, edit, delete
   - a subscriber can't see private infos or open Options and Users
 - [ ] The existing user and info from the old database still show up and the user can log in.
-- [ ] **After merging:** delete `../bis-admin-pre-github-20261016.bundle`. It's the last copy of the pre-GitHub history and contains the old emails (see [github-migration-plan.md](github-migration-plan.md) 4.9.2).
+- [ ] **After merging:** delete `~/Downloads/backups/bis-admin/bis-admin-pre-github-20261016.bundle`. It's the last copy of the pre-GitHub history and contains the old emails (see [github-migration-plan.md](github-migration-plan.md) 4.9.2).
 
 ## Risks and notes
 
