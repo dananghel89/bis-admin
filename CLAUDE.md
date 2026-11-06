@@ -26,7 +26,7 @@ php71 artisan route:list                        # list routes
 Front-end assets are not built. The views load prebuilt static templates with `asset(...)`:
 - `public/admin/` is the **Sufee** admin theme (Colorlib, MIT, Nov 2018 release), in its original `assets/` + `vendors/` layout. It's used by the admin and auth layouts.
 - `public/landing/` is the **Bell** theme (BootstrapMade, free license; its footer credit must stay).
-- Project-specific admin styles go in `public/css/bis-admin.css`, which loads after the theme. Keep theme files, their banners and their `LICENSE`/`README` files unchanged; see `docs/theme-licensing-plan.md`.
+- Project-specific admin styles go in `public/css/bis-admin.css`, which loads after the theme. Keep theme files, their banners and their `LICENSE`/`README` files unchanged (details in the local `docs/theme-licensing-plan.md`).
 
 `webpack.mix.js`/`package.json` are the untouched Laravel defaults, and no view uses their output.
 
@@ -53,5 +53,7 @@ Front-end assets are not built. The views load prebuilt static templates with `a
 ## Conventions
 
 Commit messages are one line in the form `type: description` (e.g. `fix: ...`, `chore: ...`, `refactor: ...`).
+
+The plans in `docs/` (review, theme licensing, GitHub migration, Laravel 13 upgrade, finish project) are **local working notes, gitignored on purpose**: never `git add -f` them, and don't link to them from tracked files such as the README or code comments.
 
 The UI language is **English only** (decided 2026-11-02; translated in the review plan's B13). `AccessTest::test_admin_pages_are_english_only` fails on Spanish text in any admin page. Don't introduce `lang/` translation files.

@@ -12,7 +12,7 @@
 					</a>
 				</li>
 
-				{{-- Messages is not built yet (docs/finish-project-plan.md, Milestone 4): menu hidden until then.
+				{{-- Messages is not built yet: menu hidden until then.
 				@can ( 'accessMessages' )
 					<li class="menu-item-has-children dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

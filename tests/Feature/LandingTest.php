@@ -30,7 +30,7 @@ class LandingTest extends TestCase
 
     public function test_bell_footer_credit_is_kept()
     {
-        // Required by the BootstrapMade free license, see docs/theme-licensing-plan.md.
+        // Required by the BootstrapMade free license.
         $credit = '<a href="https://bootstrapmade.com/">Bootstrap Templates</a> by BootstrapMade';
 
         $this->get('/')->assertSee($credit);
