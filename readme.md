@@ -2,7 +2,7 @@
 
 **Building Information System**: an architecture web application for documentation, plans and licenses.
 
-BIS Admin has a public landing page, user accounts with roles, and an admin dashboard where editors publish information for subscribers. It is built with Laravel 5.8.
+BIS Admin has a public landing page, user accounts with roles, and an admin dashboard where editors publish information for subscribers. It is built with Laravel 13 on PHP 8.4.
 
 > **Status:** work in progress. Accounts, site options and **Infos** work end to end. The **Alerts**, **Plans**, **Licenses**, **Users** and **Messages** sections only show their pages so far.
 
@@ -31,9 +31,9 @@ People who register themselves become **subscribers**. There is no admin screen 
 
 ## Requirements
 
-- PHP **7.1.3 – 7.x**. PHP 8 is not supported by Laravel 5.8.
+- PHP **8.3 or newer** (developed on 8.4), with the `pdo_mysql` extension, and `pdo_sqlite` for the tests
 - MySQL
-- Composer. This repo includes `composer.phar` (Composer 2.2 LTS), which still runs on PHP 7.1. Current Composer releases need PHP 7.2.5 or newer.
+- [Composer](https://getcomposer.org) 2
 
 The front-end needs no build step: the admin and landing templates are prebuilt files in `public/admin` and `public/landing`.
 
@@ -41,7 +41,7 @@ The front-end needs no build step: the admin and landing templates are prebuilt 
 
 1. Clone the repository and install the PHP dependencies:
    ```bash
-   php composer.phar install
+   composer install
    ```
 2. Create your environment file and app key:
    ```bash
@@ -57,8 +57,6 @@ The front-end needs no build step: the admin and landing templates are prebuilt 
    Seeding again later is safe: an existing user with that email is left unchanged.
 6. Point a virtual host at the `public/` folder (`.env.example` uses `http://bis-admin.test`), or run `php artisan serve`. Then log in with the admin account from step 4.
 
-If more than one PHP version is installed, run `php` and `composer.phar` with PHP 7.1–7.x, for example `php7.1 composer.phar install`.
-
 ## Configuration
 
 Admins manage these settings from **Dashboard → Options**. They are stored in the `options` table:
@@ -69,16 +67,16 @@ Admins manage these settings from **Dashboard → Options**. They are stored in 
 | Email Address | Contact address (saved, but not shown on the site yet) |
 | Membership | When on, anyone can register at `/register`. When off, `/register` redirects to the home page. |
 
-The register routes are set up when the routes file loads. If you cache routes with `php artisan route:cache`, run it again after changing Membership.
+Membership is checked on every request, so a change takes effect at once, also with cached routes (`php artisan route:cache`).
 
 ## Tests
 
 ```bash
-php vendor/bin/phpunit
-php vendor/bin/phpunit --filter test_editor_adds_an_info     # a single test
+php artisan test
+php artisan test --filter test_editor_adds_an_info     # a single test
 ```
 
-The tests run on an in-memory SQLite database (set in `phpunit.xml`), so they never touch the database in `.env`. PHP needs the `pdo_sqlite` extension. The feature tests cover login, registration, password reset, each role's access to every admin page, Infos, Settings, Options and the landing pages.
+The tests run on an in-memory SQLite database (set in `phpunit.xml`), so they never touch the database in `.env`. The feature tests cover login, registration, password reset, each role's access to every admin page, Infos, Settings, Options and the landing pages.
 
 ## Project structure
 
@@ -86,15 +84,15 @@ The tests run on an in-memory SQLite database (set in `phpunit.xml`), so they ne
 |---|---|
 | `routes/web.php` | Landing routes; loads `routes/auth.php` and `routes/admin.php` |
 | `routes/admin.php` | Dashboard routes under `/dashboard`, protected by `auth` and per-page `can:` permissions |
-| `app/Providers/AuthServiceProvider.php` | Defines every permission (Gate ability) for each role |
+| `app/Providers/AppServiceProvider.php` | Defines every permission (Gate ability) for each role, and the sign-up and password-reset rate limits |
 | `app/Http/Controllers/Admin` | Dashboard controllers |
-| `app/Http/Models` | Eloquent models (`Info`, `Alert`, `Plan`, `License`, `Options`); `User` is in `app/User.php` |
+| `app/Models` | Eloquent models (`User`, `Info`, `Alert`, `Plan`, `License`, `Options`) |
 | `app/Helpers.php` | Global helpers: `get_option()`, `get_post_statuses()`, `get_gravatar()` |
 | `resources/views` | Blade views, with `admin`, `auth` and `landing` layouts |
 
 ## Built with
 
-- [Laravel 5.8](https://laravel.com/docs/5.8)
+- [Laravel 13](https://laravel.com/docs/13.x), with [laravel/ui](https://github.com/laravel/ui) for the login, registration and password reset controllers
 - The Sufee and Bell themes (Bootstrap 4 and jQuery), stored in `public/admin` and `public/landing`; see Credits
 - [Gravatar](https://gravatar.com) for user avatars
 
