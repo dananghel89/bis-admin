@@ -24,7 +24,7 @@ class InfoEditRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'title' => 'required|string|max:100|unique:infos,title,' . $this->id,
+            'title' => 'required|string|max:100|unique:infos,title,' . $this->route('id'),
             'content' => 'string|nullable',
             'status' => 'required|in:' . implode(',', array_keys(get_post_statuses())),
         ];

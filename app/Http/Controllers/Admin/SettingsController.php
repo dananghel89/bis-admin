@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\User;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 use App\Http\Requests\SettingsRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -39,7 +40,7 @@ class SettingsController extends Controller
         $password = $request->get('password');
 
         if ( !is_null($password) ) {
-            $user->password = bcrypt($password);
+            $user->password = Hash::make($password);
         }
 
         $user->save();

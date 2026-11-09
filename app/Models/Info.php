@@ -1,11 +1,16 @@
 <?php
 
-namespace App\Http\Models;
+namespace App\Models;
 
+use Database\Factories\InfoFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Info extends Model
 {
+    /** @use HasFactory<InfoFactory> */
+    use HasFactory;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -22,7 +27,7 @@ class Info extends Model
      */
     public function authorUser()
     {
-        return $this->belongsTo(\App\User::class, 'author');
+        return $this->belongsTo(User::class, 'author');
     }
 
     /**
@@ -30,7 +35,7 @@ class Info extends Model
      * everyone else only the public ones.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeVisibleTo($query, $user)

@@ -1,53 +1,55 @@
 <?php
 
+use App\Http\Controllers\Admin\AlertController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\EmailController;
+use App\Http\Controllers\Admin\InfoController;
+use App\Http\Controllers\Admin\LicenseController;
+use App\Http\Controllers\Admin\OptionsController;
+use App\Http\Controllers\Admin\PlanController;
+use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Admin Routes
-|--------------------------------------------------------------------------
-|
-*/
+Route::prefix('dashboard')->middleware('auth')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-Route::group(['prefix' => 'dashboard', 'middleware' => 'auth'], function() {
-	Route::get('/', 'Admin\DashboardController@index')->name('dashboard');
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings')->middleware('can:editProfile');
+    Route::patch('/settings', [SettingsController::class, 'settingsEdit'])->name('settingsEdit')->middleware('can:editProfile');
 
-	Route::get('/settings', 'Admin\SettingsController@index')->name('settings')->middleware('can:editProfile');
-	Route::patch('/settings', 'Admin\SettingsController@settingsEdit')->name('settingsEdit')->middleware('can:editProfile');
+    Route::get('/options', [OptionsController::class, 'index'])->name('options')->middleware('can:editOptions');
+    Route::patch('/options', [OptionsController::class, 'optionsEdit'])->name('optionsEdit')->middleware('can:editOptions');
 
-	Route::get('/options', 'Admin\OptionsController@index')->name('options')->middleware('can:editOptions');
-	Route::patch('/options', 'Admin\OptionsController@optionsEdit')->name('optionsEdit')->middleware('can:editOptions');
+    Route::get('/users', [UserController::class, 'index'])->name('users')->middleware('can:viewUsers');
+    Route::get('/users/add-user', [UserController::class, 'userAdd'])->name('userAdd')->middleware('can:addUsers');
+    Route::get('/users/view-user/{id}', [UserController::class, 'userView'])->name('userView')->middleware('can:viewUsers');
+    Route::get('/users/edit-user/{id}', [UserController::class, 'userEdit'])->name('userEdit')->middleware('can:editUsers');
 
-	Route::get('/users', 'Admin\UserController@index')->name('users')->middleware('can:viewUsers');
-	Route::get('/users/add-user', 'Admin\UserController@userAdd')->name('userAdd')->middleware('can:addUsers');
-	Route::get('/users/view-user/{id}', 'Admin\UserController@userView')->name('userView')->middleware('can:viewUsers');
-	Route::get('/users/edit-user/{id}', 'Admin\UserController@userEdit')->name('userEdit')->middleware('can:editUsers');
+    Route::get('/infos', [InfoController::class, 'index'])->name('infos')->middleware('can:viewPosts');
+    Route::get('/infos/add-info', [InfoController::class, 'infoAdd'])->name('infoAdd')->middleware('can:addPosts');
+    Route::get('/infos/view-info/{id}', [InfoController::class, 'infoView'])->name('infoView')->middleware('can:viewPosts');
+    Route::get('/infos/edit-info/{id}', [InfoController::class, 'infoEdit'])->name('infoEdit')->middleware('can:editPosts');
+    Route::post('/infos/add-info', [InfoController::class, 'infoAddSave'])->name('infoAddSave')->middleware('can:addPosts');
+    Route::patch('/infos/edit-info/{id}', [InfoController::class, 'infoEditSave'])->name('infoEditSave')->middleware('can:editPosts');
+    Route::delete('/infos/edit-info/{id}', [InfoController::class, 'infoDelete'])->name('infoDelete')->middleware('can:deletePosts');
 
-	Route::get('/infos', 'Admin\InfoController@index')->name('infos')->middleware('can:viewPosts');
-	Route::get('/infos/add-info', 'Admin\InfoController@infoAdd')->name('infoAdd')->middleware('can:addPosts');
-	Route::get('/infos/view-info/{id}', 'Admin\InfoController@infoView')->name('infoView')->middleware('can:viewPosts');
-	Route::get('/infos/edit-info/{id}', 'Admin\InfoController@infoEdit')->name('infoEdit')->middleware('can:editPosts');
-	Route::post('/infos/add-info', 'Admin\InfoController@infoAddSave')->name('infoAddSave')->middleware('can:addPosts');
-	Route::patch('/infos/edit-info/{id}', 'Admin\InfoController@infoEditSave')->name('infoEditSave')->middleware('can:editPosts');
-	Route::delete('/infos/edit-info/{id}', 'Admin\InfoController@infoDelete')->name('infoDelete')->middleware('can:deletePosts');
+    Route::get('/alerts', [AlertController::class, 'index'])->name('alerts')->middleware('can:viewPosts');
+    Route::get('/alerts/add-alert', [AlertController::class, 'alertAdd'])->name('alertAdd')->middleware('can:addPosts');
+    Route::get('/alerts/view-alert/{id}', [AlertController::class, 'alertView'])->name('alertView')->middleware('can:viewPosts');
+    Route::get('/alerts/edit-alert/{id}', [AlertController::class, 'alertEdit'])->name('alertEdit')->middleware('can:editPosts');
 
-	Route::get('/alerts', 'Admin\AlertController@index')->name('alerts')->middleware('can:viewPosts');
-	Route::get('/alerts/add-alert', 'Admin\AlertController@alertAdd')->name('alertAdd')->middleware('can:addPosts');
-	Route::get('/alerts/view-alert/{id}', 'Admin\AlertController@alertView')->name('alertView')->middleware('can:viewPosts');
-	Route::get('/alerts/edit-alert/{id}', 'Admin\AlertController@alertEdit')->name('alertEdit')->middleware('can:editPosts');
+    Route::get('/plans', [PlanController::class, 'index'])->name('plans')->middleware('can:viewPosts');
+    Route::get('/plans/add-plan', [PlanController::class, 'planAdd'])->name('planAdd')->middleware('can:addPosts');
+    Route::get('/plans/view-plan/{id}', [PlanController::class, 'planView'])->name('planView')->middleware('can:viewPosts');
+    Route::get('/plans/edit-plan/{id}', [PlanController::class, 'planEdit'])->name('planEdit')->middleware('can:editPosts');
 
-	Route::get('/plans', 'Admin\PlanController@index')->name('plans')->middleware('can:viewPosts');
-	Route::get('/plans/add-plan', 'Admin\PlanController@planAdd')->name('planAdd')->middleware('can:addPosts');
-	Route::get('/plans/view-plan/{id}', 'Admin\PlanController@planView')->name('planView')->middleware('can:viewPosts');
-	Route::get('/plans/edit-plan/{id}', 'Admin\PlanController@planEdit')->name('planEdit')->middleware('can:editPosts');
+    Route::get('/licenses', [LicenseController::class, 'index'])->name('licenses')->middleware('can:viewPosts');
+    Route::get('/licenses/add-license', [LicenseController::class, 'licenseAdd'])->name('licenseAdd')->middleware('can:addPosts');
+    Route::get('/licenses/view-license/{id}', [LicenseController::class, 'licenseView'])->name('licenseView')->middleware('can:viewPosts');
+    Route::get('/licenses/edit-license/{id}', [LicenseController::class, 'licenseEdit'])->name('licenseEdit')->middleware('can:editPosts');
 
-	Route::get('/licenses', 'Admin\LicenseController@index')->name('licenses')->middleware('can:viewPosts');
-	Route::get('/licenses/add-license', 'Admin\LicenseController@licenseAdd')->name('licenseAdd')->middleware('can:addPosts');
-	Route::get('/licenses/view-license/{id}', 'Admin\LicenseController@licenseView')->name('licenseView')->middleware('can:viewPosts');
-	Route::get('/licenses/edit-license/{id}', 'Admin\LicenseController@licenseEdit')->name('licenseEdit')->middleware('can:editPosts');
-
-	Route::get('/messages', 'Admin\EmailController@index')->name('messages')->middleware('can:accessMessages');
-	Route::get('/messages/sent', 'Admin\EmailController@messagesSent')->name('messagesSent')->middleware('can:accessMessages');
-	Route::get('/messages/send-message', 'Admin\EmailController@messageSend')->name('messageSend')->middleware('can:accessMessages');
-	Route::get('/messages/view-message/{id}', 'Admin\EmailController@messageView')->name('messageView')->middleware('can:accessMessages');
+    Route::get('/messages', [EmailController::class, 'index'])->name('messages')->middleware('can:accessMessages');
+    Route::get('/messages/sent', [EmailController::class, 'messagesSent'])->name('messagesSent')->middleware('can:accessMessages');
+    Route::get('/messages/send-message', [EmailController::class, 'messageSend'])->name('messageSend')->middleware('can:accessMessages');
+    Route::get('/messages/view-message/{id}', [EmailController::class, 'messageView'])->name('messageView')->middleware('can:accessMessages');
 });

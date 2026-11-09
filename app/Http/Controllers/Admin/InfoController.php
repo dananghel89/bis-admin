@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Models\Info;
+use App\Models\Info;
 use App\Http\Requests\InfoAddRequest;
 use App\Http\Requests\InfoEditRequest;
 use Illuminate\Support\Facades\Auth;

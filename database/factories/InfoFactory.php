@@ -1,20 +1,38 @@
 <?php
 
-use App\User;
-use App\Http\Models\Info;
-use Faker\Generator as Faker;
+namespace Database\Factories;
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+use App\Models\Info;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Info::class, function (Faker $faker) {
-    return [
-        'title' => $faker->unique()->sentence(4),
-        'content' => $faker->paragraph,
-        'author' => function () {
-            return factory(User::class)->states('editor')->create()->id;
-        },
-        'status' => 'public',
-    ];
-});
+/**
+ * @extends Factory<Info>
+ */
+class InfoFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            'title' => fake()->unique()->sentence(4),
+            'content' => fake()->paragraph(),
+            'author' => User::factory()->editor(),
+            'status' => 'public',
+        ];
+    }
 
-$factory->state(Info::class, 'private', ['status' => 'private']);
+    /**
+     * Only editors can see it.
+     */
+    public function private(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'private',
+        ]);
+    }
+}
