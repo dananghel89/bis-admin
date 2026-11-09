@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Admin;
 
-use App\User;
+use App\Models\User;
 use Tests\TestCase;
-use App\Http\Models\Info;
+use App\Models\Info;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class InfosTest extends TestCase
@@ -12,7 +12,7 @@ class InfosTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @var \App\User
+     * @var \App\Models\User
      */
     protected $editor;
 
@@ -20,7 +20,7 @@ class InfosTest extends TestCase
     {
         parent::setUp();
 
-        $this->editor = factory(User::class)->states('editor')->create();
+        $this->editor = User::factory()->editor()->create();
     }
 
     public function test_editor_adds_an_info()
@@ -39,7 +39,7 @@ class InfosTest extends TestCase
 
     public function test_title_is_required_and_unique()
     {
-        factory(Info::class)->create(['title' => 'Taken']);
+        Info::factory()->create(['title' => 'Taken']);
 
         $this->actingAs($this->editor)
             ->post('/dashboard/infos/add-info', ['content' => 'x', 'status' => 'public'])
@@ -54,7 +54,7 @@ class InfosTest extends TestCase
 
     public function test_editor_edits_an_info_keeping_its_title()
     {
-        $info = factory(Info::class)->create(['title' => 'Same title']);
+        $info = Info::factory()->create(['title' => 'Same title']);
 
         $this->actingAs($this->editor)
             ->patch("/dashboard/infos/edit-info/{$info->id}", [
@@ -71,7 +71,7 @@ class InfosTest extends TestCase
 
     public function test_editor_deletes_an_info()
     {
-        $info = factory(Info::class)->create();
+        $info = Info::factory()->create();
 
         $this->actingAs($this->editor)
             ->delete("/dashboard/infos/edit-info/{$info->id}")
@@ -88,21 +88,20 @@ class InfosTest extends TestCase
 
     public function test_list_shows_the_authors_name()
     {
-        $author = factory(User::class)->states('editor')->create(['name' => 'Ana Architect']);
-        factory(Info::class)->create(['title' => 'Plan review', 'author' => $author->id]);
+        $author = User::factory()->editor()->create(['name' => 'Ana Architect']);
+        Info::factory()->create(['title' => 'Plan review', 'author' => $author->id]);
 
         $this->actingAs($this->editor)
             ->get('/dashboard/infos')
-            ->assertSee('Plan review')
-            ->assertSee('Ana Architect');
+            ->assertSee('Plan review', false)
+            ->assertSee('Ana Architect', false);
     }
 
     public function test_list_is_newest_first_and_loads_authors_in_one_query()
     {
-        // B15
-        factory(Info::class)->create(['title' => 'Older info', 'created_at' => now()->subDays(2)]);
-        factory(Info::class)->create(['title' => 'Newest info', 'created_at' => now()]);
-        factory(Info::class, 3)->create(['created_at' => now()->subDays(5)]);
+        Info::factory()->create(['title' => 'Older info', 'created_at' => now()->subDays(2)]);
+        Info::factory()->create(['title' => 'Newest info', 'created_at' => now()]);
+        Info::factory(3)->create(['created_at' => now()->subDays(5)]);
 
         \DB::enableQueryLog();
         $html = $this->actingAs($this->editor)->get('/dashboard/infos')->getContent();
@@ -116,20 +115,19 @@ class InfosTest extends TestCase
 
     public function test_content_keeps_line_breaks_and_stays_escaped()
     {
-        // B16
-        $info = factory(Info::class)->create(['content' => "Line one\nLine two <script>alert(1)</script>"]);
+        $info = Info::factory()->create(['content' => "Line one\nLine two <script>alert(1)</script>"]);
 
         $this->actingAs($this->editor)
             ->get("/dashboard/infos/view-info/{$info->id}")
-            ->assertSee('Line one<br />')
-            ->assertSee('&lt;script&gt;')
-            ->assertDontSee('<script>alert(1)</script>');
+            ->assertSee('Line one<br />', false)
+            ->assertSee('&lt;script&gt;', false)
+            ->assertDontSee('<script>alert(1)</script>', false);
     }
 
     public function test_subscriber_cannot_add_edit_or_delete()
     {
-        $subscriber = factory(User::class)->create();
-        $info = factory(Info::class)->create();
+        $subscriber = User::factory()->create();
+        $info = Info::factory()->create();
 
         $this->actingAs($subscriber)->post('/dashboard/infos/add-info', ['title' => 'X', 'status' => 'public'])->assertForbidden();
         $this->actingAs($subscriber)->patch("/dashboard/infos/edit-info/{$info->id}", ['title' => 'X', 'status' => 'public'])->assertForbidden();
@@ -140,8 +138,7 @@ class InfosTest extends TestCase
 
     public function test_status_must_be_public_or_private()
     {
-        // B05
-        $info = factory(Info::class)->create();
+        $info = Info::factory()->create();
 
         $this->actingAs($this->editor)
             ->post('/dashboard/infos/add-info', ['title' => 'Odd', 'status' => 'whatever'])
@@ -156,36 +153,35 @@ class InfosTest extends TestCase
 
     public function test_subscriber_gets_404_for_a_private_info()
     {
-        // B06: privacy is enforced by the controller, not only by the view
-        $subscriber = factory(User::class)->create();
-        $private = factory(Info::class)->states('private')->create(['content' => 'SECRET-CONTENT']);
-        $public = factory(Info::class)->create();
+        // Privacy is enforced by the controller, not only by the view
+        $subscriber = User::factory()->create();
+        $private = Info::factory()->private()->create(['content' => 'SECRET-CONTENT']);
+        $public = Info::factory()->create();
 
         $this->actingAs($subscriber)->get("/dashboard/infos/view-info/{$private->id}")
             ->assertNotFound()
-            ->assertDontSee('SECRET-CONTENT');
+            ->assertDontSee('SECRET-CONTENT', false);
         $this->actingAs($subscriber)->get("/dashboard/infos/view-info/{$public->id}")->assertOk();
         $this->actingAs($this->editor)->get("/dashboard/infos/view-info/{$private->id}")->assertOk();
     }
 
     public function test_delete_asks_for_confirmation()
     {
-        // B09
-        $info = factory(Info::class)->create();
+        $info = Info::factory()->create();
 
         $this->actingAs($this->editor)
             ->get("/dashboard/infos/edit-info/{$info->id}")
-            ->assertSee("return confirm('Delete this info?')");
+            ->assertSee("return confirm('Delete this info?')", false);
     }
 
     public function test_subscriber_does_not_see_private_infos_in_the_list()
     {
-        factory(Info::class)->create(['title' => 'Public note']);
-        factory(Info::class)->states('private')->create(['title' => 'Private note']);
+        Info::factory()->create(['title' => 'Public note']);
+        Info::factory()->private()->create(['title' => 'Private note']);
 
-        $this->actingAs(factory(User::class)->create())
+        $this->actingAs(User::factory()->create())
             ->get('/dashboard/infos')
-            ->assertSee('Public note')
-            ->assertDontSee('Private note');
+            ->assertSee('Public note', false)
+            ->assertDontSee('Private note', false);
     }
 }

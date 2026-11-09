@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\User;
+use App\Models\User;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,7 +13,7 @@ class AdminSeederTest extends TestCase
 
     public function test_seeding_creates_one_admin_from_the_settings()
     {
-        // B10: a fresh install gets its first admin from db:seed
+        // A fresh install gets its first admin from db:seed
         config([
             'project.seed_admin.name' => 'Site Admin',
             'project.seed_admin.email' => 'owner@example.com',

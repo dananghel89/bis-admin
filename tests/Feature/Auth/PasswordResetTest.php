@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
-use App\User;
+use App\Models\User;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
@@ -16,13 +16,13 @@ class PasswordResetTest extends TestCase
 
     public function test_forgot_password_page_renders()
     {
-        $this->get('/password/reset')->assertOk()->assertSee('name="email"');
+        $this->get('/password/reset')->assertOk()->assertSee('name="email"', false);
     }
 
     public function test_requesting_a_reset_sends_the_reset_notification()
     {
         Notification::fake();
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $this->post('/password/email', ['email' => $user->email])->assertSessionHas('status');
 
@@ -31,23 +31,36 @@ class PasswordResetTest extends TestCase
 
     public function test_reset_requests_are_throttled()
     {
-        // B08: at most 3 requests per 10 minutes from one IP
+        // At most 3 requests per 10 minutes from one IP. Each request uses another user, because
+        // the password broker also limits repeat links for the same email (60 seconds).
         Notification::fake();
-        $user = factory(User::class)->create();
+        $users = User::factory(4)->create();
 
-        for ($i = 0; $i < 3; $i++) {
+        foreach ($users->take(3) as $user) {
             $this->post('/password/email', ['email' => $user->email])->assertSessionHas('status');
+            Notification::assertSentTo($user, ResetPassword::class);
         }
-        $this->post('/password/email', ['email' => $user->email])->assertStatus(429);
+        $this->post('/password/email', ['email' => $users[3]->email])->assertStatus(429);
 
-        Notification::assertSentToTimes($user, ResetPassword::class, 3);
+        Notification::assertNotSentTo($users[3], ResetPassword::class);
+    }
+
+    public function test_the_same_email_gets_one_link_per_minute()
+    {
+        Notification::fake();
+        $user = User::factory()->create();
+
+        $this->post('/password/email', ['email' => $user->email])->assertSessionHas('status');
+        $this->post('/password/email', ['email' => $user->email])->assertSessionHasErrors('email');
+
+        Notification::assertSentToTimes($user, ResetPassword::class, 1);
     }
 
     public function test_reset_throttle_is_separate_from_sign_up()
     {
         // The throttle key includes the route, so sign-up attempts don't use up reset requests
         Notification::fake();
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         for ($i = 0; $i < 3; $i++) {
             $this->post('/register', ['name' => 'X']);
@@ -58,20 +71,20 @@ class PasswordResetTest extends TestCase
 
     public function test_reset_screen_renders()
     {
-        $this->get('/password/reset/some-token')->assertOk()->assertSee('name="token"');
+        $this->get('/password/reset/some-token')->assertOk()->assertSee('name="token"', false);
     }
 
     public function test_reset_screen_prefills_the_email_from_the_link()
     {
         $this->get('/password/reset/some-token?email=jane%40example.com')
             ->assertOk()
-            ->assertSee('value="jane@example.com"')
-            ->assertDontSee('value="1"');
+            ->assertSee('value="jane@example.com"', false)
+            ->assertDontSee('value="1"', false);
     }
 
     public function test_valid_token_resets_the_password()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $token = Password::broker()->createToken($user);
 
         $this->post('/password/reset', [

@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
-use App\User;
+use App\Models\User;
 use Tests\TestCase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -41,7 +41,7 @@ class RegisterTest extends TestCase
 
     public function test_form_renders_when_membership_is_on()
     {
-        $this->get('/register')->assertOk()->assertSee('name="terms"');
+        $this->get('/register')->assertOk()->assertSee('name="terms"', false);
     }
 
     public function test_valid_sign_up_creates_a_logged_in_subscriber()
@@ -65,7 +65,6 @@ class RegisterTest extends TestCase
 
     public function test_password_needs_at_least_8_characters()
     {
-        // B17
         $data = array_merge($this->validData(), ['password' => 'short12', 'password_confirmation' => 'short12']);
 
         $this->post('/register', $data)->assertSessionHasErrors('password');
@@ -74,7 +73,7 @@ class RegisterTest extends TestCase
 
     public function test_sign_ups_are_throttled()
     {
-        // B08: at most 3 sign-up attempts per 10 minutes from one IP
+        // At most 3 sign-up attempts per 10 minutes from one IP
         for ($i = 0; $i < 3; $i++) {
             $this->post('/register', ['name' => 'X'])->assertSessionHasErrors('email');
         }
@@ -94,10 +93,10 @@ class RegisterTest extends TestCase
 
     public function test_login_page_hides_the_register_link_when_membership_is_off()
     {
-        $this->get('/login')->assertSee(url('/register'));
+        $this->get('/login')->assertSee(url('/register'), false);
 
         $this->setMembership('0');
 
-        $this->get('/login')->assertDontSee(url('/register'));
+        $this->get('/login')->assertDontSee(url('/register'), false);
     }
 }

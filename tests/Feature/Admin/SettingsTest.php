@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
-use App\User;
+use App\Models\User;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,7 +13,7 @@ class SettingsTest extends TestCase
 
     public function test_user_changes_name_and_email()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $this->actingAs($user)
             ->patch('/dashboard/settings', ['name' => 'Renamed', 'email' => 'renamed@example.com'])
@@ -26,8 +26,8 @@ class SettingsTest extends TestCase
 
     public function test_email_must_be_unique_but_may_stay_the_same()
     {
-        $user = factory(User::class)->create();
-        $other = factory(User::class)->create();
+        $user = User::factory()->create();
+        $other = User::factory()->create();
 
         $this->actingAs($user)
             ->patch('/dashboard/settings', ['name' => $user->name, 'email' => $user->email])
@@ -40,7 +40,7 @@ class SettingsTest extends TestCase
 
     public function test_user_changes_password_with_confirmation()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $this->actingAs($user)
             ->patch('/dashboard/settings', [
@@ -65,8 +65,7 @@ class SettingsTest extends TestCase
 
     public function test_new_password_needs_at_least_8_characters()
     {
-        // B17
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $this->actingAs($user)
             ->patch('/dashboard/settings', [
@@ -82,7 +81,7 @@ class SettingsTest extends TestCase
 
     public function test_blank_password_keeps_the_old_one()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $this->actingAs($user)
             ->patch('/dashboard/settings', ['name' => 'Same', 'email' => $user->email, 'password' => ''])

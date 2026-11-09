@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
-use App\User;
+use App\Models\User;
 use Tests\TestCase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -12,7 +12,7 @@ class OptionsTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @var \App\User
+     * @var \App\Models\User
      */
     protected $admin;
 
@@ -20,7 +20,7 @@ class OptionsTest extends TestCase
     {
         parent::setUp();
 
-        $this->admin = factory(User::class)->states('admin')->create();
+        $this->admin = User::factory()->admin()->create();
     }
 
     /**
@@ -36,8 +36,8 @@ class OptionsTest extends TestCase
     {
         $this->actingAs($this->admin)
             ->get('/dashboard/options')
-            ->assertSee('value="BIS"')
-            ->assertSee('value="Architecture Web Application"');
+            ->assertSee('value="BIS"', false)
+            ->assertSee('value="Architecture Web Application"', false);
     }
 
     public function test_admin_saves_the_four_options()
@@ -69,7 +69,6 @@ class OptionsTest extends TestCase
 
     public function test_options_that_are_not_on_the_form_keep_their_value()
     {
-        // B07
         DB::table('options')->insert(['name' => 'logo', 'value' => 'logo.png']);
 
         $this->actingAs($this->admin)->patch('/dashboard/options', [
@@ -83,7 +82,7 @@ class OptionsTest extends TestCase
 
     public function test_saving_creates_a_missing_option_row()
     {
-        // B07: update by name, not by row id
+        // Update by name, not by row id
         DB::table('options')->where('name', 'tagline')->delete();
 
         $this->actingAs($this->admin)->patch('/dashboard/options', [

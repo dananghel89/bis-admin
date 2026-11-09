@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Admin;
 
-use App\User;
+use App\Models\User;
 use Tests\TestCase;
-use App\Http\Models\Info;
+use App\Models\Info;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AccessTest extends TestCase
@@ -64,11 +64,11 @@ class AccessTest extends TestCase
     public function test_each_role_can_open_exactly_its_pages()
     {
         $users = [
-            'admin' => factory(User::class)->states('admin')->create(),
-            'editor' => factory(User::class)->states('editor')->create(),
-            'subscriber' => factory(User::class)->create(),
+            'admin' => User::factory()->admin()->create(),
+            'editor' => User::factory()->editor()->create(),
+            'subscriber' => User::factory()->create(),
         ];
-        $info = factory(Info::class)->create();
+        $info = Info::factory()->create();
 
         foreach ($this->pages($info->id) as $uri => $allowed) {
             foreach ($users as $role => $user) {
@@ -82,25 +82,25 @@ class AccessTest extends TestCase
 
     public function test_admin_pages_are_english_only()
     {
-        // B13: the UI is English only (decided 2026-11-02)
+        // The UI is English only (decided 2026-11-02)
         $spanish = [
             'Añadir', 'Todos Los', 'Todas Las', 'Informaciones', 'Información', 'Avisos', 'Planos', 'Licencias',
             'Usuarios', 'Opciones', 'Ajustes', 'Mensajes', 'Bandeja', 'Enviar', 'Administración',
             'Datos De Sistema', 'Cerrar Sesión',
         ];
         $users = [
-            'admin' => factory(User::class)->states('admin')->create(),
-            'editor' => factory(User::class)->states('editor')->create(),
-            'subscriber' => factory(User::class)->create(),
+            'admin' => User::factory()->admin()->create(),
+            'editor' => User::factory()->editor()->create(),
+            'subscriber' => User::factory()->create(),
         ];
-        $info = factory(Info::class)->create();
+        $info = Info::factory()->create();
 
         foreach ($this->pages($info->id) as $uri => $allowed) {
             foreach ($allowed as $role) {
                 $html = $this->actingAs($users[$role])->get($uri)->getContent();
 
                 foreach ($spanish as $word) {
-                    $this->assertNotContains($word, $html, "{$role} GET {$uri} contains '{$word}'");
+                    $this->assertStringNotContainsString($word, $html, "{$role} GET {$uri} contains '{$word}'");
                 }
             }
         }
@@ -108,11 +108,11 @@ class AccessTest extends TestCase
 
     public function test_menu_has_no_fake_unread_badge_and_no_messages_entry()
     {
-        // B11: Messages isn't built yet, so its menu (with a hard-coded "10" badge) is hidden
-        $html = $this->actingAs(factory(User::class)->create())->get('/dashboard')->getContent();
+        // Messages isn't built yet, so its menu (with a hard-coded "10" badge) is hidden
+        $html = $this->actingAs(User::factory()->create())->get('/dashboard')->getContent();
 
-        $this->assertNotContains('badge-success', $html);
-        $this->assertNotContains(route('messages'), $html);
+        $this->assertStringNotContainsString('badge-success', $html);
+        $this->assertStringNotContainsString(route('messages'), $html);
     }
 
     public function test_guests_are_sent_to_login_from_every_admin_page()
