@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Environment
 
-Laravel 13 admin app ("BIS Admin") on PHP 8.4, served locally by WAMP at http://bis-admin.test with MySQL database `bis_admin`. Upgraded from Laravel 5.8 / PHP 7.1 on 2026-11-09 (git tag `pre-laravel-13` marks the last 5.8 commit).
+Laravel 13 admin app ("BIS Admin") on PHP 8.4, served locally by WAMP at http://bis-admin.test with MySQL database `bis_admin`. Upgraded from Laravel 5.8 / PHP 7.1 on 2026-11-09 (the last 5.8 commit is `13cccce`).
 
 - **Use the plain `php` (8.4.26) and the global `composer` (2.10).** `php71` is only for the old 5.8 code.
 - **Tests use an in-memory SQLite database** (`phpunit.xml` sets `DB_CONNECTION=sqlite`, `DB_DATABASE=:memory:`; `tests/Unit/TestDatabaseTest.php` guards it), so they never touch `bis_admin`. Still, never put test data into `bis_admin` by hand.
