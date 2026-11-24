@@ -98,6 +98,4 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
         Route::match(['post', 'patch'], '/users/mail-settings/{user}/test', [MailAccountController::class, 'test'])->name('userMailTest');
         Route::delete('/users/mail-settings/{user}', [MailAccountController::class, 'delete'])->name('userMailDelete');
     });
-
-    // Sections still to build: one "coming soon" page each.
 });
