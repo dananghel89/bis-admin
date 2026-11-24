@@ -18,13 +18,7 @@
 				<div class="col-lg-6 col-xs-12 text-lg-right text-center">
 					<ul class="list-inline">
 						<li class="list-inline-item">
-							<a href="{{ route('front') }}">Home</a>
-						</li>
-						<li class="list-inline-item">
 							<a href="{{ route('tos') }}">Terms of Service</a>
-						</li>
-						<li class="list-inline-item">
-							<a href="{{ url('/#contact') }}">Contact</a>
 						</li>
 					</ul>
 				</div>

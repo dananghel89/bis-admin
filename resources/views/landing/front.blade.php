@@ -202,13 +202,13 @@
 
 						<div>
 							<i class="fa fa-envelope"></i>
-							<p><a href="mailto:{{ config('project.contact_email') }}">{{ config('project.contact_email') }}</a></p>
+							<p>{{ config('project.contact_email') }}</p>
 						</div>
 
 						@if ( config('project.contact_phone') )
 							<div>
 								<i class="fa fa-phone"></i>
-								<p><a href="tel:{{ preg_replace('/[^0-9+]/', '', config('project.contact_phone')) }}">{{ config('project.contact_phone') }}</a></p>
+								<p>{{ config('project.contact_phone') }}</p>
 							</div>
 						@endif
 					</div>

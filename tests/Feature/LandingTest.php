@@ -52,7 +52,7 @@ class LandingTest extends TestCase
     {
         config(['project.contact_email' => 'team@example.test']);
 
-        $this->get('/')->assertSee('href="mailto:team@example.test"', false);
+        $this->get('/')->assertSee('<p>team@example.test</p>', false)->assertDontSee('href="mailto:', false);
         $this->get('/terms-of-service')->assertSee('href="mailto:team@example.test"', false);
     }
 
@@ -62,7 +62,8 @@ class LandingTest extends TestCase
 
         $this->get('/')
             ->assertSee('<p>Main Street 1<br />' . "\n" . '08001 Barcelona</p>', false)
-            ->assertSee('<a href="tel:+34900000000">+34 900 000 000</a>', false);
+            ->assertSee('<p>+34 900 000 000</p>', false)
+            ->assertDontSee('href="tel:', false);
     }
 
     public function test_address_and_phone_are_left_out_when_empty()
@@ -97,6 +98,15 @@ class LandingTest extends TestCase
         $this->actingAs(User::factory()->admin()->create())
             ->get('/dashboard/options')
             ->assertNotFound();
+    }
+
+    public function test_footer_links_only_to_the_terms_of_service()
+    {
+        $footer = strstr($this->get('/')->getContent(), '<footer');
+
+        $this->assertStringContainsString('<a href="' . route('tos') . '">Terms of Service</a>', $footer);
+        $this->assertStringNotContainsString('>Home</a>', $footer);
+        $this->assertStringNotContainsString('>Contact</a>', $footer);
     }
 
     public function test_bell_footer_credit_is_kept()

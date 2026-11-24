@@ -14,14 +14,10 @@ return [
     */
 
     'site_title' => env('SITE_TITLE', 'BIS'),
-
     'tagline' => env('SITE_TAGLINE', 'Architecture Web Application'),
 
     'contact_email' => env('CONTACT_EMAIL', 'contact@example.com'),
-
-    // Optional; left out of the page when empty. Use "\n" in .env for a line break.
     'contact_address' => env('CONTACT_ADDRESS'),
-
     'contact_phone' => env('CONTACT_PHONE'),
 
     /*
