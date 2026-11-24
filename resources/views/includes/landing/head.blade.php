@@ -34,6 +34,14 @@
 		resize: none;
 	}
 
+	.contactForm .hp-field {
+		position: absolute;
+		left: -10000px;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+	}
+
 	.info .fa {
 		width: 32px;
 		height: auto;

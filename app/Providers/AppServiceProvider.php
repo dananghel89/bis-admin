@@ -56,6 +56,9 @@ class AppServiceProvider extends ServiceProvider
     protected function defineRateLimiters(): void
     {
         RateLimiter::for('password-email', fn (Request $request) => Limit::perMinutes(10, 3)->by($request->ip()));
-        RateLimiter::for('contact', fn (Request $request) => Limit::perMinutes(10, 3)->by($request->ip()));
+        RateLimiter::for('contact', fn (Request $request) => Limit::perMinutes(10, 3)->by($request->ip())
+            ->response(fn () => redirect()->to(route('front').'#contact')
+                ->withInput()
+                ->withErrors(['contact' => 'Too many messages. Please try again in a few minutes.'])));
     }
 }

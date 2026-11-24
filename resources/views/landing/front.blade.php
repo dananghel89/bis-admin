@@ -207,24 +207,42 @@
 
 				<div class="col-lg-5 col-md-8">
 					<div class="form">						
-						<form role="form" class="contactForm">
-							<fieldset disabled>
+						@if ( session('contact_status') )
+							<div id="sendmessage" class="show">{{ session('contact_status') }}</div>
+						@endif
+
+						@if ( $errors->has('contact') )
+							<div id="errormessage" class="show">{{ $errors->first('contact') }}</div>
+						@endif
+
+						<form role="form" class="contactForm" method="POST" action="{{ route('contact') }}">
+							@csrf
+
+							{{-- Honeypot: hidden from people, bots fill it in. --}}
+							<div class="hp-field" aria-hidden="true">
+								<label for="website">Leave this field empty</label>
+								<input type="text" name="website" id="website" tabindex="-1" autocomplete="off">
+							</div>
+
+							@foreach ( ['name' => 'Your Name', 'email' => 'Your Email', 'subject' => 'Subject'] as $field => $placeholder )
 								<div class="form-group">
-									<input type="text" name="name" class="form-control" id="name" placeholder="Your Name">
+									<input type="{{ $field === 'email' ? 'email' : 'text' }}" name="{{ $field }}" class="form-control" id="{{ $field }}" placeholder="{{ $placeholder }}" value="{{ old($field) }}" required>
+									@if ( $errors->has($field) )
+										<div class="validation show">{{ $errors->first($field) }}</div>
+									@endif
 								</div>
-								<div class="form-group">
-									<input type="email" class="form-control" name="email" id="email" placeholder="Your Email">
-								</div>
-								<div class="form-group">
-									<input type="text" class="form-control" name="subject" id="subject" placeholder="Subject">
-								</div>
-								<div class="form-group">
-									<textarea class="form-control" name="message" rows="5" placeholder="Message"></textarea>
-								</div>
-								<div class="text-center">
-									<button type="submit">Send Message</button>
-								</div>
-							</fieldset>
+							@endforeach
+
+							<div class="form-group">
+								<textarea class="form-control" name="message" id="message" rows="5" placeholder="Message" required>{{ old('message') }}</textarea>
+								@if ( $errors->has('message') )
+									<div class="validation show">{{ $errors->first('message') }}</div>
+								@endif
+							</div>
+
+							<div class="text-center">
+								<button type="submit">Send Message</button>
+							</div>
 						</form>
 					</div>
 				</div>
