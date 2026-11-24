@@ -37,6 +37,25 @@ class LandingTest extends TestCase
             ->assertSee('© ' . date('Y') . ' Test Site', false);
     }
 
+    public function test_pages_have_no_placeholder_text()
+    {
+        foreach (['/', '/terms-of-service'] as $uri) {
+            $html = $this->get($uri)->assertOk()->getContent();
+
+            foreach (['Lorem ipsum', 'dolor sit amet', 'Voluptua', 'Eque feugiat', '+34 935', 'Marià Cubí'] as $placeholder) {
+                $this->assertStringNotContainsString($placeholder, $html, "{$uri} contains '{$placeholder}'");
+            }
+        }
+    }
+
+    public function test_contact_email_comes_from_the_config()
+    {
+        config(['project.contact_email' => 'team@example.test']);
+
+        $this->get('/')->assertSee('href="mailto:team@example.test"', false);
+        $this->get('/terms-of-service')->assertSee('href="mailto:team@example.test"', false);
+    }
+
     public function test_hero_button_logs_in_or_opens_the_dashboard()
     {
         $this->get('/')->assertSee('<a class="btn btn-full" href="' . route('login') . '">Log In</a>', false);

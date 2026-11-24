@@ -9,20 +9,36 @@
 @section('content')
 
 	<section class="tos" id="tos">
-		<div class="container text-center">
-			<h2>Terms of Service</h2>
+		<div class="container">
+			<h2 class="text-center">Terms of Service</h2>
 
 			<div class="row">
 				<div class="col-lg-8 offset-lg-2">
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis suscipit pellentesque libero non interdum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin nec egestas libero. Sed blandit erat sed sapien auctor, ac suscipit neque pharetra. Maecenas eu metus consectetur, viverra elit nec, finibus felis. Donec malesuada ligula et mauris scelerisque, ac lacinia ex tincidunt. In a est imperdiet, dignissim nunc ut, facilisis neque. Donec mattis lacinia nibh in lobortis. Proin in interdum libero. Sed sed imperdiet metus. Suspendisse eu tellus sit amet lectus viverra mollis eget nec nibh. Suspendisse et lectus et arcu ullamcorper tempor at et ligula. In nec nisl massa.</p>
+					<p>These terms apply to everyone who uses {{ config('project.site_title') }} (Building Information System). By logging in, you agree to them.</p>
 
-					<p>Proin eu porta metus. Duis interdum, turpis ullamcorper rhoncus hendrerit, risus tortor luctus purus, non lacinia enim sem sed augue. Aliquam congue ut turpis at sollicitudin. Duis vel condimentum nulla. Sed scelerisque feugiat diam sed convallis. Quisque fringilla dapibus lectus, eu vehicula lacus imperdiet eget. Integer condimentum velit et justo convallis, et aliquet magna vestibulum. Integer auctor odio a mattis volutpat. Quisque a odio non est consectetur consequat eu ut lectus. Morbi fermentum velit leo, quis rutrum arcu facilisis id.</p>
+					<h3>1. The service</h3>
+					<p>{{ config('project.site_title') }} is a private web application where our staff keep the information, plans and licenses of properties, and where the architects who work on those properties can read them, download them and report the status of their work.</p>
 
-					<p>Ut sodales est a elit gravida tincidunt. Sed sit amet nunc sit amet massa tempor blandit. Mauris vitae lorem augue. Sed non nunc augue. Pellentesque efficitur congue lorem, ultricies vehicula metus rutrum ac. Nunc eu ornare leo. Maecenas dictum vulputate erat eget viverra. Vivamus vulputate lacus ac lacus lobortis, ornare bibendum libero hendrerit. Aliquam pulvinar, ante quis rhoncus mollis, lacus enim mattis eros, id consectetur lectus arcu vel lacus. Morbi sit amet efficitur urna. Fusce gravida, dolor at bibendum faucibus, ante justo dapibus elit, quis bibendum massa purus eu lacus. Nulla vehicula nec turpis efficitur gravida.</p>
+					<h3>2. Accounts</h3>
+					<p>There is no public sign-up. Our staff create every account and choose its role. Keep your password to yourself, change it from your settings if you think someone else knows it, and tell us at once if your account is used without your permission. We may suspend or delete an account that is misused or no longer needed.</p>
 
-					<p>Mauris leo libero, interdum vitae pellentesque a, pretium non ex. Duis suscipit quam elit, a molestie quam volutpat id. Mauris bibendum urna lectus, id dapibus libero interdum sit amet. Praesent vel nisl fringilla, aliquet ipsum et, dictum sem. Integer molestie nibh elit, sed posuere neque iaculis id. Vivamus et volutpat nisi. Nullam molestie tortor justo, nec sodales neque placerat faucibus. Praesent faucibus elit sapien, ac molestie turpis placerat eu. Praesent ullamcorper bibendum metus quis eleifend.</p>
+					<h3>3. Documents are confidential</h3>
+					<p>The information, plans and licenses you can see are shared with you only for your work on those properties. Don't share, publish or sell them, or use them for anything else, without permission from our staff. You can only see the properties our staff make available to you.</p>
 
-					<p>Etiam ornare odio eget egestas auctor. Aenean convallis euismod feugiat. In sed turpis orci. Praesent vestibulum mi et ex rutrum, a interdum lorem dignissim. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Cras ultrices ligula a lorem pharetra pellentesque. Pellentesque venenatis euismod facilisis. Suspendisse lobortis purus ligula, sit amet porttitor orci convallis blandit. Sed consectetur tincidunt lectus semper consectetur. Pellentesque sagittis pretium velit in elementum. Sed lobortis elementum massa, quis euismod velit tempor posuere. Donec aliquam est libero. Quisque malesuada nisl diam.</p>
+					<h3>4. Acceptable use</h3>
+					<p>Don't try to open pages, properties or files you weren't given access to, don't upload or send harmful files or content, and don't use the service in a way that could damage it or disturb other users.</p>
+
+					<h3>5. Mailbox</h3>
+					<p>The mailbox connects to an email account that belongs to you. Its settings and password are stored encrypted and are used only to read and send your email from the dashboard. You are responsible for the messages you send.</p>
+
+					<h3>6. Availability</h3>
+					<p>We work to keep the service available and the documents correct, but we can't promise that it will always be online or free of errors. Keep your own copy of any document you can't afford to lose.</p>
+
+					<h3>7. Changes</h3>
+					<p>We may update these terms. The current version is always on this page, and using the service after a change means you accept it.</p>
+
+					<h3>8. Contact</h3>
+					<p>Questions about these terms? Write to <a href="mailto:{{ config('project.contact_email') }}">{{ config('project.contact_email') }}</a> or use the <a href="{{ url('/#contact') }}">contact form</a>.</p>
 				</div>
 			</div>
 		</div>

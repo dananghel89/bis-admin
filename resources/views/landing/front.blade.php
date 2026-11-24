@@ -19,7 +19,7 @@
 
 			<div class="col-md-12">
 				<h1>Building Information System</h1>
-				<p class="tagline">The architecture web application for documentation, plans & licenses.</p>
+				<p class="tagline">Property information, plans and licenses for architects, in one place.</p>
 
 				@auth
 					<a class="btn btn-full" href="{{ route('dashboard') }}">Dashboard</a>
@@ -40,30 +40,30 @@
 		<div class="container text-center">
 			<h2>About {{ config('project.site_title') }}</h2>
 
-			<p>Voluptua scripserit per ad, laudem viderer sit ex. Ex alia corrumpit voluptatibus usu, sed unum convenire id. Ut cum nisl moderatius, per nihil dicant commodo an. Eum tacimates erroribus ad. Atqui feugiat euripidis ea pri, sed veniam tacimates ex. Menandri temporibus an duo.</p>
+			<p>{{ config('project.site_title') }} (Building Information System) keeps the documentation of every property in one place. Our staff add the information, plans and licenses of each property, and the architects who work on it open them, download the PDF files and report the progress of their work. There is no public sign-up: staff create every account, so each document stays with the people who need it.</p>
 
 			<div class="row stats-row">
 				<div class="stats-col text-center col-md-3 col-sm-6">
 					<div class="circle">
-						<span class="stats-no">1</span> Easy. Fast. <br> Efficient.
+						<span class="stats-no">1</span> Property <br> Records
 					</div>
 				</div>
 
 				<div class="stats-col text-center col-md-3 col-sm-6">
 					<div class="circle">
-						<span class="stats-no">2</span> Direct <br> Messages
+						<span class="stats-no">2</span> Plans on <br> a Map
 					</div>
 				</div>
 
 				<div class="stats-col text-center col-md-3 col-sm-6">
 					<div class="circle">
-						<span class="stats-no">3</span> Digital <br> Plans
+						<span class="stats-no">3</span> Licenses <br> &amp; Dates
 					</div>
 				</div>
 
 				<div class="stats-col text-center col-md-3 col-sm-6">
 					<div class="circle">
-						<span class="stats-no">4</span> Optimize <br> Workflow
+						<span class="stats-no">4</span> Built-in <br> Mailbox
 					</div>
 				</div>
 			</div>
@@ -78,7 +78,7 @@
 	<div class="{{ $parallax_cls }}" data-bg-img="{{ $parallax_img }}" data-settings='{"stellar-background-ratio": 0.6}' data-toggle="parallax-bg">
 		<div class="container">
 			<h2>Welcome to {{ config('project.site_title') }}</h2>
-			<p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin aliquam blandit velit vel eleifend.</p>
+			<p class="mb-0">Everything an architect needs to know about a property, one login away.</p>
 		</div>
 	</div>
 
@@ -91,28 +91,13 @@
 					<div class="card card-block text-center">
 						<div>
 							<div class="feature-icon">
-								<span class="fa fa-wrench"></span>
-							</div>
-						</div>
-
-						<div>
-							<h3>Speciality Architect</h3>
-							<p>Nam sodales eleifend posuere. Sed eget nisl non risus placerat ornare. Mauris sit amet tempor eros. Etiam commodo sem sed gravida egestas.</p>
-						</div>
-					</div>
-				</div>
-
-				<div class="feature-col col-lg-4 col-xs-12">
-					<div class="card card-block text-center">
-						<div>
-							<div class="feature-icon">
 								<span class="fa fa-home"></span>
 							</div>
 						</div>
 
 						<div>
-							<h3>Facility Management</h3>
-							<p>Eque feugiat contentiones ei has. Id summo mundi explicari his, nec in maiorum scriptorem. Sed eget nisl non risus placerat ornare.</p>
+							<h3>Property Information</h3>
+							<p>The address, description and location of every property, kept up to date by our staff and ready whenever you need them.</p>
 						</div>
 					</div>
 				</div>
@@ -121,13 +106,28 @@
 					<div class="card card-block text-center">
 						<div>
 							<div class="feature-icon">
-								<span class="fa fa-search"></span>
+								<span class="fa fa-map-marker"></span>
 							</div>
 						</div>
 
 						<div>
-							<h3>External Expert</h3>
-							<p>Id summo mundi explicari his, nec in maiorum scriptorem. Eque feugiat contentiones ei has. Mauris sit amet tempor eros. Etiam sed gravida egestas.</p>
+							<h3>Plans on a Map</h3>
+							<p>See where each property is on the map, then open its plans and download them as PDF files.</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="feature-col col-lg-4 col-xs-12">
+					<div class="card card-block text-center">
+						<div>
+							<div class="feature-icon">
+								<span class="fa fa-file-text-o"></span>
+							</div>
+						</div>
+
+						<div>
+							<h3>Licenses &amp; Expiry Dates</h3>
+							<p>Every license with its number, issue date and expiry date, so a license that is about to expire never goes unnoticed.</p>
 						</div>
 					</div>
 				</div>
@@ -138,13 +138,13 @@
 					<div class="card card-block text-center">
 						<div>
 							<div class="feature-icon">
-								<span class="fa fa-briefcase"></span>
+								<span class="fa fa-tasks"></span>
 							</div>
 						</div>
 
 						<div>
-							<h3>General Contractor</h3>
-							<p>Id summo mundi explicari his, nec in maiorum scriptorem. Eque feugiat contentiones ei has. Mauris sit amet tempor eros. Etiam sed gravida egestas.</p>
+							<h3>Work Status</h3>
+							<p>Architects mark their work on a property as pending, in progress or done, with a short note. Staff see every change.</p>
 						</div>
 					</div>
 				</div>
@@ -153,13 +153,13 @@
 					<div class="card card-block text-center">
 						<div>
 							<div class="feature-icon">
-								<span class="fa fa-cog"></span>
+								<span class="fa fa-envelope"></span>
 							</div>
 						</div>
 
 						<div>
-							<h3>Owner</h3>
-							<p>Nam sodales eleifend posuere. Sed eget nisl non risus placerat ornare. Mauris sit amet tempor eros. Etiam commodo sem sed gravida egestas.</p>
+							<h3>Built-in Mailbox</h3>
+							<p>Send and receive email from your own address without leaving the dashboard.</p>
 						</div>
 					</div>
 				</div>
@@ -168,13 +168,13 @@
 					<div class="card card-block text-center">
 						<div>
 							<div class="feature-icon">
-								<span class="fa fa-info"></span>
+								<span class="fa fa-lock"></span>
 							</div>
 						</div>
 
 						<div>
-							<h3>Informations &amp; Plans</h3>
-							<p>Eque feugiat contentiones ei has. Id summo mundi explicari his, nec in maiorum scriptorem. Sed eget nisl non risus placerat ornare.</p>
+							<h3>Private Access</h3>
+							<p>No public sign-up. Our staff create each account, and architects only see the properties they work on.</p>
 						</div>
 					</div>
 				</div>
@@ -194,18 +194,13 @@
 				<div class="col-lg-3 col-md-4">
 					<div class="info">
 						<div>
-							<i class="fa fa-map-marker"></i>
-							<p>Carrer de Marià Cubí, <br> 178-184, 08021 Barcelona</p>
-						</div>
-
-						<div>
 							<i class="fa fa-envelope"></i>
-							<p>dev@dananghel.com</p>
+							<p><a href="mailto:{{ config('project.contact_email') }}">{{ config('project.contact_email') }}</a></p>
 						</div>
 
 						<div>
-							<i class="fa fa-phone"></i>
-							<p>+34 935 666 222</p>
+							<i class="fa fa-comments"></i>
+							<p>Questions about an account or a property? Write to us, or use the form.</p>
 						</div>
 					</div>
 				</div>
