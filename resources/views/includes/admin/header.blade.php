@@ -38,6 +38,44 @@
 					</a>
 				@endcan
 
+				{{-- The theme's notifications dropdown: for staff, unread contacts and licenses to check --}}
+				@can ( 'readContacts' )
+					@php
+						$notices = array_filter([
+							'contacts' => App\Models\Contact::whereNull('read_at')->count(),
+							'licenses' => App\Models\License::needsAttention()->count(),
+						]);
+					@endphp
+					<div class="dropdown">
+						<button class="btn btn-link text-secondary position-relative p-2" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Notifications">
+							<i class="fas fa-bell"></i>
+							@if ( $notices )
+								<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 10px">{{ array_sum($notices) }}</span>
+							@endif
+						</button>
+						<ul class="dropdown-menu dropdown-menu-end shadow border-0" style="width: 300px; max-width: 90vw">
+							<li><h6 class="dropdown-header bg-body-tertiary fw-bold py-3 px-3">Notifications</h6></li>
+							@if ( isset($notices['contacts']) )
+								<li>
+									<a class="dropdown-item py-2 px-3" href="{{ route('contacts', ['unread' => 1]) }}">
+										<i class="fas fa-at text-danger me-2"></i> {{ trans_choice(':count unread contact message|:count unread contact messages', $notices['contacts']) }}
+									</a>
+								</li>
+							@endif
+							@if ( isset($notices['licenses']) )
+								<li>
+									<a class="dropdown-item py-2 px-3" href="{{ route('licenses', ['state' => 'attention']) }}">
+										<i class="fas fa-file-alt text-warning me-2"></i> {{ trans_choice(':count license expired or expiring|:count licenses expired or expiring', $notices['licenses']) }}
+									</a>
+								</li>
+							@endif
+							@unless ( $notices )
+								<li><span class="dropdown-item-text small text-muted px-3">Nothing new.</span></li>
+							@endunless
+						</ul>
+					</div>
+				@endcan
+
 				@stack('header-right')
 
 				<div class="dropdown">
