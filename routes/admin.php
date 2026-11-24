@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\PropertyController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\UserController;
@@ -32,6 +33,19 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
         Route::delete('/infos/edit-info/{property}', [PropertyController::class, 'propertyDelete'])->name('infoDelete');
     });
 
+    // Plans: everyone sees and downloads the visible ones, staff manage them
+    Route::middleware('can:viewProperties')->group(function () {
+        Route::get('/plans', [PlanController::class, 'index'])->name('plans');
+        Route::get('/plans/download/{plan}', [PlanController::class, 'planDownload'])->name('planDownload');
+    });
+    Route::middleware('can:manageProperties')->group(function () {
+        Route::get('/plans/add-plan', [PlanController::class, 'planAdd'])->name('planAdd');
+        Route::post('/plans/add-plan', [PlanController::class, 'planAddSave'])->name('planAddSave');
+        Route::get('/plans/edit-plan/{plan}', [PlanController::class, 'planEdit'])->name('planEdit');
+        Route::patch('/plans/edit-plan/{plan}', [PlanController::class, 'planEditSave'])->name('planEditSave');
+        Route::delete('/plans/edit-plan/{plan}', [PlanController::class, 'planDelete'])->name('planDelete');
+    });
+
     // Users (staff only)
     Route::middleware('can:manageUsers')->group(function () {
         Route::get('/users', [UserController::class, 'index'])->name('users');
@@ -45,6 +59,5 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
 
     // Sections still to build: one "coming soon" page each.
     Route::view('/alerts', 'admin.alerts.alertsIndex')->name('alerts')->middleware('can:useMailbox');
-    Route::view('/plans', 'admin.plans.plansIndex')->name('plans')->middleware('can:viewProperties');
     Route::view('/licenses', 'admin.licenses.licensesIndex')->name('licenses')->middleware('can:viewProperties');
 });

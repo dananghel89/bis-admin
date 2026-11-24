@@ -68,6 +68,17 @@
 					<a href="{{ route('infos') }}" class="btn btn-sm btn-outline-secondary ms-auto"><i class="fas fa-angle-left me-1"></i> Back to Infos</a>
 				</div>
 			</div>
+
+			<div class="card mt-4">
+				<div class="card-header d-flex justify-content-between align-items-center">
+					<strong class="card-title">Plans</strong>
+					@can ( 'manageProperties' )
+						<a href="{{ route('planAdd', ['property' => $property->id]) }}" class="btn btn-sm btn-success"><i class="fas fa-upload me-1"></i> Upload Plan</a>
+					@endcan
+				</div>
+
+				@include('admin.plans.plansTable', ['plans' => $property->plans()->latest()->get(), 'showProperty' => false])
+			</div>
 		</div>
 
 		<div class="col-xl-5">
