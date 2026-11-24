@@ -11,6 +11,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * Two roles: admin (shown as "Staff") manages everything; editor (shown as
+ * "Architect") sees the properties made visible to them.
+ */
 #[Fillable(['name', 'email', 'password', 'role'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
@@ -18,9 +22,12 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    const ADMIN = 0;
-    const EDITOR = 1;
-    const SUBSCRIBER = 2;
+    public const ADMIN = 0;
+
+    public const EDITOR = 1;
+
+    /** The role names people see. */
+    public const ROLE_LABELS = [self::ADMIN => 'Staff', self::EDITOR => 'Architect'];
 
     /**
      * Get the attributes that should be cast.
@@ -54,15 +61,33 @@ class User extends Authenticatable
     }
 
     /**
-     * Get role value from integer. A missing role (NULL) is no role at all, never admin.
+     * The role in code: 'admin', 'editor', or '' for a missing or unknown role,
+     * which gets no permissions (never admin).
      */
     public function getRole(): string
     {
         return match ($this->role) {
             self::ADMIN => 'admin',
             self::EDITOR => 'editor',
-            self::SUBSCRIBER => 'subscriber',
             default => '',
         };
+    }
+
+    /**
+     * The role people see: "Staff" or "Architect".
+     */
+    public function roleLabel(): string
+    {
+        return self::ROLE_LABELS[$this->role] ?? '';
+    }
+
+    public function isStaff(): bool
+    {
+        return $this->role === self::ADMIN;
+    }
+
+    public function isArchitect(): bool
+    {
+        return $this->role === self::EDITOR;
     }
 }

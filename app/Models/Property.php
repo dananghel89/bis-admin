@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Database\Factories\PropertyFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -89,6 +90,36 @@ class Property extends Model
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * The properties a user may see. Staff: all. Architects: published ones that are
+     * assigned to them, or that have no architect at all. Every property, plan and
+     * license query for a page goes through this; anything else is a 404.
+     *
+     * @param  Builder<Property>  $query
+     */
+    public function scopeVisibleTo(Builder $query, User $user): void
+    {
+        if ($user->isStaff()) {
+            return;
+        }
+
+        if (! $user->isArchitect()) {
+            $query->whereRaw('1 = 0');
+
+            return;
+        }
+
+        $query->where('status', 'published')->where(function (Builder $query) use ($user) {
+            $query->whereHas('architects', fn (Builder $q) => $q->whereKey($user->id))
+                ->orWhereDoesntHave('architects');
+        });
+    }
+
+    public function isVisibleTo(User $user): bool
+    {
+        return static::visibleTo($user)->whereKey($this->id)->exists();
     }
 
     public function isPublished(): bool

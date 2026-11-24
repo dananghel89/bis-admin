@@ -29,12 +29,12 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
-            'role' => User::SUBSCRIBER,
+            'role' => User::EDITOR,
         ];
     }
 
     /**
-     * An admin: manages users and site options.
+     * Staff: manages properties, users and contact messages.
      */
     public function admin(): static
     {
@@ -44,7 +44,7 @@ class UserFactory extends Factory
     }
 
     /**
-     * An editor: writes and manages posts.
+     * An architect: sees the properties made visible to them (the default).
      */
     public function editor(): static
     {

@@ -15,14 +15,16 @@
 				</a>
 			</li>
 
-			@can ( 'viewPosts' )
+			@can ( 'useMailbox' )
 				<li class="nav-item">
 					<a class="nav-link" href="{{ route('alerts') }}" data-page="alerts" title="Alerts">
 						<i class="fas fa-inbox"></i>
 						<span class="nav-text ms-2">Alerts</span>
 					</a>
 				</li>
+			@endcan
 
+			@can ( 'viewProperties' )
 				<li class="nav-header mt-3 mb-2">
 					<span class="small fw-bold text-uppercase text-light opacity-75">Properties</span>
 				</li>
@@ -49,7 +51,7 @@
 				</li>
 			@endcan
 
-			@can ( 'viewUsers' )
+			@can ( 'manageUsers' )
 				<li class="nav-header mt-3 mb-2">
 					<span class="small fw-bold text-uppercase text-light opacity-75">Admin</span>
 				</li>

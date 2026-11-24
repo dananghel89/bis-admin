@@ -30,23 +30,23 @@ class AppServiceProvider extends ServiceProvider
 
     /**
      * The abilities checked by the `can:` route middleware and by @can in the views.
+     * Staff = admin, Architect = editor. Which properties an architect sees is not a
+     * gate: Property::visibleTo() limits every query.
      */
     protected function defineGates(): void
     {
         $roles = fn (string ...$roles) => fn (User $user) => in_array($user->getRole(), $roles, true);
 
-        Gate::define('addUsers', $roles('admin'));
-        Gate::define('viewUsers', $roles('admin'));
-        Gate::define('editUsers', $roles('admin'));
-        Gate::define('deleteUsers', $roles('admin'));
-        Gate::define('editProfile', $roles('admin', 'editor', 'subscriber'));
-        Gate::define('addPosts', $roles('editor'));
-        Gate::define('viewPosts', $roles('editor', 'subscriber'));
-        Gate::define('editPosts', $roles('editor'));
-        Gate::define('deletePosts', $roles('editor'));
-        Gate::define('sendAlerts', $roles('editor'));
-        Gate::define('receiveAlerts', $roles('subscriber'));
-        Gate::define('accessMessages', $roles('admin', 'editor', 'subscriber'));
+        // Staff only
+        Gate::define('manageUsers', $roles('admin'));
+        Gate::define('readContacts', $roles('admin'));
+        Gate::define('manageProperties', $roles('admin')); // add, edit, delete, publish, assign, upload
+
+        // Staff and architects
+        Gate::define('viewProperties', $roles('admin', 'editor')); // lists, pages, maps, downloads
+        Gate::define('updateWorkStatus', $roles('admin', 'editor'));
+        Gate::define('useMailbox', $roles('admin', 'editor'));
+        Gate::define('editProfile', $roles('admin', 'editor'));
     }
 
     /**

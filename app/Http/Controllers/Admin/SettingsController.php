@@ -19,7 +19,7 @@ class SettingsController extends Controller
     {
         $name = Auth::user()->name;
         $email = Auth::user()->email;
-        $role = Auth::user()->getRole();
+        $role = Auth::user()->roleLabel();
 
         return view('admin.settingsEdit', compact('name', 'email', 'role'));
     }
