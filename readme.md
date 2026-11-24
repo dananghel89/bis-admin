@@ -2,18 +2,17 @@
 
 **Building Information System**: an architecture web application for documentation, plans and licenses.
 
-BIS Admin has a public landing page, user accounts with roles, and an admin dashboard where editors publish information for subscribers. It is built with Laravel 13 on PHP 8.4.
+BIS Admin has a public landing page with a contact form, user accounts with roles, and an admin dashboard where editors publish information for subscribers. It is built with Laravel 13 on PHP 8.4.
 
-> **Status:** work in progress. Accounts, site options and **Infos** work end to end. The **Alerts**, **Plans**, **Licenses**, **Users** and **Messages** sections only show their pages so far.
+> **Status:** work in progress. The landing page, its contact form, accounts and **Infos** work end to end. The **Alerts**, **Plans**, **Licenses**, **Users** and **Messages** sections only show their pages so far.
 
 ## Features
 
 | Area | What works |
 |---|---|
-| Landing | Front page and Terms of Service page |
-| Accounts | Login, logout, password reset, and self-registration when *Membership* is on |
+| Landing | Front page, Terms of Service page, and a contact form that saves each message and emails it to the contact address |
+| Accounts | Login, logout and password reset. There is no public sign-up: accounts are created by staff |
 | Settings | Every user can change their own name, email and password |
-| Options | Admins edit the site title, tagline, contact email, and whether anyone can register |
 | Infos | Editors create, edit and delete infos marked *public* or *private*; subscribers read public infos |
 | Alerts, Plans, Licenses, Users, Messages | Pages only; no saving yet |
 
@@ -23,11 +22,11 @@ Every user has one role, stored as a number in the `users.role` column:
 
 | Role | Value | Can access |
 |---|---|---|
-| Admin | `0` | Options, Users, Messages, own Settings |
+| Admin | `0` | Users, Messages, own Settings |
 | Editor | `1` | Create, edit and delete Infos, Alerts, Plans and Licenses; Messages; own Settings |
 | Subscriber | `2` | View Infos (public ones only), Alerts, Plans and Licenses; Messages; own Settings |
 
-People who register themselves become **subscribers**. There is no admin screen for changing roles yet; the first admin is created by the database seeder (see step 4 below).
+There is no public sign-up and no admin screen for accounts yet; the first admin is created by the database seeder (see step 4 below).
 
 ## Requirements
 
@@ -50,7 +49,7 @@ The front-end needs no build step: the admin and landing templates are prebuilt 
    ```
 3. Create an empty MySQL database (named `bis_admin` by default) and set the `DB_*` values in `.env`.
 4. Choose the first admin's login in `.env`: `SEED_ADMIN_NAME`, `SEED_ADMIN_EMAIL` and `SEED_ADMIN_PASSWORD`. The defaults are `admin@example.com` / `password`; never keep them on a public server.
-5. Create the tables and the first admin. The migrations also add the default site options, with Membership turned on:
+5. Create the tables and the first admin:
    ```bash
    php artisan migrate --seed
    ```
@@ -59,15 +58,17 @@ The front-end needs no build step: the admin and landing templates are prebuilt 
 
 ## Configuration
 
-Admins manage these settings from **Dashboard → Options**. They are stored in the `options` table:
+Site settings are read from `config/project.php`, which takes them from `.env`:
 
-| Option | Purpose |
+| `.env` key | Purpose |
 |---|---|
-| Site Title, Tagline | Used in page titles, headers and the footer |
-| Email Address | Contact address (saved, but not shown on the site yet) |
-| Membership | When on, anyone can register at `/register`. When off, `/register` redirects to the home page. |
+| `SITE_TITLE`, `SITE_TAGLINE` | Used in page titles, headers and the footer |
+| `CONTACT_EMAIL` | Shown on the landing page; receives the contact form messages |
+| `MAIL_*` | The SMTP server the site sends email through (contact form, password reset). `MAIL_MAILER=log` writes the emails to `storage/logs` instead |
 
-Membership is checked on every request, so a change takes effect at once, also with cached routes (`php artisan route:cache`).
+After changing `.env` on a server that caches its config, run `php artisan config:cache` again.
+
+The contact form accepts 3 messages per 10 minutes from one IP, ignores bots that fill in a hidden field, and saves every message in the `contacts` table even when the email can't be sent.
 
 ## Tests
 
@@ -76,7 +77,7 @@ php artisan test
 php artisan test --filter test_editor_adds_an_info     # a single test
 ```
 
-The tests run on an in-memory SQLite database (set in `phpunit.xml`), so they never touch the database in `.env`. The feature tests cover login, registration, password reset, each role's access to every admin page, Infos, Settings, Options and the landing pages.
+The tests run on an in-memory SQLite database (set in `phpunit.xml`), so they never touch the database in `.env`. The feature tests cover login, password reset, each role's access to every admin page, Infos, Settings, the landing pages and the contact form.
 
 ## Project structure
 
@@ -84,15 +85,16 @@ The tests run on an in-memory SQLite database (set in `phpunit.xml`), so they ne
 |---|---|
 | `routes/web.php` | Landing routes; loads `routes/auth.php` and `routes/admin.php` |
 | `routes/admin.php` | Dashboard routes under `/dashboard`, protected by `auth` and per-page `can:` permissions |
-| `app/Providers/AppServiceProvider.php` | Defines every permission (Gate ability) for each role, and the sign-up and password-reset rate limits |
+| `app/Providers/AppServiceProvider.php` | Defines every permission (Gate ability) for each role, and the contact form and password-reset rate limits |
+| `config/project.php` | Site title, tagline, contact email and the first admin's login |
 | `app/Http/Controllers/Admin` | Dashboard controllers |
-| `app/Models` | Eloquent models (`User`, `Info`, `Alert`, `Plan`, `License`, `Options`) |
-| `app/Helpers.php` | Global helpers: `get_option()`, `get_post_statuses()`, `get_gravatar()` |
+| `app/Models` | Eloquent models (`User`, `Info`, `Alert`, `Plan`, `License`, `Contact`) |
+| `app/Helpers.php` | Global helpers: `get_post_statuses()`, `get_gravatar()` |
 | `resources/views` | Blade views, with `admin`, `auth` and `landing` layouts |
 
 ## Built with
 
-- [Laravel 13](https://laravel.com/docs/13.x), with [laravel/ui](https://github.com/laravel/ui) for the login, registration and password reset controllers
+- [Laravel 13](https://laravel.com/docs/13.x), with [laravel/ui](https://github.com/laravel/ui) for the login and password reset controllers
 - The Sufee and Bell themes (Bootstrap 4 and jQuery), stored in `public/admin` and `public/landing`; see Credits
 - [Gravatar](https://gravatar.com) for user avatars
 
