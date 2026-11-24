@@ -3,6 +3,7 @@
 {{-- page title --}}
 
 @section('title', 'Add Info')
+@section('page', 'infos')
 
 {{-- content section --}}
 
@@ -14,13 +15,13 @@
 				{{ csrf_field() }}
 
 				<div class="card-body card-block">
-					<div class="row form-group">
+					<div class="row mb-3">
 						<div class="col-3">
 							<label for="status" class=" form-control-label">Status</label>
 						</div>
 
 						<div class="col-9">
-							<select name="status" id="status" class="form-control">
+							<select name="status" id="status" class="form-select">
 								@foreach ( $statuses as $statusKey => $statusValue )
 									<option value="{{ $statusKey }}" {{ (collect(old('status'))->contains($statusKey)) ? 'selected' : '' }}>{{ $statusValue }}</option>
 								@endforeach
@@ -28,7 +29,7 @@
 						</div>
 					</div>
 
-					<div class="row form-group">
+					<div class="row mb-3">
 						<div class="col-3">
 							<label for="title" class="form-control-label">Title</label>
 						</div>
@@ -38,7 +39,7 @@
 						</div>
 					</div>
 
-					<div class="row form-group">
+					<div class="row mb-3">
 						<div class="col-3">
 							<label for="content" class="form-control-label">Content</label>
 						</div>
@@ -49,7 +50,7 @@
 					</div>
 
 					@if ( count($errors) > 0 )
-						<div class="row form-group mb-0">
+						<div class="row mb-0">
 							<div class="col-3">
 								<label class="form-control-label">Validation</label>
 							</div>
@@ -69,14 +70,14 @@
 					<div class="row">
 						<div class="col-9">
 							<button type="submit" class="btn btn-primary btn-sm">
-								<i class="fa fa-dot-circle-o"></i> Publish
+								<i class="fas fa-save"></i> Publish
 							</button>
 						</div>
 
 						<div class="col-3">
-							<div class="text-right">
+							<div class="text-end">
 								<a href="{{ route('infos') }}" class="btn btn-secondary btn-sm">
-									<i class="fa fa-angle-left"></i> Back to Infos
+									<i class="fas fa-angle-left"></i> Back to Infos
 								</a>
 							</div>
 						</div>

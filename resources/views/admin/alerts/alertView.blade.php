@@ -3,6 +3,7 @@
 {{-- page title --}}
 
 @section('title', 'View Alert')
+@section('page', 'alerts')
 
 {{-- content section --}}
 

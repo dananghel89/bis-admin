@@ -1,47 +1,34 @@
 @extends('layouts.auth')
 
-{{-- page title --}}
-
-@section('title', 'Access Dashboard')
-
-{{-- content section --}}
+@section('title', 'Welcome Back')
+@section('subtitle', 'Sign in to your account')
 
 @section('content')
 
-	<div class="login-form">
-		<form method="POST" action="{{ route('login') }}">
-			{{ csrf_field() }}
+	<x-form.ajax :action="route('login')" id="loginForm">
+		<x-form.input name="email" label="Email address" type="email" floating required autofocus autocomplete="username" />
 
-			<div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-				<label for="email">Email Address</label>
-				<input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="Email Address" required autofocus>
+		<div class="position-relative">
+			<x-form.input name="password" label="Password" type="password" floating required autocomplete="current-password" />
+			<button type="button" class="btn btn-link position-absolute end-0 top-0 mt-2 me-2 p-1 text-secondary" data-toggle-password="password" aria-label="Show or hide the password" style="z-index: 5">
+				<i class="fas fa-eye"></i>
+			</button>
+		</div>
 
-				@if ($errors->has('email'))
-					<small class="help-block form-text text-danger">{{ $errors->first('email') }}</small>
-				@endif
-			</div>
-			
-			<div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-				<label for="password">Password</label>
-				<input id="password" type="password" class="form-control" name="password" placeholder="Password" required>
-
-				@if ($errors->has('password'))
-					<small class="help-block form-text text-danger">{{ $errors->first('password') }}</small>
-				@endif
-			</div>
-			
-			<div class="checkbox">
-				<label>
-					<input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
-				</label>
-				
-				<label class="pull-right">
-					<a href="{{ route('password.request') }}">Lost your password?</a>
-				</label>
+		<div class="d-flex justify-content-between align-items-center mb-3">
+			<div class="form-check">
+				<input class="form-check-input" type="checkbox" id="remember" name="remember" @checked(old('remember'))>
+				<label class="form-check-label" for="remember">Remember me</label>
 			</div>
 
-			<button type="submit" class="btn btn-success btn-flat mb-3 mt-3">Sign In</button>
-		</form>
-	</div>
+			<a href="{{ route('password.request') }}" class="small fw-semibold text-decoration-none">Forgot password?</a>
+		</div>
 
+		<button type="submit" class="auth-btn">Sign In</button>
+	</x-form.ajax>
+
+@endsection
+
+@section('footer')
+	<a href="{{ route('front') }}">Back to the website</a>
 @endsection

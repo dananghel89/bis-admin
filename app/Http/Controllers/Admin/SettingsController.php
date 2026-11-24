@@ -2,21 +2,20 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Support\Facades\Hash;
-use App\Models\User;
-use App\Http\Requests\SettingsRequest;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SettingsRequest;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
 
 class SettingsController extends Controller
 {
     /**
-     * Edit settings from admin.
-     *
-     * @return \Illuminate\Http\Response
+     * The logged-in user's own account.
      */
-    public function index()
+    public function index(): View
     {
         $name = Auth::user()->name;
         $email = Auth::user()->email;
@@ -26,25 +25,21 @@ class SettingsController extends Controller
     }
 
     /**
-     * Edit settings from admin.
-     *
-     * @return \Illuminate\Http\Response
+     * Save the user's own name, email and (optionally) password.
      */
-    public function settingsEdit(SettingsRequest $request)
+    public function settingsEdit(SettingsRequest $request): RedirectResponse|JsonResponse
     {
-        $user = User::find( Auth::user()->id );
+        $user = $request->user();
 
-        $user->name = $request->get('name');
-        $user->email = $request->get('email');
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
 
-        $password = $request->get('password');
-
-        if ( !is_null($password) ) {
-            $user->password = Hash::make($password);
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->input('password'));
         }
 
         $user->save();
 
-        return back()->with('success', 'Account settings updated successfully.');
+        return $this->done($request, route('settings'), 'Account settings updated successfully.');
     }
 }

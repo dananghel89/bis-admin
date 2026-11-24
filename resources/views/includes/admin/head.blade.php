@@ -1,16 +1,27 @@
 <meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, shrink-to-fit=no">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <title>{{ config('project.site_title') }} - @yield('title') | {{ config('project.tagline') }}</title>
 
-<link rel="shortcut icon" href="{{ asset('admin/img/favicon.png') }}">
+<link rel="icon" href="{{ asset('favicon.ico') }}">
 
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800">
+{{-- Paint the saved light/dark theme before the theme script (a deferred module) runs. --}}
+<script>
+	try {
+		var theme = localStorage.getItem('sufee-theme');
+		if (theme !== 'light' && theme !== 'dark') {
+			theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+		}
+		document.documentElement.setAttribute('data-bs-theme', theme);
+	} catch (e) {}
+</script>
 
-<link rel="stylesheet" href="{{ asset('admin/vendors/bootstrap/dist/css/bootstrap.min.css') }}">
-<link rel="stylesheet" href="{{ asset('admin/vendors/font-awesome/css/font-awesome.min.css') }}">
-<link rel="stylesheet" href="{{ asset('admin/vendors/themify-icons/css/themify-icons.css') }}">
-<link rel="stylesheet" href="{{ asset('admin/assets/css/style.css') }}">
+{{-- Sufee 3.2.1, built once from its source (see README); the file names change with each build. --}}
+<link rel="stylesheet" href="{{ asset('admin/themify-icons/themify-icons.css') }}">
+<link rel="stylesheet" href="{{ asset('admin/assets/main-BW119va0.css') }}">
 <link rel="stylesheet" href="{{ asset('css/bis-admin.css') }}">
+<script type="module" src="{{ asset('admin/assets/main-C9NkpTPF.js') }}"></script>
+<script src="{{ asset('js/ajax-form.js') }}" defer></script>
+
+@stack('head')

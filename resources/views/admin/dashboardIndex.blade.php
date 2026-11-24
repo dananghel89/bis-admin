@@ -1,10 +1,7 @@
 @extends('layouts.admin')
 
-{{-- page title --}}
-
 @section('title', 'Dashboard')
-
-{{-- content section --}}
+@section('page', 'dashboard')
 
 @section('content')
 

@@ -3,6 +3,7 @@
 {{-- page title --}}
 
 @section('title', 'View Info')
+@section('page', 'infos')
 
 {{-- content section --}}
 
@@ -35,16 +36,16 @@
 				<div class="row">
 					<div class="col-9">
 						@can ('editPosts')
-							<a href="{{ route('infoEdit', $info['id']) }}" class="btn btn-success btn-sm mr-2">
-								<i class="fa fa-search"></i> Edit
+							<a href="{{ route('infoEdit', $info['id']) }}" class="btn btn-success btn-sm me-2">
+								<i class="fas fa-pen"></i> Edit
 							</a>
 						@endcan
 					</div>
 
 					<div class="col-3">
-						<div class="text-right">
+						<div class="text-end">
 							<a href="{{ route('infos') }}" class="btn btn-secondary btn-sm">
-								<i class="fa fa-angle-left"></i> Back to Infos
+								<i class="fas fa-angle-left"></i> Back to Infos
 							</a>
 						</div>
 					</div>

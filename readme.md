@@ -34,7 +34,7 @@ There is no public sign-up and no admin screen for accounts yet; the first admin
 - MySQL
 - [Composer](https://getcomposer.org) 2
 
-The front-end needs no build step: the admin and landing templates are prebuilt files in `public/admin` and `public/landing`.
+The project needs no front-end build step: the admin and landing themes are ready-made files in `public/admin` and `public/landing`.
 
 ## Installation
 
@@ -97,12 +97,13 @@ The tests run on an in-memory SQLite database (set in `phpunit.xml`), so they ne
 ## Built with
 
 - [Laravel 13](https://laravel.com/docs/13.x), with [laravel/ui](https://github.com/laravel/ui) for the login and password reset controllers
-- The Sufee and Bell themes (Bootstrap 4 and jQuery), stored in `public/admin` and `public/landing`; see Credits
+- The Sufee 3.2.1 admin theme (Bootstrap 5.3, Font Awesome 7, light and dark mode) in `public/admin`, and the Bell landing theme (Bootstrap 4 and jQuery) in `public/landing`; see Credits
+- A small script, `public/js/ajax-form.js`, that sends every form without a page reload and shows the validation errors under the fields
 - [Gravatar](https://gravatar.com) for user avatars
 
 ## Credits
 
-- **Admin theme:** [Sufee](https://github.com/puikinsh/sufee-admin-dashboard) by [Colorlib](https://colorlib.com), the original author. MIT License; see [`public/admin/LICENSE`](public/admin/LICENSE). Its bundled libraries keep their own licenses in `public/admin/vendors/`.
+- **Admin theme:** [Sufee](https://github.com/puikinsh/sufee-admin-dashboard) by [Colorlib](https://colorlib.com), the original author. MIT License; see [`public/admin/LICENSE`](public/admin/LICENSE). Version 3.2.1, built once from its source with `npm install && npm run build`; `public/admin` holds the built `assets/` (Bootstrap, Font Awesome, Chart.js and the other libraries it bundles, each under its own license), `images/` and `themify-icons/`. To update it, build the new release and copy those folders again, then change the two hashed file names in `resources/views/includes/admin/head.blade.php`.
 - **Landing theme:** [Bell](https://bootstrapmade.com/bell-free-bootstrap-4-template/) by [BootstrapMade](https://bootstrapmade.com), used under the [BootstrapMade free license](https://bootstrapmade.com/license/). Its footer credit is kept as required.
 - **Photos:** the landing page background images are from [Unsplash](https://unsplash.com) ([Unsplash License](https://unsplash.com/license)).
 

@@ -1,38 +1,18 @@
 @extends('layouts.auth')
 
-{{-- page title --}}
-
-@section('title', 'Lost Password')
-
-{{-- content section --}}
+@section('title', 'Forgot Password?')
+@section('subtitle', 'We will email you a link to choose a new one')
 
 @section('content')
 
-	<div class="login-form">
-		@if (session('status'))
-			<div class="alert alert-success">
-				{{ session('status') }}
-			</div>
-		@endif
+	<x-form.ajax :action="route('password.email')" data-reset>
+		<x-form.input name="email" label="Email address" type="email" floating required autofocus autocomplete="username" />
 
-		<form method="POST" action="{{ route('password.email') }}">
-			{{ csrf_field() }}
+		<button type="submit" class="auth-btn">Send Password Reset Link</button>
+	</x-form.ajax>
 
-			<div class="form-group">
-				<label for="email">Email Address</label>
-				<input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="Email Address" required autofocus>
-			
-				@if ($errors->has('email'))
-					<small class="help-block form-text text-danger">{{ $errors->first('email') }}</small>
-				@endif
-			</div>
-			
-			<button type="submit" class="btn btn-primary btn-flat mb-3 mt-3">Send Password Reset Link</button>
-			
-			<div class="register-link mt-1 text-center">
-				<p><a href="{{ route('login') }}">Back to Log In</a></p>
-			</div>
-		</form>
-	</div>
+@endsection
 
+@section('footer')
+	<a href="{{ route('login') }}">Back to Log In</a>
 @endsection

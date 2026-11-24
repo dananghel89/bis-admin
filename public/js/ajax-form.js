@@ -8,7 +8,8 @@
  *   data-ajax-form            turns it on
  *   data-success="#selector"  element for the success message (optional)
  *   data-error="#selector"    element for errors that belong to no field (optional)
- *   data-error-class="show"   class added to a message element to show it (default "show")
+ *   data-error-class="show"   class added to an element to show it (default "show")
+ *   data-hidden-class="d-none" class removed from an element to show it (optional)
  *   data-reset                clear the form after a success (default for forms with data-success)
  *
  * Field errors go in an element with data-error-for="<field name>"; the field
@@ -27,16 +28,19 @@
 		return selector ? document.querySelector(selector) : null;
 	}
 
+	// cls is {show: class to add, hidden: class to remove} when an element is shown.
 	function show(el, text, cls) {
 		if (!el) { return; }
 		el.textContent = text;
-		el.classList.add(cls);
+		if (cls.show) { el.classList.add(cls.show); }
+		if (cls.hidden) { el.classList.remove(cls.hidden); }
 	}
 
 	function hide(el, cls) {
 		if (!el) { return; }
 		el.textContent = '';
-		el.classList.remove(cls);
+		if (cls.show) { el.classList.remove(cls.show); }
+		if (cls.hidden) { el.classList.add(cls.hidden); }
 	}
 
 	function fieldsNamed(form, name) {
@@ -56,7 +60,10 @@
 	}
 
 	function init(form) {
-		var cls = form.getAttribute('data-error-class') || 'show';
+		var cls = {
+			show: form.getAttribute('data-error-class') || 'show',
+			hidden: form.getAttribute('data-hidden-class') || ''
+		};
 		var success = find(form, form.getAttribute('data-success'));
 		var error = find(form, form.getAttribute('data-error'));
 		var reset = form.hasAttribute('data-reset') || !!success;
@@ -101,7 +108,8 @@
 					var first = null;
 					Object.keys(data.errors).forEach(function (name) {
 						var message = data.errors[name][0];
-						var target = form.querySelector('[data-error-for="' + name + '"]');
+						var target = form.querySelector('[data-error-for="' + name + '"]') ||
+							form.querySelector('[data-error-for="' + name.split('.')[0] + '"]');
 						var fields = fieldsNamed(form, name);
 
 						fields.forEach(function (field) { field.classList.add('is-invalid'); });

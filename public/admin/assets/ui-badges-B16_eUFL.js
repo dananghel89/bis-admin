@@ -1,0 +1,1 @@
+import'data:text/javascript,"assets/ui-badges-B16_eUFL.js";if(!import.meta.resolve)throw Error("import.meta.resolve not supported")';export function __vite_legacy_guard(){import.meta.url,import(`_`).catch(()=>1),(async function*(){})().next()}import"./main-BwCE4sxw.js";

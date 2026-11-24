@@ -3,6 +3,7 @@
 {{-- page title --}}
 
 @section('title', 'Sent Messages')
+@section('page', 'messages')
 
 {{-- content section --}}
 

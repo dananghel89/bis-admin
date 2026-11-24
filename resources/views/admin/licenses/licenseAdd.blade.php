@@ -3,6 +3,7 @@
 {{-- page title --}}
 
 @section('title', 'Add License')
+@section('page', 'licenses')
 
 {{-- content section --}}
 

@@ -3,21 +3,14 @@
 {{-- page title --}}
 
 @section('title', 'All Infos')
+@section('page', 'infos')
 
 {{-- content section --}}
 
 @section('content')
 
-	@if ( $message = Session::get('success') )
-		<div class="sufee-alert alert with-close alert-success alert-dismissible fade show">
-			<span>{{ $message }}</span>
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
-	@endif
 
-	<div class="card_table mb-4">
+	<div class="card mb-4 card_table">
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -56,14 +49,14 @@
 			<div class="row">
 				<div class="col-9">
 					@can ('addPosts')
-						<a href="{{ route('infoAdd') }}" class="btn btn-success btn-sm mr-2">
-							<i class="fa fa-plus"></i> Add Info
+						<a href="{{ route('infoAdd') }}" class="btn btn-success btn-sm me-2">
+							<i class="fas fa-plus"></i> Add Info
 						</a>
 					@endcan
 				</div>
 
 				<div class="col-3">
-					<p class="m-0 pt-1 text-right">{{ count($infos) }} items</p>
+					<p class="m-0 pt-1 text-end">{{ count($infos) }} items</p>
 				</div>
 			</div>
 		</div>

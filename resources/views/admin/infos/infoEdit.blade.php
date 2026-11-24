@@ -3,19 +3,12 @@
 {{-- page title --}}
 
 @section('title', 'Edit Info')
+@section('page', 'infos')
 
 {{-- content section --}}
 
 @section('content')
 
-	@if ( $message = Session::get('success') )
-		<div class="sufee-alert alert with-close alert-success alert-dismissible fade show">
-			<span>{{ $message }}</span>
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
-	@endif
 
 	<div class="card_form">
 		<div class="card">
@@ -24,13 +17,13 @@
 				{{ csrf_field() }}
 
 				<div class="card-body card-block">
-					<div class="row form-group">
+					<div class="row mb-3">
 						<div class="col-3">
 							<label for="status" class=" form-control-label">Status</label>
 						</div>
 
 						<div class="col-9">
-							<select name="status" id="status" class="form-control">
+							<select name="status" id="status" class="form-select">
 								@php
 									$status_val = !empty(old('status')) ? old('status') : $info['status'];
 								@endphp
@@ -42,7 +35,7 @@
 						</div>
 					</div>
 
-					<div class="row form-group">
+					<div class="row mb-3">
 						<div class="col-3">
 							<label for="title" class="form-control-label">Title</label>
 						</div>
@@ -52,7 +45,7 @@
 						</div>
 					</div>
 
-					<div class="row form-group">
+					<div class="row mb-3">
 						<div class="col-3">
 							<label for="content" class="form-control-label">Content</label>
 						</div>
@@ -63,7 +56,7 @@
 					</div>
 
 					@if ( count($errors) > 0 )
-						<div class="row form-group mb-0">
+						<div class="row mb-0">
 							<div class="col-3">
 								<label class="form-control-label">Validation</label>
 							</div>
@@ -82,25 +75,25 @@
 				<div class="card-footer">
 					<div class="row">
 						<div class="col-9">
-							<button type="submit" class="btn btn-primary btn-sm mr-2">
-								<i class="fa fa-dot-circle-o"></i> Update
+							<button type="submit" class="btn btn-primary btn-sm me-2">
+								<i class="fas fa-save"></i> Update
 							</button>
 
-							<a href="{{ route('infoView', $info['id']) }}" class="btn btn-success btn-sm mr-2">
-								<i class="fa fa-search"></i> View
+							<a href="{{ route('infoView', $info['id']) }}" class="btn btn-success btn-sm me-2">
+								<i class="fas fa-pen"></i> View
 							</a>
 
 							@can ('deletePosts')
 								<a class="btn btn-danger btn-sm" href="{{ route('infoDelete', $info['id']) }}" onclick="event.preventDefault(); return confirm('Delete this info?') && document.getElementById('delete-info').submit();">
-									<i class="fa fa-ban"></i> Delete
+									<i class="fas fa-ban"></i> Delete
 								</a>
 							@endcan
 						</div>
 
 						<div class="col-3">
-							<div class="text-right">
+							<div class="text-end">
 								<a href="{{ route('infos') }}" class="btn btn-secondary btn-sm">
-									<i class="fa fa-angle-left"></i> Back to Infos
+									<i class="fas fa-angle-left"></i> Back to Infos
 								</a>
 							</div>
 						</div>

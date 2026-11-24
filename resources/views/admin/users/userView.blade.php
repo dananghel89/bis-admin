@@ -3,6 +3,7 @@
 {{-- page title --}}
 
 @section('title', 'View User')
+@section('page', 'users')
 
 {{-- content section --}}
 

@@ -3,6 +3,7 @@
 {{-- page title --}}
 
 @section('title', 'All Plans')
+@section('page', 'plans')
 
 {{-- content section --}}
 
