@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,10 +17,20 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings')->middleware('can:editProfile');
     Route::patch('/settings', [SettingsController::class, 'settingsEdit'])->name('settingsEdit')->middleware('can:editProfile');
 
+    // Users (staff only)
+    Route::middleware('can:manageUsers')->group(function () {
+        Route::get('/users', [UserController::class, 'index'])->name('users');
+        Route::get('/users/add-user', [UserController::class, 'userAdd'])->name('userAdd');
+        Route::post('/users/add-user', [UserController::class, 'userAddSave'])->name('userAddSave');
+        Route::get('/users/view-user/{user}', [UserController::class, 'userView'])->name('userView');
+        Route::get('/users/edit-user/{user}', [UserController::class, 'userEdit'])->name('userEdit');
+        Route::patch('/users/edit-user/{user}', [UserController::class, 'userEditSave'])->name('userEditSave');
+        Route::delete('/users/edit-user/{user}', [UserController::class, 'userDelete'])->name('userDelete');
+    });
+
     // Sections still to build: one "coming soon" page each.
     Route::view('/alerts', 'admin.alerts.alertsIndex')->name('alerts')->middleware('can:useMailbox');
     Route::view('/infos', 'admin.infos.infosIndex')->name('infos')->middleware('can:viewProperties');
     Route::view('/plans', 'admin.plans.plansIndex')->name('plans')->middleware('can:viewProperties');
     Route::view('/licenses', 'admin.licenses.licensesIndex')->name('licenses')->middleware('can:viewProperties');
-    Route::view('/users', 'admin.users.usersIndex')->name('users')->middleware('can:manageUsers');
 });

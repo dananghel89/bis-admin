@@ -11,6 +11,7 @@
  *   data-error-class="show"   class added to an element to show it (default "show")
  *   data-hidden-class="d-none" class removed from an element to show it (optional)
  *   data-reset                clear the form after a success (default for forms with data-success)
+ *   data-confirm="Question?"  ask before sending (e.g. delete buttons)
  *
  * Field errors go in an element with data-error-for="<field name>"; the field
  * itself gets the class "is-invalid" (Bootstrap) while it has an error.
@@ -77,6 +78,7 @@
 		form.addEventListener('submit', function (event) {
 			event.preventDefault();
 			if (busy) { return; }
+			if (form.hasAttribute('data-confirm') && !window.confirm(form.getAttribute('data-confirm'))) { return; }
 			busy = true;
 
 			var buttons = form.querySelectorAll('button[type="submit"], input[type="submit"]');
