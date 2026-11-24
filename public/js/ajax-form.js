@@ -10,7 +10,7 @@
  *   data-error="#selector"    element for errors that belong to no field (optional)
  *   data-error-class="show"   class added to an element to show it (default "show")
  *   data-hidden-class="d-none" class removed from an element to show it (optional)
- *   data-reset                clear the form after a success (default for forms with data-success)
+ *   data-reset                clear the form after a success
  *   data-confirm="Question?"  ask before sending (e.g. delete buttons)
  *
  * Field errors go in an element with data-error-for="<field name>"; the field
@@ -67,7 +67,7 @@
 		};
 		var success = find(form, form.getAttribute('data-success'));
 		var error = find(form, form.getAttribute('data-error'));
-		var reset = form.hasAttribute('data-reset') || !!success;
+		var reset = form.hasAttribute('data-reset');
 		var busy = false;
 
 		// An edited field loses its old error at once.
@@ -87,7 +87,11 @@
 			hide(success, cls);
 			hide(error, cls);
 
-			fetch(form.action, {
+			// A button with formaction (e.g. "Test connection") sends the same fields elsewhere.
+			var submitter = event.submitter;
+			var action = (submitter && submitter.getAttribute('formaction')) || form.action;
+
+			fetch(action, {
 				method: 'POST', // Laravel reads PUT/PATCH/DELETE from the _method field
 				body: new FormData(form),
 				credentials: 'same-origin',

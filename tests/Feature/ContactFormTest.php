@@ -172,7 +172,7 @@ class ContactFormTest extends TestCase
     public function test_the_form_is_set_up_for_ajax()
     {
         $this->get('/')
-            ->assertSee('data-ajax-form data-success="#sendmessage" data-error="#errormessage" data-error-class="show"', false)
+            ->assertSee('data-ajax-form data-reset data-success="#sendmessage" data-error="#errormessage" data-error-class="show"', false)
             ->assertSee('<div class="validation " data-error-for="name"></div>', false)
             ->assertSee('<div id="sendmessage" class="" role="status"></div>', false)
             ->assertSee('<script src="' . asset('js/ajax-form.js') . '"></script>', false);

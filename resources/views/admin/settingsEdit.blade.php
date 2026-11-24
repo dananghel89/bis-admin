@@ -30,6 +30,13 @@
 					</x-form.ajax>
 				</div>
 			</div>
+
+			@include('includes.admin.mail-settings', [
+				'account' => Auth::user()->mailAccount,
+				'saveUrl' => route('settingsMail'),
+				'testUrl' => route('settingsMailTest'),
+				'deleteUrl' => route('settingsMailDelete'),
+			])
 		</div>
 	</div>
 

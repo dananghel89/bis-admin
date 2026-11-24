@@ -39,6 +39,15 @@
 					</x-form.ajax>
 				</div>
 			</div>
+
+			@if ( $user->exists )
+				@include('includes.admin.mail-settings', [
+					'account' => $user->mailAccount,
+					'saveUrl' => route('userMail', $user),
+					'testUrl' => route('userMailTest', $user),
+					'deleteUrl' => route('userMailDelete', $user),
+				])
+			@endif
 		</div>
 	</div>
 

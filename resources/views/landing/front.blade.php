@@ -221,7 +221,7 @@
 						<div id="errormessage" class="{{ $errors->has('contact') ? 'show' : '' }}" role="alert">{{ $errors->first('contact') }}</div>
 
 						<form role="form" class="contactForm" method="POST" action="{{ route('contact') }}" novalidate
-							data-ajax-form data-success="#sendmessage" data-error="#errormessage" data-error-class="show">
+							data-ajax-form data-reset data-success="#sendmessage" data-error="#errormessage" data-error-class="show">
 							@csrf
 
 							{{-- Honeypot: hidden from people, bots fill it in. --}}

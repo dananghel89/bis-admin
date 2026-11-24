@@ -32,6 +32,12 @@
 					<i class="fa fa-moon"></i>
 				</button>
 
+				@can ( 'useMailbox' )
+					<a href="{{ route('alerts') }}" class="btn btn-link text-secondary p-2" title="Alerts" aria-label="Alerts">
+						<i class="fas fa-envelope"></i>
+					</a>
+				@endcan
+
 				@stack('header-right')
 
 				<div class="dropdown">

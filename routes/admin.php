@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\AlertController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LicenseController;
+use App\Http\Controllers\Admin\MailAccountController;
 use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\PropertyController;
 use App\Http\Controllers\Admin\SettingsController;
@@ -19,6 +21,21 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
 
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings')->middleware('can:editProfile');
     Route::patch('/settings', [SettingsController::class, 'settingsEdit'])->name('settingsEdit')->middleware('can:editProfile');
+
+    // Your own mail settings for Alerts
+    Route::middleware('can:editProfile')->group(function () {
+        Route::patch('/settings/mail', [MailAccountController::class, 'save'])->name('settingsMail');
+        Route::match(['post', 'patch'], '/settings/mail/test', [MailAccountController::class, 'test'])->name('settingsMailTest');
+        Route::delete('/settings/mail', [MailAccountController::class, 'delete'])->name('settingsMailDelete');
+    });
+
+    // Alerts: your own mailbox
+    Route::middleware('can:useMailbox')->group(function () {
+        Route::get('/alerts', [AlertController::class, 'index'])->name('alerts');
+        Route::get('/alerts/message/{box}/{uid}', [AlertController::class, 'alertView'])->name('alertView')->whereIn('box', ['inbox', 'sent'])->whereNumber('uid');
+        Route::get('/alerts/write', [AlertController::class, 'alertWrite'])->name('alertWrite');
+        Route::post('/alerts/write', [AlertController::class, 'alertSend'])->name('alertSend');
+    });
 
     // Properties ("Infos" in the menu): everyone sees the visible ones, staff manage them
     Route::middleware('can:viewProperties')->group(function () {
@@ -69,8 +86,10 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
         Route::get('/users/edit-user/{user}', [UserController::class, 'userEdit'])->name('userEdit');
         Route::patch('/users/edit-user/{user}', [UserController::class, 'userEditSave'])->name('userEditSave');
         Route::delete('/users/edit-user/{user}', [UserController::class, 'userDelete'])->name('userDelete');
+        Route::patch('/users/mail-settings/{user}', [MailAccountController::class, 'save'])->name('userMail');
+        Route::match(['post', 'patch'], '/users/mail-settings/{user}/test', [MailAccountController::class, 'test'])->name('userMailTest');
+        Route::delete('/users/mail-settings/{user}', [MailAccountController::class, 'delete'])->name('userMailDelete');
     });
 
     // Sections still to build: one "coming soon" page each.
-    Route::view('/alerts', 'admin.alerts.alertsIndex')->name('alerts')->middleware('can:useMailbox');
 });
