@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,10 +15,6 @@ Route::middleware('guest')->group(function () {
     Route::post('/password/reset', [ResetPasswordController::class, 'reset']);
 });
 
-// Membership is checked first: when sign-up is closed, everyone goes back to the front page.
-Route::middleware(['membership', 'guest'])->group(function () {
-    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/register', [RegisterController::class, 'register'])->middleware('throttle:register');
-});
+// No public sign-up: staff create the accounts.
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

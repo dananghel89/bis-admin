@@ -16,21 +16,6 @@ if ( ! function_exists('get_post_statuses') ) {
 	}
 }
 
-if ( ! function_exists('get_option') ) {
-	/**
-	 * Get option value by name.
-	 *
-	 * @param string $name
-	 * @return string
-	 */
-	function get_option( $name ) {
-		// The 'project.options' singleton (AppServiceProvider) loads all options on first use, once per app instance.
-		$options = app('project.options');
-
-		return isset($options[$name]) ? $options[$name] : '';
-	}
-}
-
 /*----------  Imported Functions  ----------*/
 
 if ( ! function_exists('get_gravatar') ) {

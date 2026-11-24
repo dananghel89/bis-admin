@@ -4,6 +4,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Site
+    |--------------------------------------------------------------------------
+    |
+    | Shown in page titles, headers and the landing page. The contact email is
+    | shown on the landing page and receives the contact form messages.
+    |
+    */
+
+    'site_title' => env('SITE_TITLE', 'BIS'),
+
+    'tagline' => env('SITE_TAGLINE', 'Architecture Web Application'),
+
+    'contact_email' => env('CONTACT_EMAIL', 'contact@example.com'),
+
+    /*
+    |--------------------------------------------------------------------------
     | First admin account
     |--------------------------------------------------------------------------
     |

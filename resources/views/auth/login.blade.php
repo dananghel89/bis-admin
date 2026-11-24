@@ -41,12 +41,6 @@
 			</div>
 
 			<button type="submit" class="btn btn-success btn-flat mb-3 mt-3">Sign In</button>
-
-			@if ( get_option('membership') )
-				<div class="register-link mt-1 text-center">
-					<p>Don't have an account? <a href="{{ route('register') }}">Sign Up</a></p>
-				</div>
-			@endif
 		</form>
 	</div>
 

@@ -3,7 +3,7 @@
 <meta name="viewport" content="width=device-width, shrink-to-fit=no">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
-<title>{{ get_option('site_title') }} - @yield('title') | {{ get_option('tagline') }}</title>
+<title>{{ config('project.site_title') }} - @yield('title') | {{ config('project.tagline') }}</title>
 
 <link rel="shortcut icon" href="{{ asset('admin/img/favicon.png') }}">
 

@@ -1,7 +1,7 @@
 <aside id="left-panel" class="left-panel">
 	<nav class="navbar navbar-expand-sm navbar-default">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="{{ route('front') }}">{{ get_option('site_title') }}</a>
+			<a class="navbar-brand" href="{{ route('front') }}">{{ config('project.site_title') }}</a>
 		</div>
 
 		<div id="main-menu" class="main-menu">
@@ -147,14 +147,8 @@
 					@endcan
 				@endcan
 			
-				@can ( 'editOptions' )
+				@can ( 'viewUsers' )
 					<h3 class="menu-title">Administration</h3>
-
-					<li>
-						<a href="{{ route('options') }}">
-							<i class="menu-icon fa fa-wrench"></i> Options
-						</a>
-					</li>
 
 					@can ( 'addUsers' )
 						<li class="menu-item-has-children dropdown">

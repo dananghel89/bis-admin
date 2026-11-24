@@ -56,18 +56,6 @@ class PasswordResetTest extends TestCase
         Notification::assertSentToTimes($user, ResetPassword::class, 1);
     }
 
-    public function test_reset_throttle_is_separate_from_sign_up()
-    {
-        // The throttle key includes the route, so sign-up attempts don't use up reset requests
-        Notification::fake();
-        $user = User::factory()->create();
-
-        for ($i = 0; $i < 3; $i++) {
-            $this->post('/register', ['name' => 'X']);
-        }
-
-        $this->post('/password/email', ['email' => $user->email])->assertSessionHas('status');
-    }
 
     public function test_reset_screen_renders()
     {

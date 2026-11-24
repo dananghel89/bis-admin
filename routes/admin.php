@@ -5,7 +5,6 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EmailController;
 use App\Http\Controllers\Admin\InfoController;
 use App\Http\Controllers\Admin\LicenseController;
-use App\Http\Controllers\Admin\OptionsController;
 use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\UserController;
@@ -16,9 +15,6 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
 
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings')->middleware('can:editProfile');
     Route::patch('/settings', [SettingsController::class, 'settingsEdit'])->name('settingsEdit')->middleware('can:editProfile');
-
-    Route::get('/options', [OptionsController::class, 'index'])->name('options')->middleware('can:editOptions');
-    Route::patch('/options', [OptionsController::class, 'optionsEdit'])->name('optionsEdit')->middleware('can:editOptions');
 
     Route::get('/users', [UserController::class, 'index'])->name('users')->middleware('can:viewUsers');
     Route::get('/users/add-user', [UserController::class, 'userAdd'])->name('userAdd')->middleware('can:addUsers');

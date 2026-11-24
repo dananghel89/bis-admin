@@ -21,11 +21,11 @@
 				<h1>Building Information System</h1>
 				<p class="tagline">The architecture web application for documentation, plans & licenses.</p>
 
-				@if ( Route::has('login') && get_option('membership') )
-					@if ( !Auth::check() )
-						<a class="btn btn-full" href="{{ route('register') }}">Get Started Now</a>
-					@endif
-				@endif
+				@auth
+					<a class="btn btn-full" href="{{ route('dashboard') }}">Dashboard</a>
+				@else
+					<a class="btn btn-full" href="{{ route('login') }}">Log In</a>
+				@endauth
 			</div>
 		</div>
 	</section>
@@ -38,7 +38,7 @@
 
 	<section class="about" id="about">
 		<div class="container text-center">
-			<h2>About {{ get_option('site_title') }}</h2>
+			<h2>About {{ config('project.site_title') }}</h2>
 
 			<p>Voluptua scripserit per ad, laudem viderer sit ex. Ex alia corrumpit voluptatibus usu, sed unum convenire id. Ut cum nisl moderatius, per nihil dicant commodo an. Eum tacimates erroribus ad. Atqui feugiat euripidis ea pri, sed veniam tacimates ex. Menandri temporibus an duo.</p>
 
@@ -77,7 +77,7 @@
 
 	<div class="{{ $parallax_cls }}" data-bg-img="{{ $parallax_img }}" data-settings='{"stellar-background-ratio": 0.6}' data-toggle="parallax-bg">
 		<div class="container">
-			<h2>Welcome to {{ get_option('site_title') }}</h2>
+			<h2>Welcome to {{ config('project.site_title') }}</h2>
 			<p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin aliquam blandit velit vel eleifend.</p>
 		</div>
 	</div>

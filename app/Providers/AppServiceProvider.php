@@ -2,13 +2,11 @@
 
 namespace App\Providers;
 
-use App\Models\Options;
 use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -18,17 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // All site options as [name => value], read by get_option(). Lazy: nothing touches
-        // the database until the first get_option() call, so artisan works without MySQL.
-        $this->app->singleton('project.options', function () {
-            $model = new Options();
-
-            if (! Schema::hasTable($model->getTable())) {
-                return [];
-            }
-
-            return $model->newQuery()->pluck('value', 'name')->all();
-        });
+        //
     }
 
     /**
@@ -52,7 +40,6 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('editUsers', $roles('admin'));
         Gate::define('deleteUsers', $roles('admin'));
         Gate::define('editProfile', $roles('admin', 'editor', 'subscriber'));
-        Gate::define('editOptions', $roles('admin'));
         Gate::define('addPosts', $roles('editor'));
         Gate::define('viewPosts', $roles('editor', 'subscriber'));
         Gate::define('editPosts', $roles('editor'));
@@ -63,12 +50,12 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Sign-up and reset-link requests: 3 per 10 minutes per IP. Named limiters keep a
-     * separate counter per limiter, so one form never uses up the other's attempts.
+     * Public forms: 3 requests per 10 minutes per IP. Named limiters keep a separate
+     * counter per limiter, so one form never uses up another form's attempts.
      */
     protected function defineRateLimiters(): void
     {
-        RateLimiter::for('register', fn (Request $request) => Limit::perMinutes(10, 3)->by($request->ip()));
         RateLimiter::for('password-email', fn (Request $request) => Limit::perMinutes(10, 3)->by($request->ip()));
+        RateLimiter::for('contact', fn (Request $request) => Limit::perMinutes(10, 3)->by($request->ip()));
     }
 }

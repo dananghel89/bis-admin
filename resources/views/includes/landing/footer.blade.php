@@ -3,7 +3,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-6 col-xs-12 text-lg-left text-center">
-					<p class="copyright-text">© {{ date('Y') }} {{ get_option('site_title') }} - All Rights Reserved</p>
+					<p class="copyright-text">© {{ date('Y') }} {{ config('project.site_title') }} - All Rights Reserved</p>
 					<div class="credits">
 						<!--
 							All the links in the footer should remain intact.

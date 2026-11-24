@@ -27,7 +27,6 @@ class AccessTest extends TestCase
         return [
             '/dashboard' => $all,
             '/dashboard/settings' => $all,
-            '/dashboard/options' => $admin,
 
             '/dashboard/users' => $admin,
             '/dashboard/users/add-user' => $admin,
