@@ -13,6 +13,15 @@
 <link rel="stylesheet" href="{{ asset('landing/css/style.css') }}">
 
 <style type="text/css">
+	a {
+		color: #199EB8;
+	}
+
+	a:hover,
+	a:focus {
+		color: #137A8E;
+	}
+
 	.social-nav .btn {
 		padding: 6px 30px;
 		font-size: 1em !important;
