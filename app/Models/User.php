@@ -6,6 +6,8 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -28,10 +30,27 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'role' => 'integer',
         ];
+    }
+
+    /**
+     * The properties this user is assigned to as an architect.
+     *
+     * @return BelongsToMany<Property, $this>
+     */
+    public function properties(): BelongsToMany
+    {
+        return $this->belongsToMany(Property::class);
+    }
+
+    /**
+     * @return HasOne<MailAccount, $this>
+     */
+    public function mailAccount(): HasOne
+    {
+        return $this->hasOne(MailAccount::class);
     }
 
     /**

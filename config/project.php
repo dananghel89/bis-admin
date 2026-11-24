@@ -22,19 +22,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | First admin account
+    | Map
     |--------------------------------------------------------------------------
     |
-    | Created by `php artisan db:seed` (database/seeders/AdminUserSeeder.php) when no
-    | user with this email exists yet. Set real values in .env, never in the repo,
-    | and always set SEED_ADMIN_PASSWORD on a public server.
+    | Where the property maps open when there is nothing to show yet, and the
+    | area the demo seeders place their properties in. Barcelona by default.
     |
     */
 
-    'seed_admin' => [
-        'name' => env('SEED_ADMIN_NAME', 'Admin'),
-        'email' => env('SEED_ADMIN_EMAIL', 'admin@example.com'),
-        'password' => env('SEED_ADMIN_PASSWORD', 'password'),
+    'map_center' => [
+        'lat' => (float) env('MAP_CENTER_LAT', 41.3874),
+        'lng' => (float) env('MAP_CENTER_LNG', 2.1686),
+        'zoom' => (int) env('MAP_ZOOM', 13),
     ],
 
 ];

@@ -26,7 +26,7 @@ Every user has one role, stored as a number in the `users.role` column:
 | Editor | `1` | Create, edit and delete Infos, Alerts, Plans and Licenses; Messages; own Settings |
 | Subscriber | `2` | View Infos (public ones only), Alerts, Plans and Licenses; Messages; own Settings |
 
-There is no public sign-up and no admin screen for accounts yet; the first admin is created by the database seeder (see step 4 below).
+There is no public sign-up; the first staff account is created with `php artisan app:create-admin` (see step 4 below).
 
 ## Requirements
 
@@ -48,12 +48,15 @@ The project needs no front-end build step: the admin and landing themes are read
    php artisan key:generate
    ```
 3. Create an empty MySQL database (named `bis_admin` by default) and set the `DB_*` values in `.env`.
-4. Choose the first admin's login in `.env`: `SEED_ADMIN_NAME`, `SEED_ADMIN_EMAIL` and `SEED_ADMIN_PASSWORD`. The defaults are `admin@example.com` / `password`; never keep them on a public server.
-5. Create the tables and the first admin:
+4. Create the tables, then the first staff (admin) account. The command asks for the name, email and password:
    ```bash
-   php artisan migrate --seed
+   php artisan migrate
+   php artisan app:create-admin
    ```
-   Seeding again later is safe: an existing user with that email is left unchanged.
+5. Optional, for a demo: fill the database with 6 architects and 20 properties around Barcelona, with plans, licenses and small sample PDFs. All the demo architects use the password `architect-demo`; the seeder prints their emails.
+   ```bash
+   php artisan db:seed
+   ```
 6. Point a virtual host at the `public/` folder (`.env.example` uses `http://bis-admin.test`), or run `php artisan serve`. Then log in with the admin account from step 4.
 
 ## Configuration
@@ -90,7 +93,7 @@ The tests run on an in-memory SQLite database (set in `phpunit.xml`), so they ne
 | `app/Providers/AppServiceProvider.php` | Defines every permission (Gate ability) for each role, and the contact form and password-reset rate limits |
 | `config/project.php` | Site title, tagline, contact email and the first admin's login |
 | `app/Http/Controllers/Admin` | Dashboard controllers |
-| `app/Models` | Eloquent models (`User`, `Info`, `Alert`, `Plan`, `License`, `Contact`) |
+| `app/Models` | Eloquent models (`User`, `Property`, `Plan`, `License`, `PropertyStatusChange`, `MailAccount`, `Contact`) |
 | `app/Helpers.php` | Global helpers: `get_post_statuses()`, `get_gravatar()` |
 | `resources/views` | Blade views, with `admin`, `auth` and `landing` layouts |
 

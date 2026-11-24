@@ -4,7 +4,6 @@ namespace Tests\Feature\Admin;
 
 use App\Models\User;
 use Tests\TestCase;
-use App\Models\Info;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AccessTest extends TestCase
@@ -14,10 +13,9 @@ class AccessTest extends TestCase
     /**
      * Every admin page and the roles that may open it, matching the Gates in AuthServiceProvider.
      *
-     * @param int $infoId
      * @return array
      */
-    protected function pages($infoId)
+    protected function pages()
     {
         $all = ['admin', 'editor', 'subscriber'];
         $admin = ['admin'];
@@ -34,9 +32,6 @@ class AccessTest extends TestCase
             '/dashboard/users/edit-user/1' => $admin,
 
             '/dashboard/infos' => $readers,
-            '/dashboard/infos/add-info' => $editor,
-            "/dashboard/infos/view-info/{$infoId}" => $readers,
-            "/dashboard/infos/edit-info/{$infoId}" => $editor,
 
             '/dashboard/alerts' => $readers,
             '/dashboard/alerts/add-alert' => $editor,
@@ -67,9 +62,7 @@ class AccessTest extends TestCase
             'editor' => User::factory()->editor()->create(),
             'subscriber' => User::factory()->create(),
         ];
-        $info = Info::factory()->create();
-
-        foreach ($this->pages($info->id) as $uri => $allowed) {
+        foreach ($this->pages() as $uri => $allowed) {
             foreach ($users as $role => $user) {
                 $status = $this->actingAs($user)->get($uri)->getStatusCode();
                 $expected = in_array($role, $allowed) ? 200 : 403;
@@ -92,9 +85,7 @@ class AccessTest extends TestCase
             'editor' => User::factory()->editor()->create(),
             'subscriber' => User::factory()->create(),
         ];
-        $info = Info::factory()->create();
-
-        foreach ($this->pages($info->id) as $uri => $allowed) {
+        foreach ($this->pages() as $uri => $allowed) {
             foreach ($allowed as $role) {
                 $html = $this->actingAs($users[$role])->get($uri)->getContent();
 
@@ -116,7 +107,7 @@ class AccessTest extends TestCase
 
     public function test_guests_are_sent_to_login_from_every_admin_page()
     {
-        foreach (array_keys($this->pages(1)) as $uri) {
+        foreach (array_keys($this->pages()) as $uri) {
             $this->get($uri)->assertRedirect('/login');
         }
     }

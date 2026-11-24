@@ -3,7 +3,6 @@
 use App\Http\Controllers\Admin\AlertController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EmailController;
-use App\Http\Controllers\Admin\InfoController;
 use App\Http\Controllers\Admin\LicenseController;
 use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\SettingsController;
@@ -21,13 +20,7 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/users/view-user/{id}', [UserController::class, 'userView'])->name('userView')->middleware('can:viewUsers');
     Route::get('/users/edit-user/{id}', [UserController::class, 'userEdit'])->name('userEdit')->middleware('can:editUsers');
 
-    Route::get('/infos', [InfoController::class, 'index'])->name('infos')->middleware('can:viewPosts');
-    Route::get('/infos/add-info', [InfoController::class, 'infoAdd'])->name('infoAdd')->middleware('can:addPosts');
-    Route::get('/infos/view-info/{id}', [InfoController::class, 'infoView'])->name('infoView')->middleware('can:viewPosts');
-    Route::get('/infos/edit-info/{id}', [InfoController::class, 'infoEdit'])->name('infoEdit')->middleware('can:editPosts');
-    Route::post('/infos/add-info', [InfoController::class, 'infoAddSave'])->name('infoAddSave')->middleware('can:addPosts');
-    Route::patch('/infos/edit-info/{id}', [InfoController::class, 'infoEditSave'])->name('infoEditSave')->middleware('can:editPosts');
-    Route::delete('/infos/edit-info/{id}', [InfoController::class, 'infoDelete'])->name('infoDelete')->middleware('can:deletePosts');
+    Route::view('/infos', 'admin.infos.infosIndex')->name('infos')->middleware('can:viewPosts');
 
     Route::get('/alerts', [AlertController::class, 'index'])->name('alerts')->middleware('can:viewPosts');
     Route::get('/alerts/add-alert', [AlertController::class, 'alertAdd'])->name('alertAdd')->middleware('can:addPosts');

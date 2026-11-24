@@ -2,18 +2,19 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
-     * Seed the application's database.
+     * Demo data: architects, then properties with their plans and licenses.
+     * The admin is not seeded: create it with `php artisan app:create-admin`.
      */
     public function run(): void
     {
-        $this->call(AdminUserSeeder::class);
+        $this->call([
+            ArchitectSeeder::class,
+            PropertySeeder::class,
+        ]);
     }
 }

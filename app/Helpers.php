@@ -2,20 +2,6 @@
 
 /*----------  General Functions  ----------*/
 
-if ( ! function_exists('get_post_statuses') ) {
-	/**
-	 * Get defined statuses for admin posts.
-	 *
-	 * @return array
-	 */
-	function get_post_statuses() {
-		return [
-			'public' => 'Public',
-			'private' => 'Private',
-		];
-	}
-}
-
 /*----------  Imported Functions  ----------*/
 
 if ( ! function_exists('get_gravatar') ) {
