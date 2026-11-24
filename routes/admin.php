@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PropertyController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,20 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings')->middleware('can:editProfile');
     Route::patch('/settings', [SettingsController::class, 'settingsEdit'])->name('settingsEdit')->middleware('can:editProfile');
 
+    // Properties ("Infos" in the menu): everyone sees the visible ones, staff manage them
+    Route::middleware('can:viewProperties')->group(function () {
+        Route::get('/infos', [PropertyController::class, 'index'])->name('infos');
+        Route::get('/infos/view-info/{property}', [PropertyController::class, 'propertyView'])->name('infoView')->whereNumber('property');
+    });
+    Route::patch('/infos/work-status/{property}', [PropertyController::class, 'workStatus'])->name('infoWorkStatus')->middleware('can:updateWorkStatus');
+    Route::middleware('can:manageProperties')->group(function () {
+        Route::get('/infos/add-info', [PropertyController::class, 'propertyAdd'])->name('infoAdd');
+        Route::post('/infos/add-info', [PropertyController::class, 'propertyAddSave'])->name('infoAddSave');
+        Route::get('/infos/edit-info/{property}', [PropertyController::class, 'propertyEdit'])->name('infoEdit');
+        Route::patch('/infos/edit-info/{property}', [PropertyController::class, 'propertyEditSave'])->name('infoEditSave');
+        Route::delete('/infos/edit-info/{property}', [PropertyController::class, 'propertyDelete'])->name('infoDelete');
+    });
+
     // Users (staff only)
     Route::middleware('can:manageUsers')->group(function () {
         Route::get('/users', [UserController::class, 'index'])->name('users');
@@ -30,7 +45,6 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
 
     // Sections still to build: one "coming soon" page each.
     Route::view('/alerts', 'admin.alerts.alertsIndex')->name('alerts')->middleware('can:useMailbox');
-    Route::view('/infos', 'admin.infos.infosIndex')->name('infos')->middleware('can:viewProperties');
     Route::view('/plans', 'admin.plans.plansIndex')->name('plans')->middleware('can:viewProperties');
     Route::view('/licenses', 'admin.licenses.licensesIndex')->name('licenses')->middleware('can:viewProperties');
 });

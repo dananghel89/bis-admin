@@ -11,7 +11,20 @@
 					<i class="fas fa-bars"></i>
 				</button>
 
-				@stack('header-left')
+				{{-- The theme's search toggle and form (its script shows and hides them): searches properties --}}
+				@can ( 'viewProperties' )
+					<button class="btn btn-link text-secondary p-2 me-2" id="searchToggle" type="button" aria-label="Search properties">
+						<i class="fas fa-search"></i>
+					</button>
+
+					<form class="search-form d-none flex-grow-1" action="{{ route('infos') }}" method="GET" role="search" style="max-width: 400px">
+						<div class="input-group">
+							<input type="search" name="search" class="form-control" placeholder="Search properties..." aria-label="Search properties">
+							<button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>
+							<button class="btn btn-outline-secondary" type="button" id="searchClose" aria-label="Close search"><i class="fas fa-times"></i></button>
+						</div>
+					</form>
+				@endcan
 			</div>
 
 			<div class="d-flex align-items-center">

@@ -59,7 +59,7 @@
 					<ul class="list-group list-group-flush">
 						@forelse ( $user->properties as $property )
 							<li class="list-group-item d-flex justify-content-between align-items-center">
-								<span>{{ $property->name }} <small class="text-muted">· {{ $property->city }}</small></span>
+								<span><a href="{{ route('infoView', $property) }}" class="text-decoration-none">{{ $property->name }}</a> <small class="text-muted">· {{ $property->city }}</small></span>
 								<span class="badge bg-secondary">{{ $property->workStatusLabel() }}</span>
 							</li>
 						@empty
