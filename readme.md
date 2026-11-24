@@ -64,11 +64,13 @@ Site settings are read from `config/project.php`, which takes them from `.env`:
 |---|---|
 | `SITE_TITLE`, `SITE_TAGLINE` | Used in page titles, headers and the footer |
 | `CONTACT_EMAIL` | Shown on the landing page; receives the contact form messages |
+| `CONTACT_ADDRESS`, `CONTACT_PHONE` | Optional; shown on the landing page when set (use `
+` in the address for a line break) |
 | `MAIL_*` | The SMTP server the site sends email through (contact form, password reset). `MAIL_MAILER=log` writes the emails to `storage/logs` instead |
 
 After changing `.env` on a server that caches its config, run `php artisan config:cache` again.
 
-The contact form accepts 3 messages per 10 minutes from one IP, ignores bots that fill in a hidden field, and saves every message in the `contacts` table even when the email can't be sent.
+The contact form accepts 3 messages per 10 minutes from one IP, ignores bots that fill in a hidden field, and saves every message in the `contacts` table even when the email can't be sent. It is sent with ajax (`public/js/ajax-form.js`), so errors and the success message appear without a page reload; without JavaScript it posts normally.
 
 ## Tests
 

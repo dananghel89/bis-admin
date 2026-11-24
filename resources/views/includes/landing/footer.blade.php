@@ -45,3 +45,5 @@
 <script src="{{ asset('landing/lib/stickyjs/sticky.js') }}"></script>
 <script src="{{ asset('landing/lib/parallax/parallax.js') }}"></script>
 <script src="{{ asset('landing/js/custom.js') }}"></script>
+
+@stack('scripts')

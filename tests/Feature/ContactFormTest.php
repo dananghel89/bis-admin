@@ -79,7 +79,7 @@ class ContactFormTest extends TestCase
     {
         $this->post('/contact', $this->validData());
 
-        $this->get('/')->assertSee('<div id="sendmessage" class="show">Thank you! Your message has been sent.</div>', false);
+        $this->get('/')->assertSee('<div id="sendmessage" class="show" role="status">Thank you! Your message has been sent.</div>', false);
     }
 
     public function test_invalid_input_is_rejected_and_kept()
@@ -110,7 +110,7 @@ class ContactFormTest extends TestCase
         $this->post('/contact', $this->validData(['email' => 'not-an-email']));
 
         $this->get('/')
-            ->assertSee('<div class="validation show">', false)
+            ->assertSee('<div class="validation show" data-error-for="email">The email field must be a valid email address.</div>', false)
             ->assertSee('value="Anna O&#039;Brien"', false);
     }
 
@@ -165,8 +165,69 @@ class ContactFormTest extends TestCase
         $this->followingRedirects()
             ->post('/contact', $this->validData())
             ->assertOk()
-            ->assertSee('<div id="errormessage" class="show">Too many messages. Please try again in a few minutes.</div>', false)
+            ->assertSee('<div id="errormessage" class="show" role="alert">Too many messages. Please try again in a few minutes.</div>', false)
             ->assertSee('value="Anna O&#039;Brien"', false);
+    }
+
+    public function test_the_form_is_set_up_for_ajax()
+    {
+        $this->get('/')
+            ->assertSee('data-ajax-form data-success="#sendmessage" data-error="#errormessage" data-error-class="show"', false)
+            ->assertSee('<div class="validation " data-error-for="name"></div>', false)
+            ->assertSee('<div id="sendmessage" class="" role="status"></div>', false)
+            ->assertSee('<script src="' . asset('js/ajax-form.js') . '"></script>', false);
+
+        $this->assertFileExists(public_path('js/ajax-form.js'));
+    }
+
+    public function test_an_ajax_post_gets_a_json_success()
+    {
+        Mail::fake();
+
+        $this->postJson('/contact', $this->validData())
+            ->assertOk()
+            ->assertExactJson(['message' => 'Thank you! Your message has been sent.']);
+
+        $this->assertSame(1, Contact::count());
+        Mail::assertSent(ContactReceived::class);
+    }
+
+    public function test_an_ajax_post_gets_json_field_errors()
+    {
+        $this->postJson('/contact', $this->validData(['email' => 'not-an-email', 'subject' => '']))
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['email', 'subject'])
+            ->assertJsonMissingValidationErrors(['name', 'message']);
+
+        $this->assertSame(0, Contact::count());
+    }
+
+    public function test_an_ajax_honeypot_post_looks_like_success()
+    {
+        Mail::fake();
+
+        $this->postJson('/contact', $this->validData(['website' => 'x']))
+            ->assertOk()
+            ->assertJson(['message' => 'Thank you! Your message has been sent.']);
+
+        $this->assertSame(0, Contact::count());
+        Mail::assertNothingSent();
+    }
+
+    public function test_an_ajax_post_over_the_limit_gets_a_json_429()
+    {
+        Mail::fake();
+
+        for ($i = 0; $i < 3; $i++) {
+            $this->postJson('/contact', $this->validData())->assertOk();
+        }
+
+        $this->postJson('/contact', $this->validData())
+            ->assertStatus(429)
+            ->assertExactJson(['message' => 'Too many messages. Please try again in a few minutes.'])
+            ->assertHeader('Retry-After');
+
+        $this->assertSame(3, Contact::count());
     }
 
     public function test_the_contact_limit_is_separate_from_password_resets()

@@ -193,29 +193,35 @@
 			<div class="row justify-content-center">
 				<div class="col-lg-3 col-md-4">
 					<div class="info">
+						@if ( config('project.contact_address') )
+							<div>
+								<i class="fa fa-map-marker"></i>
+								<p>{!! nl2br(e(config('project.contact_address'))) !!}</p>
+							</div>
+						@endif
+
 						<div>
 							<i class="fa fa-envelope"></i>
 							<p><a href="mailto:{{ config('project.contact_email') }}">{{ config('project.contact_email') }}</a></p>
 						</div>
 
-						<div>
-							<i class="fa fa-comments"></i>
-							<p>Questions about an account or a property? Write to us, or use the form.</p>
-						</div>
+						@if ( config('project.contact_phone') )
+							<div>
+								<i class="fa fa-phone"></i>
+								<p><a href="tel:{{ preg_replace('/[^0-9+]/', '', config('project.contact_phone')) }}">{{ config('project.contact_phone') }}</a></p>
+							</div>
+						@endif
 					</div>
 				</div>
 
 				<div class="col-lg-5 col-md-8">
 					<div class="form">						
-						@if ( session('contact_status') )
-							<div id="sendmessage" class="show">{{ session('contact_status') }}</div>
-						@endif
+						{{-- Filled in by the server after a normal post, or by js/ajax-form.js after an ajax one. --}}
+						<div id="sendmessage" class="{{ session('contact_status') ? 'show' : '' }}" role="status">{{ session('contact_status') }}</div>
+						<div id="errormessage" class="{{ $errors->has('contact') ? 'show' : '' }}" role="alert">{{ $errors->first('contact') }}</div>
 
-						@if ( $errors->has('contact') )
-							<div id="errormessage" class="show">{{ $errors->first('contact') }}</div>
-						@endif
-
-						<form role="form" class="contactForm" method="POST" action="{{ route('contact') }}">
+						<form role="form" class="contactForm" method="POST" action="{{ route('contact') }}" novalidate
+							data-ajax-form data-success="#sendmessage" data-error="#errormessage" data-error-class="show">
 							@csrf
 
 							{{-- Honeypot: hidden from people, bots fill it in. --}}
@@ -227,17 +233,13 @@
 							@foreach ( ['name' => 'Your Name', 'email' => 'Your Email', 'subject' => 'Subject'] as $field => $placeholder )
 								<div class="form-group">
 									<input type="{{ $field === 'email' ? 'email' : 'text' }}" name="{{ $field }}" class="form-control" id="{{ $field }}" placeholder="{{ $placeholder }}" value="{{ old($field) }}" required>
-									@if ( $errors->has($field) )
-										<div class="validation show">{{ $errors->first($field) }}</div>
-									@endif
+									<div class="validation {{ $errors->has($field) ? 'show' : '' }}" data-error-for="{{ $field }}">{{ $errors->first($field) }}</div>
 								</div>
 							@endforeach
 
 							<div class="form-group">
 								<textarea class="form-control" name="message" id="message" rows="5" placeholder="Message" required>{{ old('message') }}</textarea>
-								@if ( $errors->has('message') )
-									<div class="validation show">{{ $errors->first('message') }}</div>
-								@endif
+								<div class="validation {{ $errors->has('message') ? 'show' : '' }}" data-error-for="message">{{ $errors->first('message') }}</div>
 							</div>
 
 							<div class="text-center">
@@ -251,3 +253,7 @@
 	</section>
 
 @endsection
+
+@push('scripts')
+	<script src="{{ asset('js/ajax-form.js') }}"></script>
+@endpush

@@ -42,7 +42,7 @@ class LandingTest extends TestCase
         foreach (['/', '/terms-of-service'] as $uri) {
             $html = $this->get($uri)->assertOk()->getContent();
 
-            foreach (['Lorem ipsum', 'dolor sit amet', 'Voluptua', 'Eque feugiat', '+34 935', 'Marià Cubí'] as $placeholder) {
+            foreach (['Lorem ipsum', 'dolor sit amet', 'Voluptua', 'Eque feugiat'] as $placeholder) {
                 $this->assertStringNotContainsString($placeholder, $html, "{$uri} contains '{$placeholder}'");
             }
         }
@@ -54,6 +54,25 @@ class LandingTest extends TestCase
 
         $this->get('/')->assertSee('href="mailto:team@example.test"', false);
         $this->get('/terms-of-service')->assertSee('href="mailto:team@example.test"', false);
+    }
+
+    public function test_address_and_phone_come_from_the_config()
+    {
+        config(['project.contact_address' => "Main Street 1\n08001 Barcelona", 'project.contact_phone' => '+34 900 000 000']);
+
+        $this->get('/')
+            ->assertSee('<p>Main Street 1<br />' . "\n" . '08001 Barcelona</p>', false)
+            ->assertSee('<a href="tel:+34900000000">+34 900 000 000</a>', false);
+    }
+
+    public function test_address_and_phone_are_left_out_when_empty()
+    {
+        config(['project.contact_address' => null, 'project.contact_phone' => '']);
+
+        $this->get('/')
+            ->assertDontSee('fa-map-marker"></i>', false)
+            ->assertDontSee('fa-phone', false)
+            ->assertSee('fa-envelope', false);
     }
 
     public function test_hero_button_logs_in_or_opens_the_dashboard()

@@ -7,8 +7,9 @@ return [
     | Site
     |--------------------------------------------------------------------------
     |
-    | Shown in page titles, headers and the landing page. The contact email is
-    | shown on the landing page and receives the contact form messages.
+    | Shown in page titles, headers and the landing page. The contact details
+    | are shown on the landing page; the email also receives the contact form
+    | messages.
     |
     */
 
@@ -17,6 +18,11 @@ return [
     'tagline' => env('SITE_TAGLINE', 'Architecture Web Application'),
 
     'contact_email' => env('CONTACT_EMAIL', 'contact@example.com'),
+
+    // Optional; left out of the page when empty. Use "\n" in .env for a line break.
+    'contact_address' => env('CONTACT_ADDRESS'),
+
+    'contact_phone' => env('CONTACT_PHONE'),
 
     /*
     |--------------------------------------------------------------------------
