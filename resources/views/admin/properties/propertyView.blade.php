@@ -79,6 +79,17 @@
 
 				@include('admin.plans.plansTable', ['plans' => $property->plans()->latest()->get(), 'showProperty' => false])
 			</div>
+
+			<div class="card mt-4">
+				<div class="card-header d-flex justify-content-between align-items-center">
+					<strong class="card-title">Licenses</strong>
+					@can ( 'manageProperties' )
+						<a href="{{ route('licenseAdd', ['property' => $property->id]) }}" class="btn btn-sm btn-success"><i class="fas fa-upload me-1"></i> Upload License</a>
+					@endcan
+				</div>
+
+				@include('admin.licenses.licensesTable', ['licenses' => $property->licenses()->orderByRaw('expires_at is null')->orderBy('expires_at')->get(), 'showProperty' => false])
+			</div>
 		</div>
 
 		<div class="col-xl-5">
