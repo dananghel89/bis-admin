@@ -56,6 +56,19 @@
 					<span class="small fw-bold text-uppercase text-light opacity-75">Admin</span>
 				</li>
 
+				@can ( 'readContacts' )
+					@php($unreadContacts = App\Models\Contact::whereNull('read_at')->count())
+					<li class="nav-item">
+						<a class="nav-link" href="{{ route('contacts') }}" data-page="contacts" title="Contacts">
+							<i class="fas fa-at"></i>
+							<span class="nav-text ms-2">Contacts</span>
+							@if ( $unreadContacts )
+								<span class="badge rounded-pill bg-danger ms-auto nav-text" title="Unread">{{ $unreadContacts }}</span>
+							@endif
+						</a>
+					</li>
+				@endcan
+
 				<li class="nav-item">
 					<a class="nav-link" href="{{ route('users') }}" data-page="users" title="Users">
 						<i class="fas fa-user"></i>

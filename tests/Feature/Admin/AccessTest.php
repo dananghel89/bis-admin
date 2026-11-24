@@ -29,6 +29,7 @@ class AccessTest extends TestCase
             '/dashboard/plans' => $all,
             '/dashboard/licenses' => $all,
             '/dashboard/users' => $staff,
+            '/dashboard/contacts' => $staff,
         ];
     }
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AlertController;
+use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LicenseController;
 use App\Http\Controllers\Admin\MailAccountController;
@@ -75,6 +76,13 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
         Route::get('/licenses/edit-license/{license}', [LicenseController::class, 'licenseEdit'])->name('licenseEdit');
         Route::patch('/licenses/edit-license/{license}', [LicenseController::class, 'licenseEditSave'])->name('licenseEditSave');
         Route::delete('/licenses/edit-license/{license}', [LicenseController::class, 'licenseDelete'])->name('licenseDelete');
+    });
+
+    // Contact form messages (staff only)
+    Route::middleware('can:readContacts')->group(function () {
+        Route::get('/contacts', [ContactController::class, 'index'])->name('contacts');
+        Route::get('/contacts/view-contact/{contact}', [ContactController::class, 'contactView'])->name('contactView');
+        Route::delete('/contacts/view-contact/{contact}', [ContactController::class, 'contactDelete'])->name('contactDelete');
     });
 
     // Users (staff only)

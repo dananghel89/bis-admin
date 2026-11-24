@@ -67,7 +67,14 @@ class AlertController extends Controller
             return redirect()->route('alerts');
         }
 
-        $draft = ['to' => '', 'cc' => '', 'subject' => '', 'body' => '', 'reply_to' => null];
+        // ?to=…&subject=… start a new email (e.g. "Reply from Alerts" on a contact message).
+        $draft = [
+            'to' => Str::limit((string) $request->query('to'), 255, ''),
+            'cc' => '',
+            'subject' => Str::limit((string) $request->query('subject'), 255, ''),
+            'body' => '',
+            'reply_to' => null,
+        ];
 
         if ($uid = $request->integer('reply')) {
             try {
