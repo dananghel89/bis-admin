@@ -7,7 +7,6 @@ use App\Services\Mailbox\MailboxConnector;
 use DirectoryTree\ImapEngine\MailboxInterface;
 use DirectoryTree\ImapEngine\Testing\FakeFolder;
 use DirectoryTree\ImapEngine\Testing\FakeMailbox;
-use DirectoryTree\ImapEngine\Testing\FakeMessage;
 use RuntimeException;
 use Symfony\Component\Mailer\Envelope;
 use Symfony\Component\Mailer\SentMessage;
@@ -24,6 +23,9 @@ class FakeMailboxConnector extends MailboxConnector
 
     public FakeFolder $sent;
 
+    /** Set to null for an account without a Trash folder. */
+    public ?FakeFolder $trash;
+
     /** @var list<RawMessage> */
     public array $sentMessages = [];
 
@@ -38,6 +40,7 @@ class FakeMailboxConnector extends MailboxConnector
     {
         $this->inbox = new FakeFolder('inbox');
         $this->sent = new FakeFolder('Sent Items', ['\\HasNoChildren', '\\Sent']);
+        $this->trash = new FakeFolder('Deleted Items', ['\\HasNoChildren', '\\Trash']);
     }
 
     /**
@@ -51,7 +54,7 @@ class FakeMailboxConnector extends MailboxConnector
             ? "From: {$from}\r\nTo: me@example.test\r\nSubject: {$subject}\r\nDate: {$date}\r\nMessage-ID: <{$messageId}>\r\nContent-Type: text/plain; charset=utf-8\r\n\r\n{$body}"
             : "From: {$from}\r\nTo: me@example.test\r\nSubject: {$subject}\r\nDate: {$date}\r\nMessage-ID: <{$messageId}>\r\nContent-Type: text/html; charset=utf-8\r\n\r\n{$html}";
 
-        $this->inbox->addMessage(new FakeMessage($uid, $flags, $contents));
+        $this->inbox->addMessage(new FakeMovableMessage($uid, $flags, $contents));
     }
 
     public function imap(MailAccount $account): MailboxInterface
@@ -62,7 +65,7 @@ class FakeMailboxConnector extends MailboxConnector
             throw new RuntimeException($this->imapFails);
         }
 
-        return new FakeMailbox([], [$this->inbox, $this->sent]);
+        return new FakeMailbox([], array_values(array_filter([$this->inbox, $this->sent, $this->trash])));
     }
 
     public function smtp(MailAccount $account): TransportInterface

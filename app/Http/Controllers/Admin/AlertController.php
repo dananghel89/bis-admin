@@ -129,6 +129,22 @@ class AlertController extends Controller
         return $this->done($request, route('alerts', ['box' => 'sent']), 'Email sent.');
     }
 
+    public function alertDelete(Request $request, string $box, int $uid): RedirectResponse|JsonResponse
+    {
+        $box = $this->box($box);
+        $mailbox = $this->mailbox($request) ?? abort(404);
+
+        try {
+            $mailbox->delete($box, $uid) || abort(404);
+        } catch (MailboxException $e) {
+            return $request->expectsJson()
+                ? response()->json(['message' => $e->getMessage()], 422)
+                : back()->with('error', $e->getMessage());
+        }
+
+        return $this->done($request, route('alerts', ['box' => $box]), 'Email deleted.');
+    }
+
     /**
      * The user's mailbox, or null when they have no mail settings yet.
      */

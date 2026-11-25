@@ -44,6 +44,7 @@
 							<th scope="col" style="width: 30%">{{ $box === 'sent' ? 'To' : 'From' }}</th>
 							<th scope="col">Subject</th>
 							<th scope="col" class="text-end" style="width: 140px">Date</th>
+							<th scope="col" style="width: 1%"><span class="visually-hidden">Actions</span></th>
 						</tr>
 					</thead>
 
@@ -63,13 +64,18 @@
 									{{ $who ?: '(unknown)' }}
 								</td>
 								<td>
-									<a href="{{ route('alertView', ['box' => $box, 'uid' => $message->uid()]) }}" class="text-decoration-none {{ $unread ? '' : 'text-body' }}">{{ $message->subject() ?: '(no subject)' }}</a>
+									<a href="{{ route('alertView', ['box' => $box, 'uid' => $message->uid()]) }}" class="text-decoration-none">{{ $message->subject() ?: '(no subject)' }}</a>
 								</td>
 								<td class="text-end small text-nowrap">{{ $message->date()?->timezone(config('app.timezone'))->format('Y-m-d H:i') }}</td>
+								<td class="text-end">
+									<x-form.ajax :action="route('alertDelete', ['box' => $box, 'uid' => $message->uid()])" method="DELETE" class="d-inline" data-confirm="Delete this email?">
+										<button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></button>
+									</x-form.ajax>
+								</td>
 							</tr>
 						@empty
 							<tr>
-								<td colspan="3" class="text-center text-muted py-4">No messages.</td>
+								<td colspan="4" class="text-center text-muted py-4">No messages.</td>
 							</tr>
 						@endforelse
 					</tbody>

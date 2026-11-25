@@ -23,6 +23,9 @@ class UserMailbox
     /** Folder names to try when the server doesn't flag its Sent folder. */
     protected const SENT_NAMES = ['Sent', 'Sent Items', 'Sent Messages', 'Sent Mail', 'INBOX.Sent', 'INBOX/Sent', '[Gmail]/Sent Mail'];
 
+    /** Folder names to try when the server doesn't flag its Trash folder. */
+    protected const TRASH_NAMES = ['Trash', 'Deleted Items', 'Deleted Messages', 'Deleted', 'INBOX.Trash', 'INBOX/Trash', '[Gmail]/Trash', '[Gmail]/Bin'];
+
     /** These servers save a copy of sent mail themselves; appending one would duplicate it. */
     protected const SAVES_SENT_ITSELF = ['gmail.com', 'googlemail.com', 'office365.com', 'outlook.com'];
 
@@ -70,6 +73,54 @@ class UserMailbox
 
             return $message;
         });
+    }
+
+    /**
+     * Delete a message the way email programs do: move it to the account's Trash
+     * folder, or, when there is none, delete it for good. False when it isn't there.
+     */
+    public function delete(string $box, int $uid): bool
+    {
+        return $this->attempt(function () use ($box, $uid) {
+            $message = $this->folder($box)?->messages()->find($uid);
+
+            if (! $message) {
+                return false;
+            }
+
+            $trash = $this->trash();
+
+            // move() is on ImapEngine's Message, not on its MessageInterface.
+            if ($trash && method_exists($message, 'move')) {
+                $message->move($trash->path(), expunge: true);
+            } else {
+                $message->markDeleted(expunge: true);
+            }
+
+            return true;
+        });
+    }
+
+    /**
+     * The Trash folder: by its \Trash flag, else by name.
+     */
+    protected function trash(): ?FolderInterface
+    {
+        $folders = $this->imap()->folders();
+
+        foreach ($folders->get() as $folder) {
+            if (in_array('\\trash', array_map('strtolower', $folder->flags()), true)) {
+                return $folder;
+            }
+        }
+
+        foreach (self::TRASH_NAMES as $name) {
+            if ($folder = $folders->find($name)) {
+                return $folder;
+            }
+        }
+
+        return null;
     }
 
     /**

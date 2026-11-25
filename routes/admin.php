@@ -34,6 +34,7 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::middleware('can:useMailbox')->group(function () {
         Route::get('/alerts', [AlertController::class, 'index'])->name('alerts');
         Route::get('/alerts/message/{box}/{uid}', [AlertController::class, 'alertView'])->name('alertView')->whereIn('box', ['inbox', 'sent'])->whereNumber('uid');
+        Route::delete('/alerts/message/{box}/{uid}', [AlertController::class, 'alertDelete'])->name('alertDelete')->whereIn('box', ['inbox', 'sent'])->whereNumber('uid');
         Route::get('/alerts/write', [AlertController::class, 'alertWrite'])->name('alertWrite');
         Route::post('/alerts/write', [AlertController::class, 'alertSend'])->name('alertSend');
     });

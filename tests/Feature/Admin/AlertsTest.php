@@ -107,6 +107,45 @@ class AlertsTest extends TestCase
     public function test_a_missing_message_is_a_404()
     {
         $this->actingAs($this->ana)->get('/dashboard/alerts/message/inbox/99')->assertNotFound();
+        $this->actingAs($this->ana)->delete('/dashboard/alerts/message/inbox/99')->assertNotFound();
+    }
+
+    public function test_deleting_an_email_moves_it_to_the_trash_folder()
+    {
+        $this->servers->receive(7, 'Bob <bob@example.test>', 'Site visit', 'Hello');
+
+        $this->actingAs($this->ana)->get('/dashboard/alerts')
+            ->assertSee(route('alertDelete', ['box' => 'inbox', 'uid' => 7]), false);
+        $this->actingAs($this->ana)->get('/dashboard/alerts/message/inbox/7')
+            ->assertSee(route('alertDelete', ['box' => 'inbox', 'uid' => 7]), false);
+
+        $this->actingAs($this->ana)->deleteJson('/dashboard/alerts/message/inbox/7')
+            ->assertOk()
+            ->assertJson(['message' => 'Email deleted.', 'redirect' => route('alerts', ['box' => 'inbox'])]);
+
+        $this->assertSame('Deleted Items', $this->servers->inbox->getMessages()[0]->movedTo);
+    }
+
+    public function test_without_a_trash_folder_deleting_removes_the_email_for_good()
+    {
+        $this->servers->trash = null;
+        $this->servers->receive(7, 'Bob <bob@example.test>', 'Site visit', 'Hello');
+
+        $this->actingAs($this->ana)->delete('/dashboard/alerts/message/inbox/7')
+            ->assertRedirect(route('alerts', ['box' => 'inbox']));
+
+        $message = $this->servers->inbox->getMessages()[0];
+        $this->assertNull($message->movedTo);
+        $this->assertTrue($message->isDeleted());
+    }
+
+    public function test_a_server_failure_while_deleting_is_shown()
+    {
+        $this->servers->imapFails = 'Connection refused';
+
+        $this->actingAs($this->ana)->deleteJson('/dashboard/alerts/message/sent/7')
+            ->assertStatus(422)
+            ->assertJson(['message' => 'Could not read your mailbox: Connection refused']);
     }
 
     public function test_sending_an_email_and_keeping_a_copy_in_sent()

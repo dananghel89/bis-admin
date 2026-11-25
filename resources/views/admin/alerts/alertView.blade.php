@@ -66,6 +66,9 @@
 			@if ( $box === 'inbox' )
 				<a href="{{ route('alertWrite', ['reply' => $message->uid()]) }}" class="btn btn-sm btn-primary"><i class="fas fa-reply me-1"></i> Reply</a>
 			@endif
+			<x-form.ajax :action="route('alertDelete', ['box' => $box, 'uid' => $message->uid()])" method="DELETE" class="d-inline" data-confirm="Delete this email?">
+				<button type="submit" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash me-1"></i> Delete</button>
+			</x-form.ajax>
 			<a href="{{ route('alerts', ['box' => $box]) }}" class="btn btn-sm btn-outline-secondary ms-auto"><i class="fas fa-angle-left me-1"></i> Back</a>
 		</div>
 	</div>
