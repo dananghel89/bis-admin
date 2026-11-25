@@ -191,6 +191,17 @@ class UsersTest extends TestCase
             ->assertDontSee('data-confirm="Delete the account of', false);
     }
 
+    public function test_the_list_has_actions_but_no_delete_for_your_own_account()
+    {
+        $ana = User::factory()->editor()->create();
+
+        $this->actingAs($this->staff)->get('/dashboard/users')
+            ->assertSee(route('userEdit', $ana), false)
+            ->assertSee('action="'.route('userDelete', $ana).'"', false)
+            ->assertSee(route('userEdit', $this->staff), false)
+            ->assertDontSee('action="'.route('userDelete', $this->staff).'"', false);
+    }
+
     public function test_a_missing_user_is_a_404()
     {
         $this->actingAs($this->staff)->get('/dashboard/users/view-user/999')->assertNotFound();

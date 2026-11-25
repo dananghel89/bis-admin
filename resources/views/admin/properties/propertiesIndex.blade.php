@@ -51,8 +51,9 @@
 							<th scope="col">Status</th>
 							<th scope="col">Architects</th>
 						@endcan
-						<th scope="col" class="text-end">Plans</th>
-						<th scope="col" class="text-end">Licenses</th>
+						<th scope="col">Plans</th>
+						<th scope="col">Licenses</th>
+						<th scope="col" class="text-end">Actions</th>
 					</tr>
 				</thead>
 
@@ -71,12 +72,22 @@
 								</td>
 								<td class="small">{{ $property->architects->pluck('name')->implode(', ') ?: 'All architects' }}</td>
 							@endcan
-							<td class="text-end">{{ $property->plans_count }}</td>
-							<td class="text-end">{{ $property->licenses_count }}</td>
+							<td>{{ $property->plans_count }}</td>
+							<td>{{ $property->licenses_count }}</td>
+							<td class="text-end text-nowrap">
+								<a href="{{ route('infoView', $property) }}" class="btn btn-sm btn-outline-primary" title="View"><i class="fas fa-eye"></i></a>
+								@can ( 'manageProperties' )
+									<a href="{{ route('infoEdit', $property) }}" class="btn btn-sm btn-outline-secondary" title="Edit"><i class="fas fa-pen"></i></a>
+									<x-form.ajax :action="route('infoDelete', $property)" method="DELETE" class="d-inline"
+										data-confirm="Delete {{ $property->name }} with all its plans and licenses? This can't be undone.">
+										<button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></button>
+									</x-form.ajax>
+								@endcan
+							</td>
 						</tr>
 					@empty
 						<tr>
-							<td colspan="7" class="text-center text-muted py-4">No properties found.</td>
+							<td colspan="8" class="text-center text-muted py-4">No properties found.</td>
 						</tr>
 					@endforelse
 				</tbody>

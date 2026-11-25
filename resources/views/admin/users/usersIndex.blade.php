@@ -30,8 +30,9 @@
 						<th scope="col">Name</th>
 						<th scope="col">Email</th>
 						<th scope="col">Role</th>
-						<th scope="col" class="text-end">Properties</th>
+						<th scope="col">Properties</th>
 						<th scope="col">Created</th>
+						<th scope="col" class="text-end">Actions</th>
 					</tr>
 				</thead>
 
@@ -48,12 +49,21 @@
 							<td>
 								<span class="badge {{ $user->isStaff() ? 'bg-primary' : 'bg-info text-dark' }}">{{ $user->roleLabel() }}</span>
 							</td>
-							<td class="text-end">{{ $user->isArchitect() ? $user->properties_count : '—' }}</td>
+							<td>{{ $user->isArchitect() ? $user->properties_count : '—' }}</td>
 							<td>{{ $user->created_at?->format('Y-m-d') }}</td>
+							<td class="text-end text-nowrap">
+								<a href="{{ route('userView', $user) }}" class="btn btn-sm btn-outline-primary" title="View"><i class="fas fa-eye"></i></a>
+								<a href="{{ route('userEdit', $user) }}" class="btn btn-sm btn-outline-secondary" title="Edit"><i class="fas fa-pen"></i></a>
+								@unless ( $user->is(Auth::user()) )
+									<x-form.ajax :action="route('userDelete', $user)" method="DELETE" class="d-inline" data-confirm="Delete the account of {{ $user->name }}? This can't be undone.">
+										<button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></button>
+									</x-form.ajax>
+								@endunless
+							</td>
 						</tr>
 					@empty
 						<tr>
-							<td colspan="5" class="text-center text-muted py-4">No users found.</td>
+							<td colspan="6" class="text-center text-muted py-4">No users found.</td>
 						</tr>
 					@endforelse
 				</tbody>

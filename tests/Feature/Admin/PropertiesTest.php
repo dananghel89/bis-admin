@@ -64,6 +64,20 @@ class PropertiesTest extends TestCase
             ->assertSee('Open House')->assertSee('Secret Draft')->assertSee('Bens House')->assertSee('Add Property');
     }
 
+    public function test_the_list_actions_follow_the_role()
+    {
+        $house = Property::factory()->published()->create();
+
+        $this->actingAs($this->ana)->get('/dashboard/infos')
+            ->assertSee(route('infoView', $house), false)
+            ->assertDontSee(route('infoEdit', $house), false)
+            ->assertDontSee(route('infoDelete', $house).'"', false);
+
+        $this->actingAs($this->staff)->get('/dashboard/infos')
+            ->assertSee(route('infoEdit', $house), false)
+            ->assertSee('action="'.route('infoDelete', $house).'"', false);
+    }
+
     public function test_the_list_can_be_searched_and_filtered()
     {
         Property::factory()->create(['name' => 'Casa Milà', 'work_status' => 'done']);

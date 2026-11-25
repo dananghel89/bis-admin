@@ -43,8 +43,8 @@
 						<tr>
 							<th scope="col" style="width: 30%">{{ $box === 'sent' ? 'To' : 'From' }}</th>
 							<th scope="col">Subject</th>
-							<th scope="col" class="text-end" style="width: 140px">Date</th>
-							<th scope="col" style="width: 1%"><span class="visually-hidden">Actions</span></th>
+							<th scope="col" style="width: 140px">Date</th>
+							<th scope="col" class="text-end">Actions</th>
 						</tr>
 					</thead>
 
@@ -66,8 +66,9 @@
 								<td>
 									<a href="{{ route('alertView', ['box' => $box, 'uid' => $message->uid()]) }}" class="text-decoration-none">{{ $message->subject() ?: '(no subject)' }}</a>
 								</td>
-								<td class="text-end small text-nowrap">{{ $message->date()?->timezone(config('app.timezone'))->format('Y-m-d H:i') }}</td>
-								<td class="text-end">
+								<td class="small text-nowrap">{{ $message->date()?->timezone(config('app.timezone'))->format('Y-m-d H:i') }}</td>
+								<td class="text-end text-nowrap">
+									<a href="{{ route('alertView', ['box' => $box, 'uid' => $message->uid()]) }}" class="btn btn-sm btn-outline-primary" title="Open"><i class="fas fa-eye"></i></a>
 									<x-form.ajax :action="route('alertDelete', ['box' => $box, 'uid' => $message->uid()])" method="DELETE" class="d-inline" data-confirm="Delete this email?">
 										<button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></button>
 									</x-form.ajax>
