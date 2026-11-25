@@ -1,8 +1,8 @@
 <nav class="sidebar bg-dark text-white position-fixed d-flex flex-column" id="sidebar">
 	<div class="sidebar-brand d-flex align-items-center justify-content-center py-3 border-bottom border-secondary">
-		<a href="{{ route('dashboard') }}" class="text-white text-decoration-none fw-bold">
-			<span class="logo-full fs-4">{{ config('project.site_title') }}</span>
-			<span class="logo-mini fs-5">{{ mb_substr(config('project.site_title'), 0, 1) }}</span>
+		<a href="{{ route('dashboard') }}" class="text-decoration-none" title="{{ config('project.site_title') }}">
+			<img src="{{ asset('landing/img/logo.png') }}" alt="{{ config('project.site_title') }}" class="logo-full me-4" width="163" height="51">
+			<img src="{{ asset('landing/img/logo.png') }}" alt="{{ config('project.site_title') }}" class="logo-mini">
 		</a>
 	</div>
 

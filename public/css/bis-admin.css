@@ -15,14 +15,28 @@
 	color: #fff;
 }
 
-/* Text logo in the sidebar and on the auth card (the theme ships an image) */
-.sidebar-brand a {
-	letter-spacing: 0.05em;
+/* The landing logo, 32px high, in the sidebar and on the auth card; collapsed, only its circle (the left part of the image) */
+.sidebar-brand .logo-full,
+.auth-logo {
+	height: 32px;
+	width: auto;
 }
 
+.sidebar-brand .logo-mini {
+	width: 32px;
+	height: 32px;
+	object-fit: cover;
+	object-position: left center;
+}
+
+/* The theme turns the auth logo white; keep its colors, on the sidebar's dark background */
 .auth-logo {
-	color: var(--bs-primary);
-	letter-spacing: 0.05em;
+	filter: none;
+	max-height: none;
+}
+
+.auth-hero {
+	background: var(--sidebar-bg);
 }
 
 /* Tables inside cards */

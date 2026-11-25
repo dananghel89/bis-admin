@@ -10,8 +10,8 @@
 	{{-- The theme's auth card (page-login.html) --}}
 	<main class="auth-card">
 		<header class="auth-hero">
-			<a href="{{ route('front') }}" class="text-decoration-none">
-				<span class="auth-logo d-inline-block fs-2 fw-bold">{{ config('project.site_title') }}</span>
+			<a href="{{ route('front') }}" class="d-inline-block" title="{{ config('project.site_title') }}">
+				<img src="{{ asset('landing/img/logo.png') }}" alt="{{ config('project.site_title') }}" class="auth-logo">
 			</a>
 			<h1 class="auth-title">@yield('title')</h1>
 			@hasSection('subtitle')

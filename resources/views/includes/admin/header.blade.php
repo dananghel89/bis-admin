@@ -86,10 +86,6 @@
 					</button>
 
 					<ul class="dropdown-menu dropdown-menu-end shadow border-0">
-						<li>
-							<span class="dropdown-item-text small text-muted">{{ Auth::user()->email }}</span>
-						</li>
-						<li><hr class="dropdown-divider"></li>
 						@can ( 'editProfile' )
 							<li>
 								<a class="dropdown-item py-2 px-3" href="{{ route('settings') }}">
