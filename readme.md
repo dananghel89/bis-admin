@@ -15,7 +15,7 @@ Staff add the properties, upload their plans and licenses as PDF files, place th
 | Work status | Pending, in progress or done, changed by staff or by an architect who sees the property, with an optional note; every change is kept |
 | Plans | A map of the properties and the list of plan PDFs; staff upload, replace and delete them |
 | Licenses | License PDFs with number, issue and expiry dates; expired ones and those expiring within 30 days are flagged |
-| Alerts | Each user's own mailbox over IMAP and SMTP: inbox, sent, read, write and reply (no attachments yet). HTML email is shown in a sandbox with remote images blocked |
+| Alerts | Each user's own mailbox over IMAP and SMTP: inbox, sent, read, write, reply and delete (to the account's Trash folder; no attachments yet). Nothing is stored in the app: every page reads the mail server, so mail sent or deleted in another email program shows here too. HTML email is shown in a sandbox with remote images blocked |
 | Contacts | Staff read and delete the contact form messages; the menu shows how many are unread |
 | Users | Staff add, edit and delete accounts, set passwords and roles, and can fill in a user's mail settings |
 | Settings | Every user changes their name, email and password, and sets up their mailbox |
